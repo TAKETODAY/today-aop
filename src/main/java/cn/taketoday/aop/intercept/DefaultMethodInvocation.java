@@ -38,7 +38,10 @@ public class DefaultMethodInvocation implements MethodInvocation {
 	protected Object[] arguments;
 	private AbstractAdvice[] advices;
 
-	private int currentInterceptorIndex = -1;
+	/**
+	 * a flag show that current index of advice
+	 */
+	private int currentAdviceIndex = -1;
 
 	public DefaultMethodInvocation(Object target, Method method, Object[] arguments, AbstractAdvice[] advices) {
 		this.target = target;
@@ -59,11 +62,11 @@ public class DefaultMethodInvocation implements MethodInvocation {
 
 	@Override
 	public Object proceed() throws Throwable {
-//		log.debug("currentInterceptorIndex: [{}]", currentInterceptorIndex);
-		if (currentInterceptorIndex == advices.length - 1) {
+		
+		if (currentAdviceIndex == advices.length - 1) {
 			return method.invoke(target, arguments);
 		}
-		return advices[++currentInterceptorIndex].invoke(this);
+		return advices[++currentAdviceIndex].invoke(this);
 	}
 
 	@Override

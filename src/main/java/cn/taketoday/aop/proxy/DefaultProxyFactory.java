@@ -20,6 +20,7 @@
 package cn.taketoday.aop.proxy;
 
 import cn.taketoday.aop.AdviceType;
+import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.ProxyCreator;
 import cn.taketoday.aop.ProxyFactory;
 import cn.taketoday.aop.advice.AbstractAdvice;
@@ -31,6 +32,7 @@ import cn.taketoday.aop.advice.MethodAfterThrowingAdvice;
 import cn.taketoday.aop.advice.MethodBeforeAdvice;
 import cn.taketoday.aop.annotation.Advice;
 import cn.taketoday.aop.annotation.AdviceImpl;
+import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.StringUtils;
 
@@ -38,10 +40,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
@@ -54,18 +54,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultProxyFactory implements ProxyFactory {
 
-	private AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
-
-	private final Map<Method, List<AbstractAdvice>> aspectMappings = new HashMap<>();
-
 	private TargetSource targetSource;
-
-	private Set<org.aopalliance.aop.Advice> adviceObjects = new HashSet<>();
+	private final Map<Method, List<AbstractAdvice>> aspectMappings = new HashMap<>();
 
 	@Override
 	public Object getProxy() {
 
-		List<Object> aspects = aspectsRegistry.getAspects();
+		List<Object> aspects = AspectsRegistry.getInstance().getAspects();
 
 		try {
 
@@ -92,19 +87,20 @@ public class DefaultProxyFactory implements ProxyFactory {
 				return createAopProxy().createProxy();
 			}
 			return targetSource.getTarget();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return targetSource.getTarget();
+		} catch (Throwable e) {
+			throw new ConfigurationException("An Exception Occured When Creating A Target Instance With Msg: [{}]",
+					e.getMessage(), e);
 		}
 	}
 
 	/**
+	 * Match method
 	 * 
-	 * @param aspects
+	 * @param aspect
 	 * @param aspectMethod
 	 * @param targetClass
-	 * @param targetDeclaredMethods
-	 * @param advice
+	 * @param advices
+	 * @return
 	 */
 	private boolean matchMethod(Object aspect, //
 			Method aspectMethod, Class<?> targetClass, Advice[] advices) //
@@ -113,10 +109,9 @@ public class DefaultProxyFactory implements ProxyFactory {
 		Method[] targetDeclaredMethods = targetClass.getDeclaredMethods();
 		for (Advice advice : advices) {
 			AdviceType adviceType = advice.type();
-			Class<? extends Annotation>[] annotations = advice.annotation();
+			Class<? extends Annotation>[] annotations = advice.value();
 			AbstractAdvice abstractAdvice = getAdvice(aspect, aspectMethod, adviceType);
 
-			adviceObjects.add(abstractAdvice);
 			boolean isAllMethodWeaving = false;
 			// annotation matching
 			for (Class<? extends Annotation> annotation : annotations) {
@@ -165,7 +160,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 		String[] methodsStr = advice.method();
 		boolean weaved = false;
 		for (String methodStr : methodsStr) {
-			String[] methodRegexs = methodStr.split("[;|,]");
+			String[] methodRegexs = methodStr.split(Constant.SPLIT_REGEXP);
 			if (methodRegexs == null || methodRegexs.length == 0) {
 				methodRegexs = new String[] { methodStr };
 			}
@@ -201,7 +196,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 			}
 			Method[] targetDeclaredMethods = targetClass.getDeclaredMethods();
 			// annotation match start
-			for (Class<? extends Annotation> annotation : advice.annotation()) {
+			for (Class<? extends Annotation> annotation : advice.value()) {
 				if (targetClass.isAnnotationPresent(annotation)) {
 					return true;
 				}
@@ -212,7 +207,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 				}
 			}
 			String name = targetClass.getName();
-			for (String regex : advice.value()) { // regex match start
+			for (String regex : advice.pointcut()) { // regex match start
 				if (StringUtils.isEmpty(regex)) {
 					return true;
 				}
@@ -225,6 +220,13 @@ public class DefaultProxyFactory implements ProxyFactory {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param aspect
+	 * @param aspectMethod
+	 * @param adviceType
+	 * @return
+	 */
 	public AbstractAdvice getAdvice(Object aspect, Method aspectMethod, AdviceType adviceType) {
 		AbstractAdvice advice = null;
 		switch (adviceType)
@@ -275,13 +277,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 	}
 
 	protected final ProxyCreator createAopProxy() {
-
-//		Class<?>[] interfaces = targetSource.getInterfaces();
 		targetSource.setAspectMappings(aspectMappings);
-		
-//		if (interfaces != null && interfaces.length != 0) {
-//			return new JdkProxyCreator(targetSource);
-//		}
 		return new CglibProxyCreator(targetSource);
 	}
 

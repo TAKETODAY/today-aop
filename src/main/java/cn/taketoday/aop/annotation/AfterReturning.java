@@ -41,11 +41,18 @@ import java.lang.annotation.Target;
 public @interface AfterReturning {
 
 	/**
-	 * package names
+	 * annotated with
 	 * 
 	 * @return
 	 */
-	String[] value() default {};
+	Class<? extends Annotation>[] value() default {};
+
+	/**
+	 * package name
+	 * 
+	 * @return
+	 */
+	String[] pointcut() default {};
 
 	/**
 	 * target classes
@@ -60,12 +67,5 @@ public @interface AfterReturning {
 	 * @return
 	 */
 	String[] method() default {};
-
-	/**
-	 * annotated with
-	 * 
-	 * @return
-	 */
-	Class<? extends Annotation>[] annotation() default {};
 
 }

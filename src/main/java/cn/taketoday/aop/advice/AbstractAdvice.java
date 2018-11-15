@@ -26,9 +26,9 @@ import cn.taketoday.aop.annotation.Arguments;
 import cn.taketoday.aop.annotation.JoinPoint;
 import cn.taketoday.aop.annotation.Returning;
 import cn.taketoday.aop.annotation.Throwing;
+import cn.taketoday.context.utils.ExceptionUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -37,7 +37,6 @@ import org.aopalliance.intercept.Joinpoint;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import lombok.Getter;
 import lombok.Setter;
 
 /**
@@ -45,15 +44,13 @@ import lombok.Setter;
  * 
  *         2018-11-10 11:26
  */
-@Setter
-@Getter
 public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 
 	protected final Method adviceMethod;
 
 	protected final Class<?>[] adviceParameterTypes;
+	@Setter
 	protected Object aspect;
-	private Object annotation;
 	private byte[] parameterTypes;
 	private int parameterLength = 0;
 
@@ -99,19 +96,13 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 	 * @return
 	 * @throws Throwable
 	 */
-	protected Object invokeAdviceMethod(//
-			MethodInvocation methodInvocation, Object returnValue, Throwable throwable) throws Throwable //
+	protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
+			Object returnValue, Throwable throwable) throws Throwable //
 	{
-		try {
-
-			if (parameterLength == 0) {
-				return adviceMethod.invoke(aspect);
-			}
-			return adviceMethod.invoke(aspect, resolveParameter(methodInvocation, returnValue, throwable));
-		} //
-		catch (InvocationTargetException ex) {
-			throw ex.getTargetException();
+		if (parameterLength == 0) {
+			return adviceMethod.invoke(aspect);
 		}
+		return adviceMethod.invoke(aspect, resolveParameter(methodInvocation, returnValue, throwable));
 	}
 
 	/**
@@ -132,7 +123,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 			switch (parameterTypes[i])
 			{
 				case Constant.TYPE_THROWING : {
-					args[i] = ex;
+					args[i] = ExceptionUtils.unwrapThrowable(ex);
 					break;
 				}
 				case Constant.TYPE_ARGUMENT : {
@@ -168,7 +159,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 						args[i] = methodInvocation;
 					}
 					if (Throwable.class.isAssignableFrom(parameterType)) {
-						args[i] = ex;
+						args[i] = ExceptionUtils.unwrapThrowable(ex);
 					}
 					if (Annotation.class.isAssignableFrom(parameterType)) {
 						args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) parameterType);

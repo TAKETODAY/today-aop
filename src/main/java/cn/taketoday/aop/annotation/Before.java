@@ -38,12 +38,18 @@ import java.lang.annotation.Target;
 public @interface Before {
 
 	/**
+	 * annotated with
+	 * 
+	 * @return
+	 */
+	Class<? extends Annotation>[] value() default {};
+
+	/**
 	 * package name
 	 * 
 	 * @return
 	 */
-	String[] value() default {};
-	
+	String[] pointcut() default {};
 
 	/**
 	 * target classes
@@ -52,19 +58,11 @@ public @interface Before {
 	 */
 	Class<?>[] target() default {};
 
-
 	/**
 	 * method in class
 	 * 
 	 * @return
 	 */
 	String[] method() default {};
-
-	/**
-	 * annotated with
-	 * 
-	 * @return
-	 */
-	Class<? extends Annotation>[] annotation() default {};
 
 }

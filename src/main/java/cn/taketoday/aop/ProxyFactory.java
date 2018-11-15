@@ -26,5 +26,10 @@ package cn.taketoday.aop;
  */
 public interface ProxyFactory {
 
+	/**
+	 * get proxy instance
+	 * 
+	 * @return
+	 */
 	Object getProxy();
 }

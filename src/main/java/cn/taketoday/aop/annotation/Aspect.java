@@ -19,22 +19,24 @@
  */
 package cn.taketoday.aop.annotation;
 
+import cn.taketoday.context.Scope;
+import cn.taketoday.context.annotation.Component;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Documented
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
 /**
  * @author Today <br>
  * 
  *         2018-08-09 18:54
  */
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Component(scope = Scope.SINGLETON)
 public @interface Aspect {
-
-	String[] value() default {};
 
 }

@@ -53,36 +53,26 @@ public class AopTest {
 	}
 
 	@Test
-	public void start() throws NoSuchBeanDefinitionException {
+	public void test_Login() throws NoSuchBeanDefinitionException {
 
-		ApplicationContext applicationContext = new StandardApplicationContext();
-		Object bean = applicationContext.getBean("TimerInterceptor");
+		try (ApplicationContext applicationContext = new StandardApplicationContext(false)) {
 
-		System.out.println(bean);
+			UserService bean = applicationContext.getBean(UserServiceImpl.class);
 
-		applicationContext.close();
-	}
+			User user = new User();
+			user.setPasswd("666");
+			user.setUserId("666");
 
-	public static void main(String[] args) throws NoSuchBeanDefinitionException {
+			long start = System.currentTimeMillis();
+			User login = bean.login(user);
+			log.debug("{}ms", System.currentTimeMillis() - start);
+//		for (int i = 0; i < 100; i++) {
+//			login = bean.login(user);
+//		}
+			log.debug("Result:[{}]", login);
+			log.debug("{}ms", System.currentTimeMillis() - start);
 
-		ApplicationContext applicationContext = new StandardApplicationContext(false);
-
-		UserService bean = applicationContext.getBean(UserServiceImpl.class);
-
-		User user = new User();
-		user.setPasswd("666");
-		user.setUserId("666");
-
-		long start = System.currentTimeMillis();
-		User login = bean.login(user);
-		log.debug("{}ms", System.currentTimeMillis() - start);
-		for (int i = 0; i < 10; i++) {
-			login = bean.login(user);
 		}
-		log.debug("Result:[{}]", login);
-		log.debug("{}ms", System.currentTimeMillis() - start);
-
-		applicationContext.close();
 	}
 
 }

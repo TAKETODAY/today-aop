@@ -23,14 +23,19 @@ import cn.taketoday.aop.annotation.After;
 import cn.taketoday.aop.annotation.AfterReturning;
 import cn.taketoday.aop.annotation.AfterThrowing;
 import cn.taketoday.aop.annotation.Annotated;
+import cn.taketoday.aop.annotation.Argument;
 import cn.taketoday.aop.annotation.Arguments;
+import cn.taketoday.aop.annotation.Around;
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.aop.annotation.Before;
+import cn.taketoday.aop.annotation.JoinPoint;
 import cn.taketoday.aop.annotation.Returning;
 import cn.taketoday.aop.annotation.Throwing;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.Order;
 import cn.taketoday.test.domain.User;
+
+import org.aopalliance.intercept.Joinpoint;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,34 +49,34 @@ import lombok.extern.slf4j.Slf4j;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class LogAspect {
 
-	@AfterReturning(value = "cn.taketoday.test.service.*", annotation = Logger.class, method = "login")
+	@AfterReturning(Logger.class)
 	public void afterReturning(@Returning Object returnValue) {
 		log.debug("@AfterReturning returnValue: [{}]", returnValue);
-//		int i = 1 / 0;
 	}
 
-	@AfterThrowing(value = "cn.taketoday.test.service.*", annotation = Logger.class, method = "login")
+	@AfterThrowing(Logger.class)
 	public void afterThrowing(@Throwing Throwable throwable) {
 		log.error("@AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
 	}
 
-	@Before(value = "cn.taketoday.test.service.*", annotation = Logger.class, method = "login")
-	public void before(@Annotated Logger logger) {
-		log.debug("@Before method in class with logger: [{}]", logger);
+	@Before(Logger.class)
+	public void before(@Annotated Logger logger, @Argument User user) {
+		log.debug("@Before method in class with logger: [{}] , Argument:[{}]", logger, user);
 	}
 
-	@After(value = "cn.taketoday.test.service.*", annotation = Logger.class, method = "login")
+	@After(Logger.class)
 	public Object after(@Returning User returnValue, @Arguments Object[] arguments) {
 		log.debug("@After method in class");
-		return returnValue.setSex("nv");
+		return returnValue.setSex("女");
 	}
-//
-//	@Around(value = "cn.taketoday.test.service.*", annotation = Logger.class, method = "login")
-//	public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
-//		log.debug("@Around Before method");
-//		Object proceed = joinpoint.proceed();
-//		log.debug("@Around After method");
-//		return proceed;
-//	}
+
+	@Around(Logger.class)
+	public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
+		log.debug("@Around Before method");
+//		int i = 1 / 0;
+		Object proceed = joinpoint.proceed();
+		log.debug("@Around After method");
+		return proceed;
+	}
 
 }

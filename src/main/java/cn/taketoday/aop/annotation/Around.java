@@ -40,11 +40,18 @@ import java.lang.annotation.Target;
 public @interface Around {
 
 	/**
+	 * annotated with
+	 * 
+	 * @return
+	 */
+	Class<? extends Annotation>[] value() default {};
+
+	/**
 	 * package name
 	 * 
 	 * @return
 	 */
-	String[] value() default {};
+	String[] pointcut() default {};
 
 	/**
 	 * target classes
@@ -59,12 +66,5 @@ public @interface Around {
 	 * @return
 	 */
 	String[] method() default {};
-
-	/**
-	 * annotated with
-	 * 
-	 * @return
-	 */
-	Class<? extends Annotation>[] annotation() default {};
 
 }

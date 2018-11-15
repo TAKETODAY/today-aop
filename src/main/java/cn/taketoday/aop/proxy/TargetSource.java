@@ -43,16 +43,10 @@ public class TargetSource {
 	private Class<?>[] interfaces;
 	private Map<Method, List<AbstractAdvice>> aspectMappings;
 
-	/**
-	 * the name of this target
-	 */
-	private final String beanName;
-
-	public TargetSource(Object target, Class<?> targetClass, String beanName) {
+	public TargetSource(Object target, Class<?> targetClass) {
 		this.target = target;
 		this.targetClass = targetClass;
 		this.interfaces = targetClass.getInterfaces();
-		this.beanName = beanName;
 	}
 
 	@Override

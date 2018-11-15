@@ -32,11 +32,11 @@ import java.util.Arrays;
 @SuppressWarnings("all")
 public class AdviceImpl implements Advice {
 
-	private String value[]	 	= { "*" };
-	private String method[] 	= { "*" };
-	private Class<?>[] target 	= null;
-	private AdviceType type 	= AdviceType.BEFORE;
-	private Class<? extends Annotation>[] annotation = null;
+	private Class<? extends Annotation>[] value;
+	private String method[] = { "*" };
+	private Class<?>[] target = null;
+	private AdviceType type = AdviceType.BEFORE;
+	private String[] pointcut = {};
 
 	@Override
 	public Class<? extends Annotation> annotationType() {
@@ -44,7 +44,7 @@ public class AdviceImpl implements Advice {
 	}
 
 	@Override
-	public String[] value() {
+	public Class<? extends Annotation>[] value() {
 		return this.value;
 	}
 
@@ -59,8 +59,8 @@ public class AdviceImpl implements Advice {
 	}
 
 	@Override
-	public Class<? extends Annotation>[] annotation() {
-		return this.annotation;
+	public String[] pointcut() {
+		return this.pointcut;
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class AdviceImpl implements Advice {
 		StringBuilder builder = new StringBuilder();
 		builder.append("{\n\t\"value\":\"").append(Arrays.toString(value)).append("\",\n\t\"method\":\"")
 				.append(Arrays.toString(method)).append("\",\n\t\"type\":\"").append(type)
-				.append("\",\n\t\"annotation\":\"").append(Arrays.toString(annotation)).append("\",\n\t\"target\":\"")
+				.append("\",\n\t\"pointcut\":\"").append(Arrays.toString(pointcut)).append("\",\n\t\"target\":\"")
 				.append(Arrays.toString(target)).append("\"\n}");
 		return builder.toString();
 	}

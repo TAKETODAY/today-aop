@@ -22,15 +22,12 @@ package cn.taketoday.aop.listener;
 import cn.taketoday.aop.advice.AspectsRegistry;
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.context.ApplicationContext;
-import cn.taketoday.context.annotation.Component;
-import cn.taketoday.context.annotation.ComponentImpl;
 import cn.taketoday.context.annotation.ContextListener;
 import cn.taketoday.context.event.ContextRefreshEvent;
 import cn.taketoday.context.factory.ObjectFactory;
 import cn.taketoday.context.factory.SimpleObjectFactory;
 import cn.taketoday.context.listener.ApplicationListener;
 import cn.taketoday.context.utils.ClassUtils;
-import cn.taketoday.context.utils.StringUtils;
 
 import java.util.Collection;
 
@@ -58,15 +55,7 @@ public class AspectsCreator implements ApplicationListener<ContextRefreshEvent> 
 				log.debug("Found Aspect: [{}]", aspect.getName());
 				Object create = objectFactory.create(aspect);
 				aspectsRegistry.addAspect(create);
-				
-				Component[] components = ClassUtils.getClassAnntation(aspect, Component.class, ComponentImpl.class);
-				if (components != null && components.length != 0) {
-					String name = components[0].value()[0];
-					if (StringUtils.isEmpty(name)) {
-						name = aspect.getSimpleName();
-					}
-					applicationContext.registerSingleton(name, create);
-				}
+				applicationContext.registerSingleton(aspect.getSimpleName(), create);
 			}
 			aspectsRegistry.sortAspects();
 		} catch (Exception e) {

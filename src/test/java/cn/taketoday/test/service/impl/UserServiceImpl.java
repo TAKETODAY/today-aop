@@ -31,25 +31,26 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * 
  * @author Today <br>
- * 		2018-11-11 09:25
+ *         2018-11-11 09:25
  */
 @Slf4j
-@Logger
 @Service
 public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDao userDao;
 
+	@Logger("登录")
 	@Override
 	public User login(User user) {
 		log.debug("login");
+//		int i = 1 / 0;
 		return userDao.login(user);
 	}
 
+	@Logger("注册")
 	@Override
 	public boolean register(User user) {
 		return userDao.save(user);
 	}
-
 }

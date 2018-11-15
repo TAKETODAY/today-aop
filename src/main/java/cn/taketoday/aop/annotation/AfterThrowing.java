@@ -39,7 +39,19 @@ import java.lang.annotation.Target;
 @Advice(type = AdviceType.AFTER_THROWING)
 public @interface AfterThrowing {
 
-	String[] value() default {};
+	/**
+	 * annotated with
+	 * 
+	 * @return
+	 */
+	Class<? extends Annotation>[] value() default {};
+
+	/**
+	 * package name
+	 * 
+	 * @return
+	 */
+	String[] pointcut() default {};
 
 	/**
 	 * target classes
@@ -55,10 +67,4 @@ public @interface AfterThrowing {
 	 */
 	String[] method() default {};
 
-	/**
-	 * annotated with
-	 * 
-	 * @return
-	 */
-	Class<? extends Annotation>[] annotation() default Annotation.class;
 }

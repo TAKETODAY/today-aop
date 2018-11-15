@@ -36,6 +36,6 @@ public class AutoProxyCreator implements BeanPostProcessor {
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
 		
-		return new DefaultProxyFactory(new TargetSource(bean, bean.getClass(), beanName)).getProxy();
+		return new DefaultProxyFactory(new TargetSource(bean, bean.getClass())).getProxy();
 	}
 }

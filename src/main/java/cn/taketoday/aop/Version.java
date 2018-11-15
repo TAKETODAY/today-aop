@@ -22,7 +22,8 @@ package cn.taketoday.aop;
 /**
  * 
  * @author Today <br>
- *         2018-08-09 18:50
+ *         2018-11-15 20:57
+ * @version 1.0.0.RELEASE
  */
 public abstract class Version {
 
@@ -30,4 +31,9 @@ public abstract class Version {
 		return "1.0.0.RELEASE";
 	}
 
+	public static String[] getHistoryVersion() {
+		return new String[] { //
+				"1.0.0.RELEASE"//
+		};
+	}
 }

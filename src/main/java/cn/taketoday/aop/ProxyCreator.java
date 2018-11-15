@@ -27,6 +27,7 @@ package cn.taketoday.aop;
 public interface ProxyCreator {
 
 	/**
+	 * create a proxy instance
 	 * 
 	 * @return
 	 */
