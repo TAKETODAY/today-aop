@@ -24,7 +24,6 @@ import cn.taketoday.context.StandardApplicationContext;
 import cn.taketoday.context.exception.NoSuchBeanDefinitionException;
 import cn.taketoday.test.domain.User;
 import cn.taketoday.test.service.UserService;
-import cn.taketoday.test.service.impl.UserServiceImpl;
 
 import org.junit.After;
 import org.junit.Before;
@@ -57,7 +56,7 @@ public class AopTest {
 
 		try (ApplicationContext applicationContext = new StandardApplicationContext(false)) {
 
-			UserService bean = applicationContext.getBean(UserServiceImpl.class);
+			UserService bean = applicationContext.getBean(UserService.class);
 
 			User user = new User();
 			user.setPasswd("666");

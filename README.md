@@ -2,7 +2,6 @@
 
 > TODAY AOP 是一款高性能轻量级的aop框架
 
-
 ### 使用说明
 
 > 使用@Aspect标注一个切面
@@ -46,25 +45,6 @@ public class LogAspect {
 public @interface Logger {
 	/** operation */
 	String value() default "";
-}
-
-
-@Test
-public void test_Login() throws NoSuchBeanDefinitionException {
-
-	try (ApplicationContext applicationContext = new StandardApplicationContext(false)) {
-		UserService bean = applicationContext.getBean(UserServiceImpl.class);
-		User user = new User();
-		user.setPasswd("666");
-		user.setUserId("666");
-		
-		long start = System.currentTimeMillis();
-		User login = bean.login(user);
-		log.debug("{}ms", System.currentTimeMillis() - start);
-		log.debug("Result:[{}]", login);
-		log.debug("{}ms", System.currentTimeMillis() - start);
-
-	}
 }
 
 @Service
@@ -114,6 +94,23 @@ public class UserDaoImpl implements UserDao {
 			return null;
 		}
 		return user_;
+	}
+}
+
+@Test
+public void test_Login() throws NoSuchBeanDefinitionException {
+
+	try (ApplicationContext applicationContext = new StandardApplicationContext(false)) {
+		UserService bean = applicationContext.getBean(UserServiceImpl.class);
+		User user = new User();
+		user.setPasswd("666");
+		user.setUserId("666");
+		
+		long start = System.currentTimeMillis();
+		User login = bean.login(user);
+		log.debug("{}ms", System.currentTimeMillis() - start);
+		log.debug("Result:[{}]", login);
+		log.debug("{}ms", System.currentTimeMillis() - start);
 	}
 }
 ```

@@ -33,10 +33,10 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class DefaultMethodInvocation implements MethodInvocation {
 
-	protected Object target;
-	protected Method method;
-	protected Object[] arguments;
-	private AbstractAdvice[] advices;
+	private final Object target;
+	private final Method method;
+	private final Object[] arguments;
+	private final AbstractAdvice[] advices;
 
 	/**
 	 * a flag show that current index of advice
@@ -62,7 +62,7 @@ public class DefaultMethodInvocation implements MethodInvocation {
 
 	@Override
 	public Object proceed() throws Throwable {
-		
+
 		if (currentAdviceIndex == advices.length - 1) {
 			return method.invoke(target, arguments);
 		}

@@ -17,42 +17,28 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package cn.taketoday.test.service.impl;
+package cn.taketoday.test.aspect;
 
-import cn.taketoday.context.annotation.Autowired;
-import cn.taketoday.context.annotation.Service;
-import cn.taketoday.test.aspect.Logger;
-import cn.taketoday.test.aspect.Timer;
-import cn.taketoday.test.dao.UserDao;
-import cn.taketoday.test.domain.User;
-import cn.taketoday.test.service.UserService;
-
-import lombok.extern.slf4j.Slf4j;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * 
  * @author Today <br>
- *         2018-11-11 09:25
+ * 
+ *         2018-11-10 19:06
  */
-@Slf4j
-@Service
-public class UserServiceImpl implements UserService {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.METHOD, ElementType.TYPE })
+public @interface Timer {
 
-	@Autowired
-	private UserDao userDao;
-
-	@Timer
-	@Logger("登录")
-	@Override
-	public User login(User user) {
-		log.debug("login");
-//		int i = 1 / 0;
-		return userDao.login(user);
-	}
-
-	@Logger("注册")
-	@Override
-	public boolean register(User user) {
-		return userDao.save(user);
-	}
+	/**
+	 * key
+	 * 
+	 * @return
+	 */
+	String value() default "";
 }

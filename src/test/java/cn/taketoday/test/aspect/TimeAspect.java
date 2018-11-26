@@ -19,20 +19,15 @@
  */
 package cn.taketoday.test.aspect;
 
-import cn.taketoday.aop.annotation.After;
 import cn.taketoday.aop.annotation.AfterReturning;
 import cn.taketoday.aop.annotation.AfterThrowing;
-import cn.taketoday.aop.annotation.Annotated;
-import cn.taketoday.aop.annotation.Arguments;
 import cn.taketoday.aop.annotation.Around;
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.aop.annotation.Before;
 import cn.taketoday.aop.annotation.JoinPoint;
-import cn.taketoday.aop.annotation.Returning;
 import cn.taketoday.aop.annotation.Throwing;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.Order;
-import cn.taketoday.test.domain.User;
 
 import org.aopalliance.intercept.Joinpoint;
 
@@ -45,40 +40,33 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Aspect
-@Order(Ordered.HIGHEST_PRECEDENCE)
-public class LogAspect {
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
+public class TimeAspect {
 
-	@AfterReturning(Logger.class)
-//	public void afterReturning(@Returning Object returnValue) {
-	public void afterReturning() {
-//		log.debug("LogAspect @AfterReturning returnValue: [{}]", returnValue);
-		log.debug("LogAspect @AfterReturning");
+	private final ThreadLocal<Long> time = new ThreadLocal<>();
+
+	@AfterReturning(Timer.class)
+	public void afterReturning(@JoinPoint Joinpoint joinpoint) {
+		log.debug("TimeAspect @AfterReturning Use [{}] ms", System.currentTimeMillis() - time.get());
 	}
 
-	@AfterThrowing(Logger.class)
+	@AfterThrowing(Timer.class)
 	public void afterThrowing(@Throwing Throwable throwable) {
-		log.error("LogAspect @AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
+		log.error("TimeAspect @AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
 	}
 
-	@Before(Logger.class)
-	public void before(@Annotated Logger logger) {
-//	public void before(@Annotated Logger logger, @Argument User user) {
-//		log.debug("LogAspect @Before method in class with logger: [{}] , Argument:[{}]", logger.value(), user);
-		log.debug("LogAspect @Before method in class with logger: [{}]", logger.value());
+	@Before(Timer.class)
+	public void before() {
+		time.set(System.currentTimeMillis());
+		log.debug("TimeAspect @Before method");
 	}
-
-	@After(Logger.class)
-	public Object after(@Returning User returnValue, @Arguments Object[] arguments) {
-		log.debug("LogAspect @After method in class");
-		return returnValue.setSex("女");
-	}
-
-	@Around(Logger.class)
+	
+	@Around(Timer.class)
 	public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
-		log.debug("LogAspect @Around Before method");
+		log.debug("TimeAspect @Around Before method");
 //		int i = 1 / 0;
 		Object proceed = joinpoint.proceed();
-		log.debug("LogAspect @Around After method");
+		log.debug("TimeAspect @Around After method");
 		return proceed;
 	}
 
