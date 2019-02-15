@@ -2,6 +2,24 @@
 
 > TODAY AOP 是一款高性能轻量级的aop框架
 
+
+## 安装
+
+```xml
+
+<dependency>
+    <groupId>cn.taketoday</groupId>
+    <artifactId>today-aop</artifactId>
+    <version>1.0.4.RELEASE</version>
+</dependency>
+
+```
+
+- [Maven Central](https://search.maven.org/artifact/cn.taketoday/today-aop/1.0.4.RELEASE/jar)
+
+## 案例
+- [DEMO](https://github.com/TAKETODAY/today-web-demo)
+
 ### 使用说明
 
 > 使用@Aspect标注一个切面
