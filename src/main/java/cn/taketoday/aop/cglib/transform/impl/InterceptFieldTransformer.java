@@ -28,6 +28,7 @@ import cn.taketoday.context.asm.Type;
  * @author Juozas Baliuka, Chris Nokleberg
  */
 public class InterceptFieldTransformer extends ClassEmitterTransformer {
+	
 	private static final String CALLBACK_FIELD = "$CGLIB_READ_WRITE_CALLBACK";
 	private static final Type CALLBACK = TypeUtils
 			.parseType("cn.taketoday.aop.cglib.transform.impl.InterceptFieldCallback");

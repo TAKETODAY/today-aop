@@ -64,6 +64,7 @@ import java.util.List;
  */
 @SuppressWarnings("all")
 abstract public class KeyFactory {
+
 	private static final Signature GET_NAME = TypeUtils.parseSignature("String getName()");
 	private static final Signature GET_CLASS = TypeUtils.parseSignature("Class getClass()");
 	private static final Signature HASH_CODE = TypeUtils.parseSignature("int hashCode()");
@@ -74,11 +75,17 @@ abstract public class KeyFactory {
 	private static final Signature GET_SORT = TypeUtils.parseSignature("int getSort()");
 
 	// generated numbers:
-	private final static int PRIMES[] = { 11, 73, 179, 331, 521, 787, 1213, 1823, 2609, 3691, 5189, 7247, 10037, 13931,
-			19289, 26627, 36683, 50441, 69403, 95401, 131129, 180179, 247501, 340057, 467063, 641371, 880603, 1209107,
-			1660097, 2279161, 3129011, 4295723, 5897291, 8095873, 11114263, 15257791, 20946017, 28754629, 39474179,
-			54189869, 74391461, 102123817, 140194277, 192456917, 264202273, 362693231, 497900099, 683510293, 938313161,
-			1288102441, 1768288259 };
+	private final static int PRIMES[] = { //
+			11, 73, 179, 331, 521, 787, 1213, 1823, //
+			2609, 3691, 5189, 7247, 10037, 13931, 19289, //
+			26627, 36683, 50441, 69403, 95401, 131129, //
+			180179, 247501, 340057, 467063, 641371, //
+			880603, 1209107, 1660097, 2279161, 3129011, //
+			4295723, 5897291, 8095873, 11114263, 15257791, //
+			20946017, 28754629, 39474179, 54189869, 74391461, //
+			102123817, 140194277, 192456917, 264202273, 362693231, //
+			497900099, 683510293, 938313161, 1288102441, 1768288259 //
+	};
 
 	public static final Customizer CLASS_BY_NAME = new Customizer() {
 		public void customize(CodeEmitter e, Type type) {
@@ -150,8 +157,9 @@ abstract public class KeyFactory {
 		return create(loader, keyInterface, customizer, Collections.<KeyFactoryCustomizer>emptyList());
 	}
 
-	public static KeyFactory create(ClassLoader loader, Class keyInterface, KeyFactoryCustomizer customizer,
-			List<KeyFactoryCustomizer> next) {
+	public static KeyFactory create(ClassLoader loader, Class keyInterface, //
+			KeyFactoryCustomizer customizer, List<KeyFactoryCustomizer> next) //
+	{
 		Generator gen = new Generator();
 		gen.setInterface(keyInterface);
 
@@ -168,9 +176,9 @@ abstract public class KeyFactory {
 	}
 
 	public static class Generator extends AbstractClassGenerator {
+
 		private static final Source SOURCE = new Source(KeyFactory.class.getName());
-		private static final Class[] KNOWN_CUSTOMIZER_TYPES = new Class[] { Customizer.class,
-				FieldTypeCustomizer.class };
+		private static final Class[] KNOWN_CUSTOMIZER_TYPES = new Class[] { Customizer.class, FieldTypeCustomizer.class };
 
 		private Class keyInterface;
 		// TODO: Make me final when deprecated methods are removed
@@ -241,7 +249,9 @@ abstract public class KeyFactory {
 
 			Type[] parameterTypes = TypeUtils.getTypes(newInstance.getParameterTypes());
 			ce.begin_class(Constant.V1_2, Constant.ACC_PUBLIC, getClassName(), KEY_FACTORY,
-					new Type[] { Type.getType(keyInterface) }, Constant.SOURCE_FILE);
+					new Type[]
+					{ Type.getType(keyInterface) }, Constant.SOURCE_FILE);
+
 			EmitUtils.null_constructor(ce);
 			EmitUtils.factory_method(ce, ReflectUtils.getSignature(newInstance));
 

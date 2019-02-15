@@ -55,8 +55,8 @@ public class EmitUtils {
 	private static final Signature APPEND_BOOLEAN = TypeUtils.parseSignature("StringBuffer append(boolean)");
 	private static final Signature LENGTH = TypeUtils.parseSignature("int length()");
 	private static final Signature SET_LENGTH = TypeUtils.parseSignature("void setLength(int)");
-	private static final Signature GET_DECLARED_METHOD = TypeUtils
-			.parseSignature("java.lang.reflect.Method getDeclaredMethod(String, Class[])");
+	private static final Signature GET_DECLARED_METHOD = TypeUtils.parseSignature(
+			"java.lang.reflect.Method getDeclaredMethod(String, Class[])");
 
 	public static final ArrayDelimiters DEFAULT_DELIMITERS = new ArrayDelimiters("{", ", ", "}");
 
@@ -173,17 +173,21 @@ public class EmitUtils {
 				default:
 					throw new IllegalArgumentException("unknown switch style " + switchStyle);
 			}
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex) {
 			throw ex;
-		} catch (Error ex) {
+		}
+		catch (Error ex) {
 			throw ex;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new CodeGenerationException(ex);
 		}
 	}
 
 	private static void string_switch_trie(final CodeEmitter e, String[] strings, final ObjectSwitchCallback callback)
-			throws Exception {
+			throws Exception // 
+	{
 		final Label def = e.make_label();
 		final Label end = e.make_label();
 		final Map buckets = CollectionUtils.bucket(Arrays.asList(strings), new Transformer() {
@@ -226,7 +230,8 @@ public class EmitUtils {
 				if (index + 1 == len) {
 					e.pop();
 					callback.processCase(bucket.get(0), end);
-				} else {
+				}
+				else {
 					stringSwitchHelper(e, bucket, callback, def, end, index + 1);
 				}
 			}
@@ -266,7 +271,8 @@ public class EmitUtils {
 					if (skipEquals)
 						e.pop();
 					callback.processCase((String) bucket.get(0), end);
-				} else {
+				}
+				else {
 					for (Iterator it = bucket.iterator(); it.hasNext();) {
 						String string = (String) it.next();
 						if (next != null) {
@@ -280,7 +286,8 @@ public class EmitUtils {
 						if (it.hasNext()) {
 							e.if_jump(e.EQ, next = e.make_label());
 							e.pop();
-						} else {
+						}
+						else {
 							e.if_jump(e.EQ, def);
 						}
 						callback.processCase(string, end);
@@ -307,7 +314,8 @@ public class EmitUtils {
 				throw new IllegalArgumentException("cannot load void type");
 			}
 			e.getstatic(TypeUtils.getBoxedType(type), "TYPE", Constant.TYPE_CLASS);
-		} else {
+		}
+		else {
 			load_class_helper(e, type);
 		}
 	}
@@ -317,7 +325,8 @@ public class EmitUtils {
 			// have to fall back on non-optimized load
 			e.push(TypeUtils.emulateClassGetName(type));
 			e.invoke_static(Constant.TYPE_CLASS, FOR_NAME);
-		} else {
+		}
+		else {
 			ClassEmitter ce = e.getClassEmitter();
 			String typeName = TypeUtils.emulateClassGetName(type);
 
@@ -355,27 +364,34 @@ public class EmitUtils {
 	public static void push_object(CodeEmitter e, Object obj) {
 		if (obj == null) {
 			e.aconst_null();
-		} else {
+		}
+		else {
 			Class type = obj.getClass();
 			if (type.isArray()) {
 				push_array(e, (Object[]) obj);
-			} else if (obj instanceof String) {
+			}
+			else if (obj instanceof String) {
 				e.push((String) obj);
-			} else if (obj instanceof Type) {
+			}
+			else if (obj instanceof Type) {
 				load_class(e, (Type) obj);
-			} else if (obj instanceof Class) {
+			}
+			else if (obj instanceof Class) {
 				load_class(e, Type.getType((Class) obj));
-			} else if (obj instanceof BigInteger) {
+			}
+			else if (obj instanceof BigInteger) {
 				e.new_instance(Constant.TYPE_BIG_INTEGER);
 				e.dup();
 				e.push(obj.toString());
 				e.invoke_constructor(Constant.TYPE_BIG_INTEGER);
-			} else if (obj instanceof BigDecimal) {
+			}
+			else if (obj instanceof BigDecimal) {
 				e.new_instance(Constant.TYPE_BIG_DECIMAL);
 				e.dup();
 				e.push(obj.toString());
 				e.invoke_constructor(Constant.TYPE_BIG_DECIMAL);
-			} else {
+			}
+			else {
 				throw new IllegalArgumentException("unknown type: " + obj.getClass());
 			}
 		}
@@ -394,14 +410,16 @@ public class EmitUtils {
 	public static void hash_code(CodeEmitter e, Type type, int multiplier, final CustomizerRegistry registry) {
 		if (TypeUtils.isArray(type)) {
 			hash_array(e, type, multiplier, registry);
-		} else {
+		}
+		else {
 			e.swap(Type.INT_TYPE, type);
 			e.push(multiplier);
 			e.math(e.MUL, Type.INT_TYPE);
 			e.swap(type, Type.INT_TYPE);
 			if (TypeUtils.isPrimitive(type)) {
 				hash_primitive(e, type);
-			} else {
+			}
+			else {
 				hash_object(e, type, registry);
 			}
 			e.math(e.ADD, Type.INT_TYPE);
@@ -515,7 +533,8 @@ public class EmitUtils {
 			ProcessArrayCallback callback) {
 		if (TypeUtils.isPrimitive(type)) {
 			e.if_cmp(type, e.NE, notEquals);
-		} else {
+		}
+		else {
 			Label end = e.make_label();
 			nullcmp(e, notEquals, end);
 			if (TypeUtils.isArray(type)) {
@@ -529,7 +548,8 @@ public class EmitUtils {
 				e.goTo(notEquals);
 				e.mark(checkContents);
 				EmitUtils.process_arrays(e, type, callback);
-			} else {
+			}
+			else {
 				List<Customizer> customizers = registry.get(Customizer.class);
 				if (!customizers.isEmpty()) {
 					for (Customizer customizer : customizers) {
@@ -639,7 +659,8 @@ public class EmitUtils {
 					e.invoke_virtual(Constant.TYPE_STRING_BUFFER, APPEND_CHAR);
 					break;
 			}
-		} else if (TypeUtils.isArray(type)) {
+		}
+		else if (TypeUtils.isArray(type)) {
 			e.dup();
 			e.ifnull(skip);
 			e.swap();
@@ -654,7 +675,8 @@ public class EmitUtils {
 				e.push(delims.after);
 				e.invoke_virtual(Constant.TYPE_STRING_BUFFER, APPEND_STRING);
 			}
-		} else {
+		}
+		else {
 			e.dup();
 			e.ifnull(skip);
 			for (Customizer customizer : registry.get(Customizer.class)) {
@@ -743,18 +765,22 @@ public class EmitUtils {
 						e.goTo(def);
 					}
 				});
-			} else {
+			}
+			else {
 				member_helper_size(e, members, callback, cached, def, end);
 			}
 			e.mark(def);
 			e.pop();
 			callback.processDefault();
 			e.mark(end);
-		} catch (RuntimeException ex) {
+		}
+		catch (RuntimeException ex) {
 			throw ex;
-		} catch (Error ex) {
+		}
+		catch (Error ex) {
 			throw ex;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new CodeGenerationException(ex);
 		}
 	}
@@ -798,7 +824,8 @@ public class EmitUtils {
 			}
 			e.pop();
 			callback.processCase(member, end);
-		} else {
+		}
+		else {
 			// choose the index that has the best chance of uniquely identifying member
 			Type[] example = typer.getParameterTypes((MethodInfo) members.get(0));
 			Map buckets = null;
@@ -819,7 +846,8 @@ public class EmitUtils {
 				// TODO: switch by returnType
 				// must have two methods with same name, types, and different return types
 				e.goTo(def);
-			} else {
+			}
+			else {
 				checked.set(index);
 
 				e.dup();

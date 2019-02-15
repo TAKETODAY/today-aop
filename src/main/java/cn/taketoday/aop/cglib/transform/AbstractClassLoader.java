@@ -37,12 +37,11 @@ abstract public class AbstractClassLoader extends ClassLoader {
 
 	static {
 
-		DOMAIN = (java.security.ProtectionDomain) java.security.AccessController
-				.doPrivileged(new java.security.PrivilegedAction() {
-					public Object run() {
-						return AbstractClassLoader.class.getProtectionDomain();
-					}
-				});
+		DOMAIN = (java.security.ProtectionDomain) java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+			public Object run() {
+				return AbstractClassLoader.class.getProtectionDomain();
+			}
+		});
 	}
 
 	protected AbstractClassLoader(ClassLoader parent, ClassLoader classPath, ClassFilter filter) {
@@ -66,24 +65,17 @@ abstract public class AbstractClassLoader extends ClassLoader {
 		}
 		ClassReader r;
 		try {
-
 			java.io.InputStream is = classPath.getResourceAsStream(name.replace('.', '/') + ".class");
-
 			if (is == null) {
-
 				throw new ClassNotFoundException(name);
-
 			}
 			try {
-
 				r = new ClassReader(is);
-
 			} finally {
-
 				is.close();
-
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new ClassNotFoundException(name + ":" + e.getMessage());
 		}
 
@@ -94,11 +86,14 @@ abstract public class AbstractClassLoader extends ClassLoader {
 			Class c = super.defineClass(name, b, 0, b.length, DOMAIN);
 			postProcess(c);
 			return c;
-		} catch (RuntimeException e) {
+		}
+		catch (RuntimeException e) {
 			throw e;
-		} catch (Error e) {
+		}
+		catch (Error e) {
 			throw e;
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new CodeGenerationException(e);
 		}
 	}

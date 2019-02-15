@@ -37,6 +37,7 @@ import java.util.List;
  */
 @SuppressWarnings("all")
 abstract public class StringSwitcher {
+	
 	private static final Type STRING_SWITCHER = TypeUtils.parseType("cn.taketoday.aop.cglib.util.StringSwitcher");
 	private static final Signature INT_VALUE = TypeUtils.parseSignature("int intValue(String)");
 	private static final StringSwitcherKey KEY_FACTORY = (StringSwitcherKey) KeyFactory.create(StringSwitcherKey.class);

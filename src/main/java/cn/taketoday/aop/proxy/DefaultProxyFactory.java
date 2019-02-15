@@ -1,48 +1,46 @@
 /**
  * Original Author -> 杨海健 (taketoday@foxmail.com) https://taketoday.cn
- * Copyright © Today & 2017 - 2018 All Rights Reserved.
+ * Copyright © TODAY & 2017 - 2019 All Rights Reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package cn.taketoday.aop.proxy;
 
-import cn.taketoday.aop.AdviceType;
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.ProxyCreator;
 import cn.taketoday.aop.ProxyFactory;
 import cn.taketoday.aop.advice.AbstractAdvice;
-import cn.taketoday.aop.advice.AroundMethodAdvice;
 import cn.taketoday.aop.advice.AspectsRegistry;
-import cn.taketoday.aop.advice.MethodAfterAdvice;
-import cn.taketoday.aop.advice.MethodAfterReturningAdvice;
-import cn.taketoday.aop.advice.MethodAfterThrowingAdvice;
-import cn.taketoday.aop.advice.MethodBeforeAdvice;
 import cn.taketoday.aop.annotation.Advice;
 import cn.taketoday.aop.annotation.AdviceImpl;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.utils.ClassUtils;
+import cn.taketoday.context.utils.ExceptionUtils;
 import cn.taketoday.context.utils.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
+import org.aopalliance.intercept.MethodInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -55,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DefaultProxyFactory implements ProxyFactory {
 
 	private TargetSource targetSource;
-	private final Map<Method, List<AbstractAdvice>> aspectMappings = new HashMap<>();
+	private Map<Method, List<MethodInterceptor>> aspectMappings = new HashMap<>(16, 1.0f);
 
 	@Override
 	public Object getProxy() {
@@ -66,30 +64,50 @@ public class DefaultProxyFactory implements ProxyFactory {
 
 			boolean weaved = false;
 			for (Object aspect : aspects) {
-				Class<?> aspectClass = aspect.getClass();
-				Method[] aspectMethods = aspectClass.getDeclaredMethods();
+				Class<?> aspectClass = aspect.getClass(); // aspect class
+				Class<?> targetClass = targetSource.getTargetClass(); // target class
 
-				for (Method aspectMethod : aspectMethods) {
-					Advice[] advices = ClassUtils.getMethodAnntation(aspectMethod, Advice.class, AdviceImpl.class);
-					if (advices == null || advices.length == 0) {
+				if (aspect instanceof MethodInterceptor) {
+					// create interceptor chain
+					Collection<Advice> advices = ClassUtils.getAnnotation(aspectClass, Advice.class, AdviceImpl.class);
+
+					// matching class start
+					if (matchClass(targetClass, advices)) { // matched
+						weaved = matchMethod(aspect, null, targetClass, advices);
+					}
+				}
+
+				for (Method aspectMethod : aspectClass.getDeclaredMethods()) {// all advice methods
+
+					Collection<Advice> advices = ClassUtils.getAnnotation(aspectMethod, Advice.class, AdviceImpl.class);
+					if (advices.isEmpty()) {
 						continue;
 					}
-					// matching start
-					Class<?> targetClass = targetSource.getTargetClass();
+
+					// matching class start
 					if (!matchClass(targetClass, advices)) {
 						continue;
 					}
-					// match method start
-					weaved = matchMethod(aspect, aspectMethod, targetClass, advices);
+					// matching methods start
+					if (weaved) {
+						matchMethod(aspect, aspectMethod, targetClass, advices);
+					}
+					else {
+						weaved = matchMethod(aspect, aspectMethod, targetClass, advices);
+					}
 				}
 			}
 			if (weaved) {
 				return createAopProxy().createProxy();
 			}
 			return targetSource.getTarget();
-		} catch (Throwable e) {
-			throw new ConfigurationException("An Exception Occured When Creating A Target Instance With Msg: [{}]",
-					e.getMessage(), e);
+		}
+		catch (Throwable ex) {
+			ex = ExceptionUtils.unwrapThrowable(ex);
+			throw new ConfigurationException(//
+					"An Exception Occured When Creating A Target Proxy Instance With Msg: [{}]", //
+					ex.getMessage(), ex//
+			);
 		}
 	}
 
@@ -97,53 +115,72 @@ public class DefaultProxyFactory implements ProxyFactory {
 	 * Match method
 	 * 
 	 * @param aspect
+	 *            aspect instance
 	 * @param aspectMethod
+	 *            aspect method
 	 * @param targetClass
+	 *            target class
 	 * @param advices
+	 *            advice instances
 	 * @return
+	 * @throws Throwable
 	 */
 	private boolean matchMethod(Object aspect, //
-			Method aspectMethod, Class<?> targetClass, Advice[] advices) //
+			Method aspectMethod, Class<?> targetClass, Collection<Advice> advices) throws Throwable //
 	{
 		boolean weaved = false;
 		Method[] targetDeclaredMethods = targetClass.getDeclaredMethods();
-		for (Advice advice : advices) {
-			AdviceType adviceType = advice.type();
-			Class<? extends Annotation>[] annotations = advice.value();
-			AbstractAdvice abstractAdvice = getAdvice(aspect, aspectMethod, adviceType);
 
-			boolean isAllMethodWeaving = false;
+		for (Advice advice : advices) {
+			Class<? extends MethodInterceptor> interceptor = advice.interceptor(); // interceptor class
+			
+			MethodInterceptor methodInterceptor = null;
+			if (aspectMethod == null) { // method interceptor
+				if (!(aspect instanceof MethodInterceptor)) {
+					throw new ConfigurationException("[{}] must be implement: [{}]", //
+							aspect.getClass().getName(), MethodInterceptor.class.getName()//
+					);
+				}
+				methodInterceptor = (MethodInterceptor) aspect;
+			}
+			else {
+				methodInterceptor = getInterceptor(aspect, aspectMethod, interceptor);
+			}
+			log.debug("Found Interceptor: [{}]", methodInterceptor);
+
+			boolean isAllMethodsWeaved = false;
 			// annotation matching
-			for (Class<? extends Annotation> annotation : annotations) {
+			for (Class<? extends Annotation> annotation : advice.value()) {
 				if (targetClass.isAnnotationPresent(annotation)) {
 					weaved = true;
-					isAllMethodWeaving = true;
+					isAllMethodsWeaved = true;
 					// all method matched
-					log.debug("Class Present An Annotation Named: [{}] All Method Will Be Weaving: [{}]", annotation,
-							advice);
+					log.debug("Class: [{}] Present An Annotation Named: [{}] All Method Will Be Weaving: [{}]", //
+							targetClass.getName(), annotation, advice);
+
 					for (Method targetMethod : targetDeclaredMethods) {// all methods
-						weaving(abstractAdvice, targetMethod);
+						weaving(methodInterceptor, targetMethod, aspectMappings);
 					}
 					continue;
 				}
-				log.debug("Class Not Present An Annotation Named: [{}]", annotation);
+				log.debug("Class: [{}] Not Present An Annotation Named: [{}]", targetClass.getName(), annotation);
 				// method annotation match start
 				for (Method targetMethod : targetDeclaredMethods) {
 					if (targetMethod.isAnnotationPresent(annotation)) {
 						weaved = true;
-						weaving(abstractAdvice, targetMethod);
+						weaving(methodInterceptor, targetMethod, aspectMappings);
 					}
 				}
 			}
-			if (isAllMethodWeaving) { // has matched all method
+			if (isAllMethodsWeaved) { // has matched all method
 				continue;
 			}
-			if (weaved) {
-				regexMatchMethod(targetDeclaredMethods, advice, abstractAdvice);
+			if (weaved) { // has already weaved
+				regexMatchMethod(targetDeclaredMethods, advice, methodInterceptor);
 				continue;
 			}
 			// regex match method
-			weaved = regexMatchMethod(targetDeclaredMethods, advice, abstractAdvice);
+			weaved = regexMatchMethod(targetDeclaredMethods, advice, methodInterceptor);
 		}
 		return weaved;
 	}
@@ -152,10 +189,10 @@ public class DefaultProxyFactory implements ProxyFactory {
 	 * 
 	 * @param targetDeclaredMethods
 	 * @param advice
-	 * @param abstractAdvice
+	 * @param methodInterceptor
 	 */
-	private final boolean regexMatchMethod(Method[] targetDeclaredMethods, //
-			Advice advice, AbstractAdvice abstractAdvice) //
+	private boolean regexMatchMethod(Method[] targetDeclaredMethods, //
+			Advice advice, MethodInterceptor methodInterceptor) //
 	{
 		String[] methodsStr = advice.method();
 		boolean weaved = false;
@@ -167,11 +204,11 @@ public class DefaultProxyFactory implements ProxyFactory {
 			// start match method
 			for (String methodRegex : methodRegexs) {
 				for (Method targetMethod : targetDeclaredMethods) {
-					if (!aspectMappings.containsKey(targetMethod)
-							&& Pattern.matches(methodRegex, targetMethod.getName())) //
+					if (!aspectMappings.containsKey(targetMethod) && //
+							Pattern.matches(methodRegex, targetMethod.getName())) //
 					{
 						weaved = true;
-						weaving(abstractAdvice, targetMethod);
+						weaving(methodInterceptor, targetMethod, aspectMappings);
 					}
 				}
 			}
@@ -180,38 +217,42 @@ public class DefaultProxyFactory implements ProxyFactory {
 	}
 
 	/**
+	 * Match target class
 	 * 
 	 * @param targetClass
+	 *            target class
 	 * @param advices
-	 * @return
+	 *            advice methods
+	 * @return if class matched
 	 */
-	private final boolean matchClass(Class<?> targetClass, Advice[] advices) {
+	static boolean matchClass(Class<?> targetClass, Collection<Advice> advices) {
 
 		for (Advice advice : advices) {
-			// target match start
+			// target class match start
 			for (Class<?> target : advice.target()) {
 				if (target == targetClass) {
 					return true;
 				}
 			}
-			Method[] targetDeclaredMethods = targetClass.getDeclaredMethods();
+			Method[] targetDeclaredMethods = targetClass.getDeclaredMethods(); // target class's methods
 			// annotation match start
 			for (Class<? extends Annotation> annotation : advice.value()) {
 				if (targetClass.isAnnotationPresent(annotation)) {
 					return true;
 				}
-				for (Method targetMethod : targetDeclaredMethods) {// all methods
+				for (Method targetMethod : targetDeclaredMethods) {// target class's methods
 					if (targetMethod.isAnnotationPresent(annotation)) {
 						return true;
 					}
 				}
 			}
-			String name = targetClass.getName();
+			String targetClassName = targetClass.getName();
 			for (String regex : advice.pointcut()) { // regex match start
 				if (StringUtils.isEmpty(regex)) {
-					return true;
+					continue;
 				}
-				if (Pattern.matches(regex, name)) {
+
+				if (Pattern.matches(regex, targetClassName)) {
 					// class matched
 					return true;
 				}
@@ -221,46 +262,46 @@ public class DefaultProxyFactory implements ProxyFactory {
 	}
 
 	/**
+	 * Get an advice instance
 	 * 
 	 * @param aspect
+	 *            aspect instance
 	 * @param aspectMethod
-	 * @param adviceType
-	 * @return
+	 *            current aspect method
+	 * @param interceptor
+	 *            interceptor type
+	 * @throws Throwable
 	 */
-	public AbstractAdvice getAdvice(Object aspect, Method aspectMethod, AdviceType adviceType) {
-		AbstractAdvice advice = null;
-		switch (adviceType)
-		{
-			case BEFORE :
-				advice = new MethodBeforeAdvice(aspectMethod);
-				break;
-			case AFTER :
-				advice = new MethodAfterAdvice(aspectMethod);
-				break;
-			case AROUND :
-				advice = new AroundMethodAdvice(aspectMethod);
-				break;
-			case AFTER_THROWING :
-				advice = new MethodAfterThrowingAdvice(aspectMethod);
-				break;
-			case AFTER_RETURNING :
-				advice = new MethodAfterReturningAdvice(aspectMethod);
-				break;
+	static MethodInterceptor getInterceptor(Object aspect, //
+			Method aspectMethod, Class<? extends MethodInterceptor> interceptor) throws Throwable //
+	{
+
+		if (interceptor == AbstractAdvice.class || !MethodInterceptor.class.isAssignableFrom(interceptor)) {
+			throw new ConfigurationException("You must be implement: [{}] or [{}]", //
+					AbstractAdvice.class.getName(), MethodInterceptor.class.getName()//
+			);
 		}
-		if (advice != null) {
-			advice.setAspect(aspect);
+
+		if (AbstractAdvice.class.isAssignableFrom(interceptor)) {
+
+			return interceptor.getConstructor(Method.class, Object.class).newInstance(aspectMethod, aspect);
 		}
-		log.debug("Found Advice: [{}]", advice);
-		return advice;
+
+		return interceptor.getConstructor().newInstance();
 	}
 
 	/**
+	 * Weaving advice to target method
 	 * 
 	 * @param advice
+	 *            advice instance
 	 * @param targetMethod
+	 *            target method
+	 * @param aspectMappings
+	 *            aspect mappings
 	 */
-	private void weaving(AbstractAdvice advice, Method targetMethod) {
-		List<AbstractAdvice> aspectMapping = aspectMappings.get(targetMethod);
+	static void weaving(MethodInterceptor advice, Method targetMethod, Map<Method, List<MethodInterceptor>> aspectMappings) {
+		List<MethodInterceptor> aspectMapping = aspectMappings.get(targetMethod);
 		if (aspectMapping == null) {
 			aspectMapping = new ArrayList<>();
 			aspectMappings.put(targetMethod, aspectMapping);
@@ -276,7 +317,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 
 	}
 
-	protected final ProxyCreator createAopProxy() {
+	protected ProxyCreator createAopProxy() {
 		targetSource.setAspectMappings(aspectMappings);
 		return new CglibProxyCreator(targetSource);
 	}

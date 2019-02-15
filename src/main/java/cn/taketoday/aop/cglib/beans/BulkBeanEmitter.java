@@ -59,7 +59,7 @@ class BulkBeanEmitter extends ClassEmitter {
 
 	private void generateGet(final Class target, final Method[] getters) {
 		CodeEmitter e = begin_method(Constant.ACC_PUBLIC, GET_PROPERTY_VALUES, null);
-		if (getters.length >= 0) {
+		if (getters.length >= 0) { // TODO
 			e.load_arg(0);
 			e.checkcast(Type.getType(target));
 			Local bean = e.make_local();

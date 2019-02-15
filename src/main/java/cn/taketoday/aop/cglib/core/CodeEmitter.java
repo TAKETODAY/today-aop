@@ -29,6 +29,7 @@ import java.util.Arrays;
  */
 @SuppressWarnings("all")
 public class CodeEmitter extends LocalVariablesSorter {
+	
 	private static final Signature BOOLEAN_VALUE = TypeUtils.parseSignature("boolean booleanValue()");
 	private static final Signature CHAR_VALUE = TypeUtils.parseSignature("char charValue()");
 	private static final Signature LONG_VALUE = TypeUtils.parseSignature("long longValue()");
@@ -748,7 +749,7 @@ public class CodeEmitter extends LocalVariablesSorter {
 		push(1);
 		math(XOR, Type.INT_TYPE);
 	}
-
+	
 	public void throw_exception(Type type, String msg) {
 		new_instance(type);
 		dup();

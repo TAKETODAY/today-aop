@@ -1,20 +1,20 @@
 /**
  * Original Author -> 杨海健 (taketoday@foxmail.com) https://taketoday.cn
- * Copyright © Today & 2017 - 2018 All Rights Reserved.
+ * Copyright © TODAY & 2017 - 2019 All Rights Reserved.
  * 
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 package cn.taketoday.aop.advice;
@@ -37,8 +37,6 @@ import org.aopalliance.intercept.Joinpoint;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import lombok.Setter;
-
 /**
  * @author Today <br>
  * 
@@ -46,41 +44,41 @@ import lombok.Setter;
  */
 public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 
-	protected final Method adviceMethod;
+	private final Object aspect;
+	private final Method adviceMethod;
+	private final byte[] adviceParameters;
+	private final int adviceParameterLength;
+	private final Class<?>[] adviceParameterTypes;
 
-	protected final Class<?>[] adviceParameterTypes;
-	@Setter
-	protected Object aspect;
-	private byte[] parameterTypes;
-	private int parameterLength = 0;
+	public AbstractAdvice(Method adviceMethod, Object aspect) {
 
-	public AbstractAdvice(Method adviceMethod) {
-		this.adviceParameterTypes = adviceMethod.getParameterTypes();
+		this.aspect = aspect;
 		this.adviceMethod = adviceMethod;
-		this.parameterLength = adviceParameterTypes.length;
-		this.parameterTypes = new byte[parameterLength];
+		this.adviceParameterLength = adviceMethod.getParameterCount();
+		this.adviceParameters = new byte[adviceParameterLength];
+		this.adviceParameterTypes = adviceMethod.getParameterTypes();
 
 		Parameter[] parameters = adviceMethod.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter parameter = parameters[i];
-			parameterTypes[i] = Constant.TYPE_NULL;
+			adviceParameters[i] = Constant.TYPE_NULL;
 			if (parameter.isAnnotationPresent(JoinPoint.class)) {
-				parameterTypes[i] = Constant.TYPE_JOIN_POINT;
+				adviceParameters[i] = Constant.TYPE_JOIN_POINT;
 			}
 			if (parameter.isAnnotationPresent(Argument.class)) {
-				parameterTypes[i] = Constant.TYPE_ARGUMENT;
+				adviceParameters[i] = Constant.TYPE_ARGUMENT;
 			}
 			if (parameter.isAnnotationPresent(Arguments.class)) {
-				parameterTypes[i] = Constant.TYPE_ARGUMENTS;
+				adviceParameters[i] = Constant.TYPE_ARGUMENTS;
 			}
 			if (parameter.isAnnotationPresent(Returning.class)) {
-				parameterTypes[i] = Constant.TYPE_RETURNING;
+				adviceParameters[i] = Constant.TYPE_RETURNING;
 			}
 			if (parameter.isAnnotationPresent(Throwing.class)) {
-				parameterTypes[i] = Constant.TYPE_THROWING;
+				adviceParameters[i] = Constant.TYPE_THROWING;
 			}
 			if (parameter.isAnnotationPresent(Annotated.class)) {
-				parameterTypes[i] = Constant.TYPE_ANNOTATED;
+				adviceParameters[i] = Constant.TYPE_ANNOTATED;
 			}
 		}
 	}
@@ -99,7 +97,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 	protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
 			Object returnValue, Throwable throwable) throws Throwable //
 	{
-		if (parameterLength == 0) {
+		if (adviceParameterLength == 0) {
 			return adviceMethod.invoke(aspect);
 		}
 		return adviceMethod.invoke(aspect, resolveParameter(methodInvocation, returnValue, throwable));
@@ -118,22 +116,30 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 	@SuppressWarnings("unchecked")
 	private final Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
 
-		Object[] args = new Object[parameterLength];
-		for (int i = 0; i < parameterLength; i++) {
-			switch (parameterTypes[i])
+		Object[] args = new Object[adviceParameterLength];
+		for (int i = 0; i < adviceParameterLength; i++) {
+			switch (adviceParameters[i])
 			{
 				case Constant.TYPE_THROWING : {
+					// TODO
 					args[i] = ExceptionUtils.unwrapThrowable(ex);
 					break;
 				}
 				case Constant.TYPE_ARGUMENT : {
-					if (parameterLength == 1) {
-						args[i] = methodInvocation.getArguments()[0];
+					// fix: NullPointerException
+					Object[] arguments = methodInvocation.getArguments();
+					if (arguments.length == 1) {
+						args[i] = arguments[0];
+						break;
 					}
 					// for every argument matching
-					for (Object argument : methodInvocation.getArguments()) {
+					for (Object argument : arguments) {
+						if (argument == null) {
+							continue;
+						}
 						if (argument.getClass() == adviceParameterTypes[i]) {
 							args[i] = argument;
+							break;
 						}
 					}
 					break;
@@ -145,8 +151,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 					args[i] = returnValue;
 					break;
 				case Constant.TYPE_ANNOTATED : {
-					args[i] = resolveAnnotation(methodInvocation,
-							(Class<? extends Annotation>) adviceParameterTypes[i]);
+					args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) adviceParameterTypes[i]);
 					break;
 				}
 				case Constant.TYPE_JOIN_POINT : {
@@ -183,7 +188,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 	private final Object resolveAnnotation(//
 			MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) //
 	{
-		Method method = methodInvocation.getMethod();
+		final Method method = methodInvocation.getMethod();
 		Annotation annotation = method.getAnnotation(annotationClass);
 		if (annotation == null) {
 			annotation = method.getDeclaringClass().getAnnotation(annotationClass);

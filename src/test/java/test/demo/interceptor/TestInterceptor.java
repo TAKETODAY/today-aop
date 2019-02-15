@@ -17,34 +17,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package cn.taketoday.aop.advice;
+package test.demo.interceptor;
 
+import cn.taketoday.aop.annotation.Advice;
+import cn.taketoday.aop.annotation.After;
+import cn.taketoday.aop.annotation.Aspect;
+import cn.taketoday.aop.annotation.Returning;
 import cn.taketoday.context.annotation.Order;
 
-import java.lang.reflect.Method;
-
+import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import test.aspect.Logger;
 
 /**
- * 
  * @author Today <br>
- *         2018-11-10 13:14
+ * 
+ *         2018-12-25 21:41
  */
-@Setter
-@Getter
-@Order(1)
-public class AroundMethodAdvice extends AbstractAdvice {
+@Slf4j
+@Aspect
+@Order(10)
+@Advice(Logger.class)
+//@Advice(pointcut = "test.demo.service.impl.*", method = "login")
+public class TestInterceptor implements MethodInterceptor {
 
-	public AroundMethodAdvice(Method method, Object aspect) {
-		super(method, aspect);
-	}
-	
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
-		return invokeAdviceMethod(invocation, null, null);
+		
+		log.debug("MethodInterceptor before");
+		
+		Object proceed = invocation.proceed();
+		
+		log.debug("MethodInterceptor afetr");
+		
+		return proceed;
+	}
+
+	@After(Logger.class)
+	public Object after(@Returning Object value) {
+
+		log.debug("value: {}",value);
+
+		return value;
 	}
 
 }

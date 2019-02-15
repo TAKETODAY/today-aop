@@ -27,6 +27,7 @@ import java.util.Map;
 
 @SuppressWarnings("all")
 public class TypeUtils {
+
 	private static final Map transforms = new HashMap();
 	private static final Map rtransforms = new HashMap();
 
@@ -187,10 +188,15 @@ public class TypeUtils {
 		sb.append(map(returnType));
 		return new Signature(methodName, sb.toString());
 	}
-
+	
+	public static Type parseType(Class<?> type) {
+		return Type.getType(map(type.getName()));
+	}
+	
 	public static Type parseType(String s) {
 		return Type.getType(map(s));
 	}
+
 
 	public static Type[] parseTypes(String s) {
 		List names = parseTypes(s, 0, s.length());

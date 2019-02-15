@@ -55,6 +55,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -317,7 +318,7 @@ public class Enhancer extends AbstractClassGenerator {
 	 *            the array of callback types
 	 */
 	public void setCallbackTypes(Class[] callbackTypes) {
-		if (callbackTypes != null && callbackTypes.length == 0) {
+		if (callbackTypes == null || callbackTypes.length == 0) {
 			throw new IllegalArgumentException("Array cannot be empty");
 		}
 		this.callbackTypes = CallbackInfo.determineTypes(callbackTypes);
@@ -1183,6 +1184,7 @@ public class Enhancer extends AbstractClassGenerator {
 
 			// Optimization: build up a map of Class -> bridge methods in class
 			// so that we can look up all the bridge methods in one pass for a class.
+			Objects.requireNonNull(actualMethod, "ActualMethod Can't be null");
 			if (TypeUtils.isBridge(actualMethod.getModifiers())) {
 				Set bridges = (Set) declToBridge.get(actualMethod.getDeclaringClass());
 				if (bridges == null) {
@@ -1202,7 +1204,7 @@ public class Enhancer extends AbstractClassGenerator {
 		se.invoke_constructor(THREAD_LOCAL, CSTRUCT_NULL);
 		se.putfield(THREAD_CALLBACKS_FIELD);
 
-		final Object[] state = new Object[1];
+//		final Object[] state = new Object[1];
 		CallbackGenerator.Context context = new CallbackGenerator.Context() {
 			public ClassLoader getClassLoader() {
 				return ClassUtils.getClassLoader();
