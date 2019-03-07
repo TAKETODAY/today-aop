@@ -4,8 +4,11 @@
 	<groupId>cn.taketoday</groupId>
 	<artifactId>today-aop</artifactId>
 
-<!-- 	<version>1.0.4.RELEASE</version> -->
-	<version>1.0.4.SNAPSHOT</version>
+<!-- 
+	<version>1.0.5.SNAPSHOT</version>
+ -->
+
+	<version>1.0.4.RELEASE</version>
 
 	<name>Today Aop Framework</name>
 
