@@ -15,12 +15,12 @@
  */
 package cn.taketoday.aop.cglib.transform.impl;
 
+import java.util.Map;
+
 import cn.taketoday.aop.cglib.core.EmitUtils;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.aop.cglib.transform.ClassEmitterTransformer;
 import cn.taketoday.context.asm.Type;
-
-import java.util.Map;
 
 @SuppressWarnings("all")
 public class AddPropertyTransformer extends ClassEmitterTransformer {

@@ -19,14 +19,13 @@
  */
 package test.aop;
 
-import cn.taketoday.context.ApplicationContext;
-import cn.taketoday.context.StandardApplicationContext;
-import cn.taketoday.context.exception.NoSuchBeanDefinitionException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import cn.taketoday.context.ApplicationContext;
+import cn.taketoday.context.StandardApplicationContext;
+import cn.taketoday.context.exception.NoSuchBeanDefinitionException;
 import lombok.extern.slf4j.Slf4j;
 import test.demo.domain.User;
 import test.demo.interceptor.TestInterceptor;
@@ -65,9 +64,9 @@ public class AopTest {
 			long start = System.currentTimeMillis();
 			User login = bean.login(user);
 			
-			for (int i = 0; i < 1000; i++) {
-				login = bean.login(user);
-			}
+//			for (int i = 0; i < 1000; i++) {
+//				login = bean.login(user);
+//			}
 			
 			log.debug("{}ms", System.currentTimeMillis() - start);
 			

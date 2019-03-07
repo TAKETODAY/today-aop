@@ -15,12 +15,11 @@
  */
 package cn.taketoday.aop.cglib.core;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.context.asm.ClassReader;
-import cn.taketoday.context.asm.ClassVisitor;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.taketoday.context.asm.ClassReader;
+import cn.taketoday.context.asm.ClassVisitor;
 
 // TODO: optimize (ClassReader buffers entire class before accept)
 @SuppressWarnings("all")
@@ -42,7 +41,8 @@ public class ClassNameReader {
 	public static String[] getClassInfo(ClassReader r) {
 		final List array = new ArrayList();
 		try {
-			r.accept(new ClassVisitor(Constant.ASM_API, null) {
+//			r.accept(new ClassVisitor(Constant.ASM_API, null) {
+			r.accept(new ClassVisitor() {
 				public void visit(int version, int access, String name, String signature, String superName,
 						String[] interfaces) {
 					array.add(name.replace('/', '.'));
@@ -56,7 +56,8 @@ public class ClassNameReader {
 					throw EARLY_EXIT;
 				}
 			}, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-		} catch (EarlyExitException e) {
+		}
+		catch (EarlyExitException e) {
 		}
 
 		return (String[]) array.toArray(new String[] {});

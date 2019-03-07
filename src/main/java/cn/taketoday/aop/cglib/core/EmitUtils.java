@@ -15,11 +15,6 @@
  */
 package cn.taketoday.aop.cglib.core;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.aop.cglib.core.internal.CustomizerRegistry;
-import cn.taketoday.context.asm.Label;
-import cn.taketoday.context.asm.Type;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -31,6 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import cn.taketoday.aop.Constant;
+import cn.taketoday.aop.cglib.core.internal.CustomizerRegistry;
+import cn.taketoday.context.asm.Label;
+import cn.taketoday.context.asm.Type;
 
 @SuppressWarnings("all")
 public class EmitUtils {

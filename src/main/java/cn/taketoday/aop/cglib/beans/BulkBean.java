@@ -15,12 +15,12 @@
  */
 package cn.taketoday.aop.cglib.beans;
 
+import java.security.ProtectionDomain;
+
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.KeyFactory;
 import cn.taketoday.aop.cglib.core.ReflectUtils;
 import cn.taketoday.context.asm.ClassVisitor;
-
-import java.security.ProtectionDomain;
 
 /**
  * @author Juozas Baliuka

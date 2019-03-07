@@ -32,7 +32,7 @@ import cn.taketoday.context.asm.Type;
 public interface Constant extends cn.taketoday.context.Constant, Opcodes {
 
 	/* Indicates the ASM API version that is used throughout cglib */
-	int			ASM_API					= ASM7;
+//	int			ASM_API					= ASM7;
 
 	Class<?>[]	EMPTY_CLASS_ARRAY		= {};
 	Type[]		TYPES_EMPTY				= {};

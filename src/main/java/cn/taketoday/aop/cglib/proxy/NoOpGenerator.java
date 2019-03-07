@@ -15,14 +15,14 @@
  */
 package cn.taketoday.aop.cglib.proxy;
 
+import java.util.Iterator;
+import java.util.List;
+
 import cn.taketoday.aop.cglib.core.ClassEmitter;
 import cn.taketoday.aop.cglib.core.CodeEmitter;
 import cn.taketoday.aop.cglib.core.EmitUtils;
 import cn.taketoday.aop.cglib.core.MethodInfo;
 import cn.taketoday.aop.cglib.core.TypeUtils;
-
-import java.util.Iterator;
-import java.util.List;
 
 @SuppressWarnings("all")
 class NoOpGenerator implements CallbackGenerator {

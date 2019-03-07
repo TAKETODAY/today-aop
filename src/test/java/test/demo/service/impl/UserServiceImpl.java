@@ -21,7 +21,6 @@ package test.demo.service.impl;
 
 import cn.taketoday.context.annotation.Autowired;
 import cn.taketoday.context.annotation.Service;
-
 import lombok.extern.slf4j.Slf4j;
 import test.aspect.Logger;
 import test.aspect.Timer;

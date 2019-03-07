@@ -19,23 +19,23 @@
  */
 package cn.taketoday.aop.annotation;
 
-import cn.taketoday.aop.advice.AbstractAdvice;
-
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
+import cn.taketoday.aop.advice.AbstractAdvice;
+
 /**
  * @author Today <br>
  * 
  *         2018-11-10 13:10
  */
-@Documented
+@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Advice {

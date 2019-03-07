@@ -15,14 +15,14 @@
  */
 package cn.taketoday.aop.cglib.core;
 
+import java.util.Arrays;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.context.asm.Attribute;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.MethodVisitor;
 import cn.taketoday.context.asm.Opcodes;
 import cn.taketoday.context.asm.Type;
-
-import java.util.Arrays;
 
 /**
  * @author Juozas Baliuka, Chris Nokleberg
@@ -601,7 +601,7 @@ public class CodeEmitter extends LocalVariablesSorter {
 	}
 
 	private void emit_type(int opcode, Type type) {
-		String desc;
+		final String desc;
 		if (TypeUtils.isArray(type)) {
 			desc = type.getDescriptor();
 		} else {

@@ -15,6 +15,9 @@
  */
 package cn.taketoday.aop.cglib.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
@@ -28,9 +31,6 @@ import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.Type;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class implements a simple String->int mapping for a fixed set of keys.

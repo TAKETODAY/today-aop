@@ -21,8 +21,7 @@ package cn.taketoday.aop.proxy;
 
 import cn.taketoday.aop.ProxyCreator;
 import cn.taketoday.aop.cglib.proxy.Enhancer;
-import cn.taketoday.aop.intercept.DefaultMethodInterceptor;
-
+import cn.taketoday.aop.intercept.CglibMethodInterceptor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,7 +48,7 @@ public class CglibProxyCreator implements ProxyCreator {
 		enhancer.setSuperclass(targetClass);
 		enhancer.setInterfaces(targetSource.getInterfaces());
 		enhancer.setInterceptDuringConstruction(false);
-		enhancer.setCallback(new DefaultMethodInterceptor(targetSource));
+		enhancer.setCallback(new CglibMethodInterceptor(targetSource));
 
 		return enhancer.create();
 	}

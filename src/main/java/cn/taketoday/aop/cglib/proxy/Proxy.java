@@ -15,10 +15,10 @@
  */
 package cn.taketoday.aop.cglib.proxy;
 
-import cn.taketoday.aop.cglib.core.CodeGenerationException;
-
 import java.io.Serializable;
 import java.lang.reflect.Method;
+
+import cn.taketoday.aop.cglib.core.CodeGenerationException;
 
 /**
  * This class is meant to be used as replacement for

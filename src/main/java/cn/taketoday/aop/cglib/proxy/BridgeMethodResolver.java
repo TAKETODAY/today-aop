@@ -16,19 +16,18 @@
 
 package cn.taketoday.aop.cglib.proxy;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.aop.cglib.core.Signature;
-import cn.taketoday.context.asm.ClassReader;
-import cn.taketoday.context.asm.ClassVisitor;
-import cn.taketoday.context.asm.MethodVisitor;
-import cn.taketoday.context.asm.Opcodes;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import cn.taketoday.aop.cglib.core.Signature;
+import cn.taketoday.context.asm.ClassReader;
+import cn.taketoday.context.asm.ClassVisitor;
+import cn.taketoday.context.asm.MethodVisitor;
+import cn.taketoday.context.asm.Opcodes;
 
 /**
  * Uses bytecode reflection to figure out the targets of all bridge methods that
@@ -81,7 +80,7 @@ class BridgeMethodResolver {
 		private Signature currentMethod = null;
 
 		BridgedFinder(Set eligibleMethods, Map resolved) {
-			super(Constant.ASM_API);
+//			super(Constant.ASM_API);
 			this.resolved = resolved;
 			this.eligibleMethods = eligibleMethods;
 		}
@@ -94,7 +93,8 @@ class BridgeMethodResolver {
 			Signature sig = new Signature(name, desc);
 			if (eligibleMethods.remove(sig)) {
 				currentMethod = sig;
-				return new MethodVisitor(Constant.ASM_API) {
+//				return new MethodVisitor(Constant.ASM_API) {
+				return new MethodVisitor() {
 					public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 						if (opcode == Opcodes.INVOKESPECIAL && currentMethod != null) {
 							Signature target = new Signature(name, desc);

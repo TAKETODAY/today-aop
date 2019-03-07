@@ -8,6 +8,7 @@ import java.util.concurrent.FutureTask;
 
 @SuppressWarnings("all")
 public class LoadingCache<K, KK, V> {
+	
 	protected final ConcurrentMap<KK, Object> map;
 	protected final Function<K, V> loader;
 	protected final Function<K, KK> keyMapper;

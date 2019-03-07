@@ -15,15 +15,15 @@
  */
 package cn.taketoday.aop.cglib.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.transform.ClassTransformer;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.FieldVisitor;
 import cn.taketoday.context.asm.MethodVisitor;
 import cn.taketoday.context.asm.Type;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Juozas Baliuka, Chris Nokleberg
@@ -45,7 +45,7 @@ public class ClassEmitter extends ClassTransformer {
 	}
 
 	public ClassEmitter() {
-		super(Constant.ASM_API);
+//		super(Constant.ASM_API);
 	}
 
 	public void setTarget(ClassVisitor cv) {
@@ -146,7 +146,8 @@ public class ClassEmitter extends ClassTransformer {
 
 		if (sig.equals(Constant.SIG_STATIC) && !TypeUtils.isInterface(getAccess())) {
 			rawStaticInit = v;
-			MethodVisitor wrapped = new MethodVisitor(Constant.ASM_API, v) {
+//			MethodVisitor wrapped = new MethodVisitor(Constant.ASM_API, v) {
+			MethodVisitor wrapped = new MethodVisitor(v) {
 				public void visitMaxs(int maxStack, int maxLocals) {
 					// ignore
 				}

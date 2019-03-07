@@ -15,11 +15,6 @@
  */
 package cn.taketoday.aop.cglib.core;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.context.asm.ClassReader;
-import cn.taketoday.context.asm.ClassVisitor;
-import cn.taketoday.context.asm.ClassWriter;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +24,10 @@ import java.io.PrintWriter;
 import java.lang.reflect.Constructor;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+
+import cn.taketoday.context.asm.ClassReader;
+import cn.taketoday.context.asm.ClassVisitor;
+import cn.taketoday.context.asm.ClassWriter;
 
 @SuppressWarnings("all")
 public class DebuggingClassWriter extends ClassVisitor {
@@ -46,7 +45,7 @@ public class DebuggingClassWriter extends ClassVisitor {
 		if (debugLocation != null) {
 			System.err.println("CGLIB debugging enabled, writing to '" + debugLocation + "'");
 			try {
-				Class clazz = Class.forName("cn.taketoday.aop.asm.util.TraceClassVisitor");
+				Class clazz = Class.forName("cn.taketoday.context.asm.util.TraceClassVisitor");
 				traceCtor = clazz.getConstructor(new Class[] { ClassVisitor.class, PrintWriter.class });
 			} catch (Throwable ignore) {
 			}
@@ -54,7 +53,7 @@ public class DebuggingClassWriter extends ClassVisitor {
 	}
 
 	public DebuggingClassWriter(int flags) {
-		super(Constant.ASM_API, new ClassWriter(flags));
+		super(new ClassWriter(flags));
 	}
 
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {

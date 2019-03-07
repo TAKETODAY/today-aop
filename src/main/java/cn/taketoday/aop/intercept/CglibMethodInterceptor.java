@@ -19,10 +19,6 @@
  */
 package cn.taketoday.aop.intercept;
 
-import cn.taketoday.aop.cglib.proxy.MethodProxy;
-import cn.taketoday.aop.proxy.TargetSource;
-import cn.taketoday.context.utils.OrderUtils;
-
 import java.lang.reflect.Method;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -32,24 +28,26 @@ import java.util.Map.Entry;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
-import lombok.extern.slf4j.Slf4j;
+import cn.taketoday.aop.cglib.proxy.MethodProxy;
+import cn.taketoday.aop.proxy.TargetSource;
+import cn.taketoday.context.utils.OrderUtils;
 
 /**
  * @author Today <br>
  * 
  *         2018-11-06 19:14
  */
-@Slf4j
-public class DefaultMethodInterceptor implements cn.taketoday.aop.cglib.proxy.MethodInterceptor {
+//@Slf4j
+public class CglibMethodInterceptor implements cn.taketoday.aop.cglib.proxy.MethodInterceptor {
 
 	private final Object target;
 	private final Map<Method, MethodInterceptor[]> aspectMappings;
-	
-	public DefaultMethodInterceptor(TargetSource targetSource) {
+
+	public CglibMethodInterceptor(TargetSource targetSource) {
 		this.target = targetSource.getTarget();
 		Map<Method, List<MethodInterceptor>> aspectMappings_ = targetSource.getAspectMappings();
 		aspectMappings = new HashMap<>(aspectMappings_.size(), 1.0f);
-		
+
 		for (Entry<Method, List<MethodInterceptor>> advices : aspectMappings_.entrySet()) {
 			advices.getValue().sort(Comparator.comparingInt(OrderUtils::getOrder).reversed());
 			aspectMappings.put(advices.getKey(), advices.getValue().toArray(new MethodInterceptor[0]));
@@ -62,7 +60,7 @@ public class DefaultMethodInterceptor implements cn.taketoday.aop.cglib.proxy.Me
 		if (advices == null) {
 			return proxy.invoke(target, args);
 		}
-		log.debug("Intercept method: [{}]", method.getName());
+//		log.debug("Intercept method: [{}]", method.getName());
 		return new DefaultMethodInvocation(target, method, args, advices).proceed();
 	}
 

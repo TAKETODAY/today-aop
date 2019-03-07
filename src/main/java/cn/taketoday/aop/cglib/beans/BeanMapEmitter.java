@@ -15,6 +15,11 @@
  */
 package cn.taketoday.aop.cglib.beans;
 
+import java.beans.PropertyDescriptor;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
 import cn.taketoday.aop.cglib.core.CodeEmitter;
@@ -27,11 +32,6 @@ import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.Type;
-
-import java.beans.PropertyDescriptor;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 @SuppressWarnings("all")
 class BeanMapEmitter extends ClassEmitter {

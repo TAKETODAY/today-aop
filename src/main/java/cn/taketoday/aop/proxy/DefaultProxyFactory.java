@@ -19,18 +19,6 @@
  */
 package cn.taketoday.aop.proxy;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.aop.ProxyCreator;
-import cn.taketoday.aop.ProxyFactory;
-import cn.taketoday.aop.advice.AbstractAdvice;
-import cn.taketoday.aop.advice.AspectsRegistry;
-import cn.taketoday.aop.annotation.Advice;
-import cn.taketoday.aop.annotation.AdviceImpl;
-import cn.taketoday.context.exception.ConfigurationException;
-import cn.taketoday.context.utils.ClassUtils;
-import cn.taketoday.context.utils.ExceptionUtils;
-import cn.taketoday.context.utils.StringUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -42,6 +30,19 @@ import java.util.regex.Pattern;
 
 import org.aopalliance.intercept.MethodInterceptor;
 
+import cn.taketoday.aop.Constant;
+import cn.taketoday.aop.ProxyCreator;
+import cn.taketoday.aop.ProxyFactory;
+import cn.taketoday.aop.advice.AbstractAdvice;
+import cn.taketoday.aop.advice.AspectsRegistry;
+import cn.taketoday.aop.annotation.Advice;
+import cn.taketoday.aop.annotation.AdviceImpl;
+import cn.taketoday.aop.annotation.Aspect;
+import cn.taketoday.context.exception.ConfigurationException;
+import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.utils.ClassUtils;
+import cn.taketoday.context.utils.ExceptionUtils;
+import cn.taketoday.context.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -52,8 +53,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultProxyFactory implements ProxyFactory {
 
-	private TargetSource targetSource;
-	private Map<Method, List<MethodInterceptor>> aspectMappings = new HashMap<>(16, 1.0f);
+	private final BeanFactory beanFactory;
+	private final TargetSource targetSource;
+	private final Map<Method, List<MethodInterceptor>> aspectMappings = new HashMap<>(16, 1.0f);
+
+	public DefaultProxyFactory() {
+		this(null, null);
+	}
+
+	public DefaultProxyFactory(TargetSource targetSource, BeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
+		this.targetSource = targetSource;
+	}
 
 	@Override
 	public Object getProxy() {
@@ -133,7 +144,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 
 		for (Advice advice : advices) {
 			Class<? extends MethodInterceptor> interceptor = advice.interceptor(); // interceptor class
-			
+
 			MethodInterceptor methodInterceptor = null;
 			if (aspectMethod == null) { // method interceptor
 				if (!(aspect instanceof MethodInterceptor)) {
@@ -144,7 +155,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 				methodInterceptor = (MethodInterceptor) aspect;
 			}
 			else {
-				methodInterceptor = getInterceptor(aspect, aspectMethod, interceptor);
+				methodInterceptor = getInterceptor(aspect, aspectMethod, interceptor, beanFactory);
 			}
 			log.debug("Found Interceptor: [{}]", methodInterceptor);
 
@@ -273,7 +284,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 	 * @throws Throwable
 	 */
 	static MethodInterceptor getInterceptor(Object aspect, //
-			Method aspectMethod, Class<? extends MethodInterceptor> interceptor) throws Throwable //
+			Method aspectMethod, Class<? extends MethodInterceptor> interceptor, BeanFactory beanFactory) throws Throwable //
 	{
 
 		if (interceptor == AbstractAdvice.class || !MethodInterceptor.class.isAssignableFrom(interceptor)) {
@@ -283,10 +294,16 @@ public class DefaultProxyFactory implements ProxyFactory {
 		}
 
 		if (AbstractAdvice.class.isAssignableFrom(interceptor)) {
-
 			return interceptor.getConstructor(Method.class, Object.class).newInstance(aspectMethod, aspect);
 		}
 
+		// fix 
+		if (interceptor.isAnnotationPresent(Aspect.class)) {
+			MethodInterceptor bean = beanFactory.getBean(interceptor);
+			if (bean != null) {
+				return bean;
+			}
+		}
 		return interceptor.getConstructor().newInstance();
 	}
 
@@ -307,14 +324,6 @@ public class DefaultProxyFactory implements ProxyFactory {
 			aspectMappings.put(targetMethod, aspectMapping);
 		}
 		aspectMapping.add(advice);
-	}
-
-	public DefaultProxyFactory(TargetSource targetSource) {
-		this.targetSource = targetSource;
-	}
-
-	public DefaultProxyFactory() {
-
 	}
 
 	protected ProxyCreator createAopProxy() {

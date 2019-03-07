@@ -19,12 +19,12 @@
  */
 package cn.taketoday.aop.annotation;
 
-import cn.taketoday.aop.advice.AbstractAdvice;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 import org.aopalliance.intercept.MethodInterceptor;
+
+import cn.taketoday.aop.advice.AbstractAdvice;
 
 /**
  * @author Today <br>

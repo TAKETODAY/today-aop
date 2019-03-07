@@ -15,10 +15,10 @@
  */
 package cn.taketoday.aop.cglib.core;
 
-import cn.taketoday.context.asm.Type;
-
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+
+import cn.taketoday.context.asm.Type;
 
 @SuppressWarnings("all")
 public class VisibilityPredicate implements Predicate {

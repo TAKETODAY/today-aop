@@ -16,16 +16,16 @@
 
 package cn.taketoday.aop.cglib.core;
 
+import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
+import java.util.Collections;
+import java.util.List;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.internal.CustomizerRegistry;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.Type;
-
-import java.lang.reflect.Method;
-import java.security.ProtectionDomain;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Generates classes to handle multi-valued keys, for use in things such as Maps

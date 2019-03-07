@@ -15,6 +15,9 @@
  */
 package cn.taketoday.aop.cglib.transform.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.CodeEmitter;
 import cn.taketoday.aop.cglib.core.CodeGenerationException;
@@ -26,9 +29,6 @@ import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.aop.cglib.transform.ClassEmitterTransformer;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.Type;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings("all")
 public class FieldProviderTransformer extends ClassEmitterTransformer {

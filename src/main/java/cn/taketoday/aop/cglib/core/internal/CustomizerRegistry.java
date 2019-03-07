@@ -1,13 +1,13 @@
 package cn.taketoday.aop.cglib.core.internal;
 
-import cn.taketoday.aop.cglib.core.Customizer;
-import cn.taketoday.aop.cglib.core.KeyFactoryCustomizer;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cn.taketoday.aop.cglib.core.Customizer;
+import cn.taketoday.aop.cglib.core.KeyFactoryCustomizer;
 
 @SuppressWarnings("all")
 public class CustomizerRegistry {

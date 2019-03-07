@@ -15,6 +15,9 @@
  */
 package cn.taketoday.aop.cglib.proxy;
 
+import java.util.Iterator;
+import java.util.List;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.Block;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
@@ -24,9 +27,6 @@ import cn.taketoday.aop.cglib.core.MethodInfo;
 import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.Type;
-
-import java.util.Iterator;
-import java.util.List;
 
 @SuppressWarnings("all")
 class InvocationHandlerGenerator implements CallbackGenerator {

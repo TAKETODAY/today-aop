@@ -19,6 +19,8 @@
  */
 package test.aspect;
 
+import org.aopalliance.intercept.Joinpoint;
+
 import cn.taketoday.aop.annotation.After;
 import cn.taketoday.aop.annotation.AfterReturning;
 import cn.taketoday.aop.annotation.AfterThrowing;
@@ -31,12 +33,11 @@ import cn.taketoday.aop.annotation.JoinPoint;
 import cn.taketoday.aop.annotation.Returning;
 import cn.taketoday.aop.annotation.Throwing;
 import cn.taketoday.context.Ordered;
+import cn.taketoday.context.annotation.Autowired;
 import cn.taketoday.context.annotation.Order;
-
-import org.aopalliance.intercept.Joinpoint;
-
 import lombok.extern.slf4j.Slf4j;
 import test.demo.domain.User;
+import test.demo.service.UserService;
 
 /**
  * 
@@ -47,6 +48,11 @@ import test.demo.domain.User;
 @Aspect
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class LogAspect {
+
+	@Autowired
+	public LogAspect(UserService service) {
+		log.debug("{}", service);
+	}
 
 	@AfterReturning(Logger.class)
 //	public void afterReturning(@Returning Object returnValue) {

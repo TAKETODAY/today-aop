@@ -15,12 +15,12 @@
  */
 package cn.taketoday.aop.cglib.util;
 
+import java.util.Comparator;
+
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.ClassesKey;
 import cn.taketoday.aop.cglib.core.ReflectUtils;
 import cn.taketoday.context.asm.ClassVisitor;
-
-import java.util.Comparator;
 
 /**
  * For the efficient sorting of multiple arrays in parallel.

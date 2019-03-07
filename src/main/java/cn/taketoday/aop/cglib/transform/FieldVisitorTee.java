@@ -15,7 +15,6 @@
  */
 package cn.taketoday.aop.cglib.transform;
 
-import cn.taketoday.aop.Constant;
 import cn.taketoday.context.asm.AnnotationVisitor;
 import cn.taketoday.context.asm.Attribute;
 import cn.taketoday.context.asm.FieldVisitor;
@@ -25,7 +24,7 @@ public class FieldVisitorTee extends FieldVisitor {
 	private FieldVisitor fv1, fv2;
 
 	public FieldVisitorTee(FieldVisitor fv1, FieldVisitor fv2) {
-		super(Constant.ASM_API);
+//		super(Constant.ASM_API);
 		this.fv1 = fv1;
 		this.fv2 = fv2;
 	}

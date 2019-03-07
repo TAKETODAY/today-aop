@@ -15,11 +15,6 @@
  */
 package cn.taketoday.aop.cglib.beans;
 
-import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
-import cn.taketoday.aop.cglib.core.KeyFactory;
-import cn.taketoday.aop.cglib.core.ReflectUtils;
-import cn.taketoday.context.asm.ClassVisitor;
-
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +24,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
+import cn.taketoday.aop.cglib.core.KeyFactory;
+import cn.taketoday.aop.cglib.core.ReflectUtils;
+import cn.taketoday.context.asm.ClassVisitor;
 
 /**
  * A <code>Map</code>-based view of a JavaBean. The default set of keys is the

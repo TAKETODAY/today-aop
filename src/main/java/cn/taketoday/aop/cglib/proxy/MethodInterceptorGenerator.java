@@ -15,6 +15,11 @@
  */
 package cn.taketoday.aop.cglib.proxy;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
 import cn.taketoday.aop.cglib.core.ClassInfo;
@@ -29,11 +34,6 @@ import cn.taketoday.aop.cglib.core.Transformer;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.Type;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("all")
 class MethodInterceptorGenerator implements CallbackGenerator {

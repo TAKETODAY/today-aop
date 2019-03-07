@@ -35,7 +35,7 @@ public class DefaultMethodInvocation implements MethodInvocation {
 
 	private final Object target;
 	private final Method method;
-	private final Object[] arguments;
+	private final Object[] args;
 	private final MethodInterceptor[] advices;
 
 	/**
@@ -49,7 +49,7 @@ public class DefaultMethodInvocation implements MethodInvocation {
 		this.target = target;
 		this.method = method;
 		this.advices = advices;
-		this.arguments = arguments;
+		this.args = arguments;
 		this.adviceLength = advices.length;
 	}
 
@@ -60,14 +60,14 @@ public class DefaultMethodInvocation implements MethodInvocation {
 
 	@Override
 	public Object[] getArguments() {
-		return arguments;
+		return args;
 	}
 
 	@Override
 	public Object proceed() throws Throwable {
 
 		if (currentAdviceIndex == adviceLength) {
-			return method.invoke(target, arguments);
+			return method.invoke(target, args);
 		}
 		return advices[currentAdviceIndex++].invoke(this);
 	}
@@ -87,7 +87,7 @@ public class DefaultMethodInvocation implements MethodInvocation {
 		return new StringBuilder()//
 				.append("{\n\t\"target\":\"").append(target)//
 				.append("\",\n\t\"method\":\"").append(method)//
-				.append("\",\n\t\"arguments\":\"").append(Arrays.toString(arguments))//
+				.append("\",\n\t\"arguments\":\"").append(Arrays.toString(args))//
 				.append("\",\n\t\"advices\":\"").append(Arrays.toString(advices))//
 				.append("\",\n\t\"currentAdviceIndex\":\"").append(currentAdviceIndex)//
 				.append("\"\n}")//

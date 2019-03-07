@@ -15,6 +15,12 @@
  */
 package cn.taketoday.aop.cglib.beans;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Modifier;
+import java.security.ProtectionDomain;
+import java.util.HashMap;
+import java.util.Map;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
@@ -29,12 +35,6 @@ import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Type;
-
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Modifier;
-import java.security.ProtectionDomain;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Chris Nokleberg

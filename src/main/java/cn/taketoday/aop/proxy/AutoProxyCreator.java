@@ -22,21 +22,29 @@ package cn.taketoday.aop.proxy;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.Order;
 import cn.taketoday.context.annotation.Singleton;
+import cn.taketoday.context.aware.BeanFactoryAware;
+import cn.taketoday.context.factory.BeanFactory;
 import cn.taketoday.context.factory.BeanPostProcessor;
 
 /**
+ * Auto create proxy
  * 
  * @author Today <br>
  *         2018-11-10 13:13
  */
 @Singleton
 @Order(Ordered.LOWEST_PRECEDENCE - Ordered.HIGHEST_PRECEDENCE)
-public class AutoProxyCreator implements BeanPostProcessor {
+public class AutoProxyCreator implements BeanPostProcessor, BeanFactoryAware {
+
+	private BeanFactory beanFactory;
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
+		return new DefaultProxyFactory(new TargetSource(bean, bean.getClass()), beanFactory).getProxy();
+	}
 
-		return new DefaultProxyFactory(new TargetSource(bean, bean.getClass())).getProxy();
+	@Override
+	public void setBeanFactory(BeanFactory beanFactory) {
+		this.beanFactory = beanFactory;
 	}
 }
-

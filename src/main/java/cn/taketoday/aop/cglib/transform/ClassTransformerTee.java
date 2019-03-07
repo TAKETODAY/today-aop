@@ -15,14 +15,14 @@
  */
 package cn.taketoday.aop.cglib.transform;
 
-import cn.taketoday.aop.Constant;
 import cn.taketoday.context.asm.ClassVisitor;
 
 public class ClassTransformerTee extends ClassTransformer {
+
 	private ClassVisitor branch;
 
 	public ClassTransformerTee(ClassVisitor branch) {
-		super(Constant.ASM_API);
+//		super(Constant.ASM_API);
 		this.branch = branch;
 	}
 

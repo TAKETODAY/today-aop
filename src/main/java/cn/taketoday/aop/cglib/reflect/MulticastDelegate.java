@@ -15,6 +15,11 @@
  */
 package cn.taketoday.aop.cglib.reflect;
 
+import java.security.ProtectionDomain;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
@@ -28,11 +33,6 @@ import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Type;
-
-import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * 

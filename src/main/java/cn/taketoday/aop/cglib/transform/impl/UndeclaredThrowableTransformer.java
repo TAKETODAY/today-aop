@@ -15,6 +15,8 @@
  */
 package cn.taketoday.aop.cglib.transform.impl;
 
+import java.lang.reflect.Constructor;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.Block;
 import cn.taketoday.aop.cglib.core.CodeEmitter;
@@ -23,8 +25,6 @@ import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.aop.cglib.transform.ClassEmitterTransformer;
 import cn.taketoday.context.asm.Type;
-
-import java.lang.reflect.Constructor;
 
 /**
  * 

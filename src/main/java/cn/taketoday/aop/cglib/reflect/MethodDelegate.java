@@ -15,6 +15,9 @@
  */
 package cn.taketoday.aop.cglib.reflect;
 
+import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
@@ -27,9 +30,6 @@ import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Type;
-
-import java.lang.reflect.Method;
-import java.security.ProtectionDomain;
 
 // TODO: don't require exact match for return type
 

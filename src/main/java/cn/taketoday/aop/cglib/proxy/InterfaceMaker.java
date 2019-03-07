@@ -15,6 +15,11 @@
  */
 package cn.taketoday.aop.cglib.proxy;
 
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.AbstractClassGenerator;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
@@ -22,11 +27,6 @@ import cn.taketoday.aop.cglib.core.ReflectUtils;
 import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.Type;
-
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Generates new interfaces at runtime. By passing a generated interface to the

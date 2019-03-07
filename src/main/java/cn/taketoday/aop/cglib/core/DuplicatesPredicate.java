@@ -15,12 +15,6 @@
  */
 package cn.taketoday.aop.cglib.core;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.context.asm.ClassReader;
-import cn.taketoday.context.asm.ClassVisitor;
-import cn.taketoday.context.asm.MethodVisitor;
-import cn.taketoday.context.asm.Opcodes;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -30,6 +24,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import cn.taketoday.context.asm.ClassReader;
+import cn.taketoday.context.asm.ClassVisitor;
+import cn.taketoday.context.asm.MethodVisitor;
+import cn.taketoday.context.asm.Opcodes;
 
 @SuppressWarnings("all")
 public class DuplicatesPredicate implements Predicate {
@@ -127,7 +126,6 @@ public class DuplicatesPredicate implements Predicate {
 		private Map methods = new HashMap();
 
 		UnnecessaryBridgeFinder(Set rejected) {
-			super(Constant.ASM_API);
 			this.rejected = rejected;
 		}
 
@@ -144,7 +142,8 @@ public class DuplicatesPredicate implements Predicate {
 			final Method currentMethod = (Method) methods.remove(sig);
 			if (currentMethod != null) {
 				currentMethodSig = sig;
-				return new MethodVisitor(Constant.ASM_API) {
+//				return new MethodVisitor(Constant.ASM_API) {
+				return new MethodVisitor() {
 					public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 						if (opcode == Opcodes.INVOKESPECIAL && currentMethodSig != null) {
 							Signature target = new Signature(name, desc);

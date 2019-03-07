@@ -15,7 +15,6 @@
  */
 package cn.taketoday.aop.cglib.transform;
 
-import cn.taketoday.aop.Constant;
 import cn.taketoday.context.asm.AnnotationVisitor;
 import cn.taketoday.context.asm.Attribute;
 import cn.taketoday.context.asm.ClassVisitor;
@@ -27,7 +26,7 @@ public class ClassVisitorTee extends ClassVisitor {
 	private ClassVisitor cv1, cv2;
 
 	public ClassVisitorTee(ClassVisitor cv1, ClassVisitor cv2) {
-		super(Constant.ASM_API);
+//		super(Constant.ASM_API);
 		this.cv1 = cv1;
 		this.cv2 = cv2;
 	}

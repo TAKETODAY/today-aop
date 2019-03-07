@@ -19,6 +19,9 @@
  */
 package cn.taketoday.aop.listener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cn.taketoday.aop.advice.AspectsRegistry;
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.context.ApplicationContext;
@@ -26,13 +29,10 @@ import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.ContextListener;
 import cn.taketoday.context.annotation.Order;
 import cn.taketoday.context.bean.BeanDefinition;
-import cn.taketoday.context.event.BeanDefinitionLoadedEvent;
+import cn.taketoday.context.event.ContextPreRefreshEvent;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.listener.ApplicationListener;
 import cn.taketoday.context.utils.ClassUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author TODAY <br>
@@ -41,10 +41,10 @@ import org.slf4j.LoggerFactory;
  */
 @ContextListener
 @Order(Ordered.LOWEST_PRECEDENCE - Ordered.HIGHEST_PRECEDENCE)
-public class AspectsCreator implements ApplicationListener<BeanDefinitionLoadedEvent> {
+public class AspectsCreator implements ApplicationListener<ContextPreRefreshEvent> {
 
 	@Override
-	public void onApplicationEvent(BeanDefinitionLoadedEvent event) {
+	public void onApplicationEvent(ContextPreRefreshEvent event) {
 
 		final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -68,7 +68,7 @@ public class AspectsCreator implements ApplicationListener<BeanDefinitionLoadedE
 				log.debug("Found Aspect: [{}]", aspectName);
 				Object aspectInstance = applicationContext.getSingleton(aspectName);
 				if (aspectInstance == null) {
-					aspectInstance = ClassUtils.newInstance(beanClass);
+					aspectInstance = ClassUtils.newInstance(beanDefinition, applicationContext);
 					applicationContext.registerSingleton(aspectName, aspectInstance);
 				}
 				aspectsRegistry.addAspect(aspectInstance);

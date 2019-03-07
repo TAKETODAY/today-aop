@@ -15,6 +15,11 @@
  */
 package cn.taketoday.aop.cglib.proxy;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import cn.taketoday.aop.Constant;
 import cn.taketoday.aop.cglib.core.ClassEmitter;
 import cn.taketoday.aop.cglib.core.CodeEmitter;
@@ -23,11 +28,6 @@ import cn.taketoday.aop.cglib.core.Signature;
 import cn.taketoday.aop.cglib.core.TypeUtils;
 import cn.taketoday.context.asm.Label;
 import cn.taketoday.context.asm.Type;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 @SuppressWarnings("all")
 class LazyLoaderGenerator implements CallbackGenerator {

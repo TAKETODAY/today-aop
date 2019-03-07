@@ -19,6 +19,8 @@
  */
 package test.aspect;
 
+import org.aopalliance.intercept.Joinpoint;
+
 import cn.taketoday.aop.annotation.AfterReturning;
 import cn.taketoday.aop.annotation.AfterThrowing;
 import cn.taketoday.aop.annotation.Around;
@@ -28,9 +30,6 @@ import cn.taketoday.aop.annotation.JoinPoint;
 import cn.taketoday.aop.annotation.Throwing;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.Order;
-
-import org.aopalliance.intercept.Joinpoint;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

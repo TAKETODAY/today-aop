@@ -19,15 +19,6 @@
  */
 package cn.taketoday.aop.advice;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.aop.annotation.Annotated;
-import cn.taketoday.aop.annotation.Argument;
-import cn.taketoday.aop.annotation.Arguments;
-import cn.taketoday.aop.annotation.JoinPoint;
-import cn.taketoday.aop.annotation.Returning;
-import cn.taketoday.aop.annotation.Throwing;
-import cn.taketoday.context.utils.ExceptionUtils;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -36,6 +27,15 @@ import org.aopalliance.aop.Advice;
 import org.aopalliance.intercept.Joinpoint;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+
+import cn.taketoday.aop.Constant;
+import cn.taketoday.aop.annotation.Annotated;
+import cn.taketoday.aop.annotation.Argument;
+import cn.taketoday.aop.annotation.Arguments;
+import cn.taketoday.aop.annotation.JoinPoint;
+import cn.taketoday.aop.annotation.Returning;
+import cn.taketoday.aop.annotation.Throwing;
+import cn.taketoday.context.utils.ExceptionUtils;
 
 /**
  * @author Today <br>
@@ -121,8 +121,15 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 			switch (adviceParameters[i])
 			{
 				case Constant.TYPE_THROWING : {
-					// TODO
-					args[i] = ExceptionUtils.unwrapThrowable(ex);
+					if (ex != null) {
+						final Class<?> parameterType = adviceParameterTypes[i];
+						final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
+						if (parameterType == Throwable.class //
+								|| parameterType.isAssignableFrom(throwable.getClass())) //
+						{
+							args[i] = throwable;
+						}
+					}
 					break;
 				}
 				case Constant.TYPE_ARGUMENT : {
@@ -163,11 +170,19 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 					if (Joinpoint.class.isAssignableFrom(parameterType)) {
 						args[i] = methodInvocation;
 					}
-					if (Throwable.class.isAssignableFrom(parameterType)) {
-						args[i] = ExceptionUtils.unwrapThrowable(ex);
-					}
 					if (Annotation.class.isAssignableFrom(parameterType)) {
 						args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) parameterType);
+					}
+					if (ex != null) {
+						final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
+						if (parameterType == Throwable.class //
+								|| parameterType.isAssignableFrom(throwable.getClass())) //
+						{
+							args[i] = throwable;
+						}
+					}
+					if (returnValue != null && parameterType.isAssignableFrom(returnValue.getClass())) {
+						args[i] = returnValue;
 					}
 					break;
 				}

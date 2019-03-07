@@ -15,12 +15,12 @@
  */
 package cn.taketoday.aop.cglib.transform;
 
-import cn.taketoday.aop.Constant;
 import cn.taketoday.context.asm.ClassVisitor;
 
 abstract public class AbstractClassTransformer extends ClassTransformer {
+
 	protected AbstractClassTransformer() {
-		super(Constant.ASM_API);
+//		super(Constant.ASM_API);1
 	}
 
 	public void setTarget(ClassVisitor target) {

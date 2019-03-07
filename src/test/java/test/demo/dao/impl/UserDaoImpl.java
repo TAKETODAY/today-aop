@@ -19,12 +19,11 @@
  */
 package test.demo.dao.impl;
 
-import cn.taketoday.context.annotation.Repository;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.taketoday.context.annotation.Repository;
 import test.demo.dao.UserDao;
 import test.demo.domain.User;
 

@@ -15,10 +15,6 @@
  */
 package cn.taketoday.aop.cglib.core;
 
-import cn.taketoday.aop.Constant;
-import cn.taketoday.context.asm.Attribute;
-import cn.taketoday.context.asm.Type;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -40,6 +36,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import cn.taketoday.aop.Constant;
+import cn.taketoday.context.asm.Attribute;
+import cn.taketoday.context.asm.Type;
 
 /**
  * @version $Id: ReflectUtils.java,v 1.30 2009/01/11 19:47:49 herbyderby Exp $
