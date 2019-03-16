@@ -28,3 +28,11 @@ public class LogAspect {
 - fix: add `AspectsDestroyListener` to clear `AspectsRegistry` aspects instance when context close 
 - optimization code
 
+
+
+## v1.0.5
+- fix: Superclass has no null constructors but no arguments were given
+
+
+
+

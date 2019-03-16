@@ -16,6 +16,10 @@
 package cn.taketoday.aop.cglib.transform;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.security.ProtectionDomain;
 
 import cn.taketoday.aop.cglib.core.ClassGenerator;
 import cn.taketoday.aop.cglib.core.CodeGenerationException;
@@ -31,13 +35,14 @@ import cn.taketoday.context.asm.ClassWriter;
  */
 @SuppressWarnings("all")
 abstract public class AbstractClassLoader extends ClassLoader {
+	
 	private ClassFilter filter;
 	private ClassLoader classPath;
-	private static java.security.ProtectionDomain DOMAIN;
+	private static ProtectionDomain DOMAIN;
 
 	static {
 
-		DOMAIN = (java.security.ProtectionDomain) java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+		DOMAIN = (ProtectionDomain) AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
 				return AbstractClassLoader.class.getProtectionDomain();
 			}
@@ -65,7 +70,7 @@ abstract public class AbstractClassLoader extends ClassLoader {
 		}
 		ClassReader r;
 		try {
-			java.io.InputStream is = classPath.getResourceAsStream(name.replace('.', '/') + ".class");
+			InputStream is = classPath.getResourceAsStream(name.replace('.', '/').concat(".class"));
 			if (is == null) {
 				throw new ClassNotFoundException(name);
 			}

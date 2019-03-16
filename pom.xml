@@ -5,10 +5,10 @@
 	<artifactId>today-aop</artifactId>
 
 <!-- 
-	<version>1.0.5.SNAPSHOT</version>
+	<version>1.0.5.RELEASE</version>
  -->
-
-	<version>1.0.4.RELEASE</version>
+ 
+	<version>1.0.5.SNAPSHOT</version>
 
 	<name>Today Aop Framework</name>
 
@@ -39,7 +39,7 @@
 	<scm>
 		<url>https://github.com/TAKETODAY/today-aop.git</url>
 		<developerConnection>TODAY</developerConnection>
-		<tag>web-framework</tag>
+		<tag>aop-framework</tag>
 	</scm>
 
 	<issueManagement>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>cn.taketoday</groupId>
 			<artifactId>today-context</artifactId>
-			<version>2.1.5.RELEASE</version>
+			<version>2.1.6.SNAPSHOT</version>
 		</dependency>
 
 		<!-- test -->

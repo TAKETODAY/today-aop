@@ -19,7 +19,8 @@ import cn.taketoday.aop.cglib.core.ClassGenerator;
 import cn.taketoday.context.asm.ClassReader;
 
 public class TransformingClassLoader extends AbstractClassLoader {
-	private ClassTransformerFactory t;
+	
+	private final ClassTransformerFactory t;
 
 	public TransformingClassLoader(ClassLoader parent, ClassFilter filter, ClassTransformerFactory t) {
 		super(parent, parent, filter);
@@ -27,7 +28,6 @@ public class TransformingClassLoader extends AbstractClassLoader {
 	}
 
 	protected ClassGenerator getGenerator(ClassReader r) {
-		ClassTransformer t2 = (ClassTransformer) t.newInstance();
-		return new TransformingClassGenerator(super.getGenerator(r), t2);
+		return new TransformingClassGenerator(super.getGenerator(r), t.newInstance());
 	}
 }

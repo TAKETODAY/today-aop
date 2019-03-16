@@ -19,6 +19,7 @@ import cn.taketoday.context.asm.ClassVisitor;
 import cn.taketoday.context.asm.MethodVisitor;
 
 public class ClassTransformerChain extends AbstractClassTransformer {
+	
 	private ClassTransformer[] chain;
 
 	public ClassTransformerChain(ClassTransformer[] chain) {

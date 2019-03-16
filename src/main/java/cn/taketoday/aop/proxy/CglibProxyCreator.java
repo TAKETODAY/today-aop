@@ -19,9 +19,15 @@
  */
 package cn.taketoday.aop.proxy;
 
+import java.lang.reflect.Constructor;
+
 import cn.taketoday.aop.ProxyCreator;
 import cn.taketoday.aop.cglib.proxy.Enhancer;
 import cn.taketoday.aop.intercept.CglibMethodInterceptor;
+import cn.taketoday.context.annotation.Autowired;
+import cn.taketoday.context.exception.ConfigurationException;
+import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.utils.ContextUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -32,14 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CglibProxyCreator implements ProxyCreator {
 
-	private TargetSource targetSource;
-
-	public CglibProxyCreator(TargetSource targetSource) {
-		this.targetSource = targetSource;
-	}
-	
 	@Override
-	public Object createProxy() {
+	public Object createProxy(TargetSource targetSource, BeanFactory beanFactory) {
 
 		log.debug("Creating Cglib Proxy, target source is: [{}]", targetSource);
 
@@ -50,7 +50,22 @@ public class CglibProxyCreator implements ProxyCreator {
 		enhancer.setInterceptDuringConstruction(false);
 		enhancer.setCallback(new CglibMethodInterceptor(targetSource));
 
-		return enhancer.create();
+		// fix: Superclass has no null constructors but no arguments were given
+		Constructor<?>[] constructors = targetClass.getConstructors();
+		if (constructors == null || constructors.length == 0) {
+			throw new ConfigurationException("You must provide at least one public constructor");
+		}
+
+		for (Constructor<?> constructor : constructors) {
+			if (constructor.getParameterCount() == 0) {// <init>()
+				return enhancer.create();
+			}
+			else if (constructor.isAnnotationPresent(Autowired.class)) {
+				final Object[] resolveParameter = ContextUtils.resolveParameter(constructor, beanFactory);
+				return enhancer.create(constructor.getParameterTypes(), resolveParameter);
+			}
+		}
+		throw new ConfigurationException("Your provided constructors must at least one annotated @{}", Autowired.class.getName());
 	}
 
 }

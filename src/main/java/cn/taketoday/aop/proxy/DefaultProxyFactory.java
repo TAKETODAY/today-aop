@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 import org.aopalliance.intercept.MethodInterceptor;
 
 import cn.taketoday.aop.Constant;
-import cn.taketoday.aop.ProxyCreator;
 import cn.taketoday.aop.ProxyFactory;
 import cn.taketoday.aop.advice.AbstractAdvice;
 import cn.taketoday.aop.advice.AspectsRegistry;
@@ -52,6 +51,8 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class DefaultProxyFactory implements ProxyFactory {
+
+	private static final CglibProxyCreator CGLIB_PROXY_CREATOR = new CglibProxyCreator();;
 
 	private final BeanFactory beanFactory;
 	private final TargetSource targetSource;
@@ -109,7 +110,8 @@ public class DefaultProxyFactory implements ProxyFactory {
 				}
 			}
 			if (weaved) {
-				return createAopProxy().createProxy();
+				targetSource.setAspectMappings(aspectMappings);
+				return CGLIB_PROXY_CREATOR.createProxy(targetSource, beanFactory);
 			}
 			return targetSource.getTarget();
 		}
@@ -297,7 +299,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 			return interceptor.getConstructor(Method.class, Object.class).newInstance(aspectMethod, aspect);
 		}
 
-		// fix 
+		// fix
 		if (interceptor.isAnnotationPresent(Aspect.class)) {
 			MethodInterceptor bean = beanFactory.getBean(interceptor);
 			if (bean != null) {
@@ -324,11 +326,6 @@ public class DefaultProxyFactory implements ProxyFactory {
 			aspectMappings.put(targetMethod, aspectMapping);
 		}
 		aspectMapping.add(advice);
-	}
-
-	protected ProxyCreator createAopProxy() {
-		targetSource.setAspectMappings(aspectMappings);
-		return new CglibProxyCreator(targetSource);
 	}
 
 }

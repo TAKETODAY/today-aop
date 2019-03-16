@@ -19,6 +19,9 @@
  */
 package cn.taketoday.aop;
 
+import cn.taketoday.aop.proxy.TargetSource;
+import cn.taketoday.context.factory.BeanFactory;
+
 /**
  * @author Today <br>
  * 
@@ -27,10 +30,10 @@ package cn.taketoday.aop;
 public interface ProxyCreator {
 
 	/**
-	 * create a proxy instance
+	 * Create a proxy instance
 	 * 
-	 * @return
+	 * @return a proxy instance
 	 */
-	Object createProxy();
+	Object createProxy(TargetSource targetSource, BeanFactory beanFactory);
 
 }

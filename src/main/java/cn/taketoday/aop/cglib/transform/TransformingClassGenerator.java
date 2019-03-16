@@ -20,8 +20,8 @@ import cn.taketoday.context.asm.ClassVisitor;
 
 public class TransformingClassGenerator implements ClassGenerator {
 
-	private ClassGenerator gen;
-	private ClassTransformer t;
+	private final ClassGenerator gen;
+	private final ClassTransformer t;
 
 	public TransformingClassGenerator(ClassGenerator gen, ClassTransformer t) {
 		this.gen = gen;
