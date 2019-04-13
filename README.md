@@ -1,5 +1,7 @@
 # TODAY AOP
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/bcdbbc4dda6a472a8de34df221b857cb)](https://app.codacy.com/app/TAKETODAY/today-aop?utm_source=github.com&utm_medium=referral&utm_content=TAKETODAY/today-aop&utm_campaign=Badge_Grade_Dashboard)
+
 > TODAY AOP 是一款高性能轻量级的aop框架
 
 
