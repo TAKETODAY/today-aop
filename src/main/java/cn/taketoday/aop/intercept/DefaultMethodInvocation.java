@@ -42,14 +42,14 @@ public class DefaultMethodInvocation implements MethodInvocation {
 	 * a flag show that current index of advice
 	 */
 	private int currentAdviceIndex = 0;
-	
+
 	private final int adviceLength;
 
 	public DefaultMethodInvocation(Object target, Method method, Object[] arguments, MethodInterceptor[] advices) {
 		this.target = target;
 		this.method = method;
-		this.advices = advices;
 		this.args = arguments;
+		this.advices = advices;
 		this.adviceLength = advices.length;
 	}
 

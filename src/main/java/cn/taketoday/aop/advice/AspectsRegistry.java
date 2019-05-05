@@ -35,12 +35,12 @@ public enum AspectsRegistry {
 
 	ASPECTS_REGISTRY;
 
+	@Getter
+	private final List<Object> aspects = new ArrayList<>();
+
 	private AspectsRegistry() {
 
 	}
-
-	@Getter
-	private final List<Object> aspects = new ArrayList<>();
 
 	public void addAspect(Object aspect) {
 		aspects.add(aspect);
