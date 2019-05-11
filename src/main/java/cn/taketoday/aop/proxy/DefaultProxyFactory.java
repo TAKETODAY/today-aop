@@ -238,7 +238,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 	 *            advice methods
 	 * @return if class matched
 	 */
-	static boolean matchClass(Class<?> targetClass, Collection<Advice> advices) {
+	public static boolean matchClass(Class<?> targetClass, Collection<Advice> advices) {
 
 		for (Advice advice : advices) {
 			// target class match start
@@ -285,7 +285,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 	 *            interceptor type
 	 * @throws Throwable
 	 */
-	static MethodInterceptor getInterceptor(Object aspect, //
+	public static MethodInterceptor getInterceptor(Object aspect, //
 			Method aspectMethod, Class<? extends MethodInterceptor> interceptor, BeanFactory beanFactory) throws Throwable //
 	{
 
@@ -319,7 +319,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 	 * @param aspectMappings
 	 *            aspect mappings
 	 */
-	static void weaving(MethodInterceptor advice, Method targetMethod, Map<Method, List<MethodInterceptor>> aspectMappings) {
+	public static void weaving(MethodInterceptor advice, Method targetMethod, Map<Method, List<MethodInterceptor>> aspectMappings) {
 		List<MethodInterceptor> aspectMapping = aspectMappings.get(targetMethod);
 		if (aspectMapping == null) {
 			aspectMapping = new ArrayList<>();
