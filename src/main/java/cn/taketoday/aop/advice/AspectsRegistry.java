@@ -33,25 +33,25 @@ import lombok.Getter;
 
 public enum AspectsRegistry {
 
-	ASPECTS_REGISTRY;
+    ASPECTS_REGISTRY;
 
-	@Getter
-	private final List<Object> aspects = new ArrayList<>();
+    @Getter
+    private final List<Object> aspects = new ArrayList<>();
 
-	private AspectsRegistry() {
+    private AspectsRegistry() {
 
-	}
+    }
 
-	public void addAspect(Object aspect) {
-		aspects.add(aspect);
-	}
+    public void addAspect(Object aspect) {
+        aspects.add(aspect);
+    }
 
-	public static AspectsRegistry getInstance() {
-		return ASPECTS_REGISTRY;
-	}
+    public static AspectsRegistry getInstance() {
+        return ASPECTS_REGISTRY;
+    }
 
-	public void sortAspects() {
-		OrderUtils.reversedSort(aspects);
-	}
+    public void sortAspects() {
+        OrderUtils.reversedSort(aspects);
+    }
 
 }

@@ -38,24 +38,24 @@ import lombok.Setter;
 @Setter
 public class TargetSource {
 
-	private Object target;
-	private Class<?> targetClass;
-	private Class<?>[] interfaces;
-	private Map<Method, List<MethodInterceptor>> aspectMappings;
+    private Object target;
+    private Class<?> targetClass;
+    private Class<?>[] interfaces;
+    private Map<Method, List<MethodInterceptor>> aspectMappings;
 
-	public TargetSource(Object target, Class<?> targetClass) {
-		this.target = target;
-		this.targetClass = targetClass;
-		this.interfaces = targetClass.getInterfaces();
-	}
+    public TargetSource(Object target, Class<?> targetClass) {
+        this.target = target;
+        this.targetClass = targetClass;
+        this.interfaces = targetClass.getInterfaces();
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder()//
-				.append("{\"targetClass\":\"").append(targetClass)//
-				.append("\",\"interfaces\":\"").append(Arrays.toString(interfaces))//
-				.append("\",\"target\":\"").append(target)//
-				.append("\"}")//
-				.toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder()//
+                .append("{\"targetClass\":\"").append(targetClass)//
+                .append("\",\"interfaces\":\"").append(Arrays.toString(interfaces))//
+                .append("\",\"target\":\"").append(target)//
+                .append("\"}")//
+                .toString();
+    }
 }

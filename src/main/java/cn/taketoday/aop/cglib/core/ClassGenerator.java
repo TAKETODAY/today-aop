@@ -19,6 +19,6 @@ import cn.taketoday.context.asm.ClassVisitor;
 
 public interface ClassGenerator {
 
-	void generateClass(ClassVisitor v) throws Exception;
+    void generateClass(ClassVisitor v) throws Exception;
 
 }

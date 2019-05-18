@@ -16,7 +16,7 @@
 package cn.taketoday.aop.cglib.transform.impl;
 
 public interface InterceptFieldEnabled {
-	void setInterceptFieldCallback(InterceptFieldCallback callback);
+    void setInterceptFieldCallback(InterceptFieldCallback callback);
 
-	InterceptFieldCallback getInterceptFieldCallback();
+    InterceptFieldCallback getInterceptFieldCallback();
 }

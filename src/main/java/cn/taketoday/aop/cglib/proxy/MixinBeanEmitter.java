@@ -27,15 +27,15 @@ import cn.taketoday.context.asm.ClassVisitor;
  */
 @SuppressWarnings("all")
 class MixinBeanEmitter extends MixinEmitter {
-	public MixinBeanEmitter(ClassVisitor v, String className, Class[] classes) {
-		super(v, className, classes, null);
-	}
+    public MixinBeanEmitter(ClassVisitor v, String className, Class[] classes) {
+        super(v, className, classes, null);
+    }
 
-	protected Class[] getInterfaces(Class[] classes) {
-		return null;
-	}
+    protected Class[] getInterfaces(Class[] classes) {
+        return null;
+    }
 
-	protected Method[] getMethods(Class type) {
-		return ReflectUtils.getPropertyMethods(ReflectUtils.getBeanProperties(type), true, true);
-	}
+    protected Method[] getMethods(Class type) {
+        return ReflectUtils.getPropertyMethods(ReflectUtils.getBeanProperties(type), true, true);
+    }
 }

@@ -24,19 +24,19 @@ import java.util.Set;
 
 @SuppressWarnings("all")
 public /* need it for class loading */ class FixedKeySet extends AbstractSet {
-	private Set set;
-	private int size;
+    private Set set;
+    private int size;
 
-	public FixedKeySet(String[] keys) {
-		size = keys.length;
-		set = Collections.unmodifiableSet(new HashSet(Arrays.asList(keys)));
-	}
+    public FixedKeySet(String[] keys) {
+        size = keys.length;
+        set = Collections.unmodifiableSet(new HashSet(Arrays.asList(keys)));
+    }
 
-	public Iterator iterator() {
-		return set.iterator();
-	}
+    public Iterator iterator() {
+        return set.iterator();
+    }
 
-	public int size() {
-		return size;
-	}
+    public int size() {
+        return size;
+    }
 }

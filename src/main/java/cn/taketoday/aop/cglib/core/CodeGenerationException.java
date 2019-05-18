@@ -21,14 +21,14 @@ package cn.taketoday.aop.cglib.core;
  */
 @SuppressWarnings("all")
 public class CodeGenerationException extends RuntimeException {
-	private Throwable cause;
+    private Throwable cause;
 
-	public CodeGenerationException(Throwable cause) {
-		super(cause.getClass().getName() + "-->" + cause.getMessage());
-		this.cause = cause;
-	}
+    public CodeGenerationException(Throwable cause) {
+        super(cause.getClass().getName() + "-->" + cause.getMessage());
+        this.cause = cause;
+    }
 
-	public Throwable getCause() {
-		return cause;
-	}
+    public Throwable getCause() {
+        return cause;
+    }
 }

@@ -29,23 +29,23 @@ import cn.taketoday.aop.cglib.core.Signature;
  */
 @SuppressWarnings("all")
 interface CallbackGenerator {
-	void generate(ClassEmitter ce, Context context, List methods) throws Exception;
+    void generate(ClassEmitter ce, Context context, List methods) throws Exception;
 
-	void generateStatic(CodeEmitter e, Context context, List methods) throws Exception;
+    void generateStatic(CodeEmitter e, Context context, List methods) throws Exception;
 
-	interface Context {
-		ClassLoader getClassLoader();
+    interface Context {
+        ClassLoader getClassLoader();
 
-		CodeEmitter beginMethod(ClassEmitter ce, MethodInfo method);
+        CodeEmitter beginMethod(ClassEmitter ce, MethodInfo method);
 
-		int getOriginalModifiers(MethodInfo method);
+        int getOriginalModifiers(MethodInfo method);
 
-		int getIndex(MethodInfo method);
+        int getIndex(MethodInfo method);
 
-		void emitCallback(CodeEmitter ce, int index);
+        void emitCallback(CodeEmitter ce, int index);
 
-		Signature getImplSignature(MethodInfo method);
+        Signature getImplSignature(MethodInfo method);
 
-		void emitLoadArgsAndInvoke(CodeEmitter e, MethodInfo method);
-	}
+        void emitLoadArgsAndInvoke(CodeEmitter e, MethodInfo method);
+    }
 }

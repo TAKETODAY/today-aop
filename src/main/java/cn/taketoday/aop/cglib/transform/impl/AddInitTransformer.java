@@ -29,31 +29,30 @@ import cn.taketoday.context.asm.Type;
  * @author Mark Hobson
  */
 public class AddInitTransformer extends ClassEmitterTransformer {
-	private MethodInfo info;
+    private MethodInfo info;
 
-	public AddInitTransformer(Method method) {
-		info = ReflectUtils.getMethodInfo(method);
+    public AddInitTransformer(Method method) {
+        info = ReflectUtils.getMethodInfo(method);
 
-		Type[] types = info.getSignature().getArgumentTypes();
-		if (types.length != 1 || !types[0].equals(Constant.TYPE_OBJECT)
-				|| !info.getSignature().getReturnType().equals(Type.VOID_TYPE)) {
-			throw new IllegalArgumentException(method + " illegal signature");
-		}
-	}
+        Type[] types = info.getSignature().getArgumentTypes();
+        if (types.length != 1 || !types[0].equals(Constant.TYPE_OBJECT) || !info.getSignature().getReturnType().equals(Type.VOID_TYPE)) {
+            throw new IllegalArgumentException(method + " illegal signature");
+        }
+    }
 
-	public CodeEmitter begin_method(int access, Signature sig, Type[] exceptions) {
-		final CodeEmitter emitter = super.begin_method(access, sig, exceptions);
-		if (sig.getName().equals(Constant.CONSTRUCTOR_NAME)) {
-			return new CodeEmitter(emitter) {
-				public void visitInsn(int opcode) {
-					if (opcode == Constant.RETURN) {
-						load_this();
-						invoke(info);
-					}
-					super.visitInsn(opcode);
-				}
-			};
-		}
-		return emitter;
-	}
+    public CodeEmitter begin_method(int access, Signature sig, Type[] exceptions) {
+        final CodeEmitter emitter = super.begin_method(access, sig, exceptions);
+        if (sig.getName().equals(Constant.CONSTRUCTOR_NAME)) {
+            return new CodeEmitter(emitter) {
+                public void visitInsn(int opcode) {
+                    if (opcode == Constant.RETURN) {
+                        load_this();
+                        invoke(info);
+                    }
+                    super.visitInsn(opcode);
+                }
+            };
+        }
+        return emitter;
+    }
 }

@@ -42,24 +42,24 @@ import test.aspect.Logger;
 //@Advice(pointcut = "test.demo.service.impl.*", method = "login")
 public class TestInterceptor implements MethodInterceptor {
 
-	@Override
-	public Object invoke(MethodInvocation invocation) throws Throwable {
-		
-		log.debug("MethodInterceptor before");
-		
-		Object proceed = invocation.proceed();
-		
-		log.debug("MethodInterceptor afetr");
-		
-		return proceed;
-	}
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
 
-	@After(Logger.class)
-	public Object after(@Returning Object value) {
+        log.debug("MethodInterceptor before");
 
-		log.debug("value: {}",value);
+        Object proceed = invocation.proceed();
 
-		return value;
-	}
+        log.debug("MethodInterceptor afetr");
+
+        return proceed;
+    }
+
+    @After(Logger.class)
+    public Object after(@Returning Object value) {
+
+        log.debug("value: {}", value);
+
+        return value;
+    }
 
 }

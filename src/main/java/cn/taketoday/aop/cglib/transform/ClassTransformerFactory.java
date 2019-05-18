@@ -16,5 +16,5 @@
 package cn.taketoday.aop.cglib.transform;
 
 public interface ClassTransformerFactory {
-	ClassTransformer newInstance();
+    ClassTransformer newInstance();
 }

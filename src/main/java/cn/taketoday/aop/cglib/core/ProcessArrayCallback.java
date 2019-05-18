@@ -18,5 +18,5 @@ package cn.taketoday.aop.cglib.core;
 import cn.taketoday.context.asm.Type;
 
 public interface ProcessArrayCallback {
-	void processElement(Type type);
+    void processElement(Type type);
 }

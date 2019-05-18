@@ -27,8 +27,8 @@ import test.demo.domain.User;
  */
 public interface UserDao {
 
-	public boolean save(User user);
+    public boolean save(User user);
 
-	public User login(User user);
+    public User login(User user);
 
 }

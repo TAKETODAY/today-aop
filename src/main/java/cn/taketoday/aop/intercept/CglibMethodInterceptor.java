@@ -40,28 +40,28 @@ import cn.taketoday.context.utils.OrderUtils;
 //@Slf4j
 public class CglibMethodInterceptor implements cn.taketoday.aop.cglib.proxy.MethodInterceptor {
 
-	private final Object target;
-	private final Map<Method, MethodInterceptor[]> aspectMappings;
+    private final Object target;
+    private final Map<Method, MethodInterceptor[]> aspectMappings;
 
-	public CglibMethodInterceptor(TargetSource targetSource) {
-		this.target = targetSource.getTarget();
-		Map<Method, List<MethodInterceptor>> aspectMappings_ = targetSource.getAspectMappings();
-		aspectMappings = new HashMap<>(aspectMappings_.size(), 1.0f);
+    public CglibMethodInterceptor(TargetSource targetSource) {
+        this.target = targetSource.getTarget();
+        Map<Method, List<MethodInterceptor>> aspectMappings_ = targetSource.getAspectMappings();
+        aspectMappings = new HashMap<>(aspectMappings_.size(), 1.0f);
 
-		for (Entry<Method, List<MethodInterceptor>> advices : aspectMappings_.entrySet()) {
-			advices.getValue().sort(Comparator.comparingInt(OrderUtils::getOrder).reversed());
-			aspectMappings.put(advices.getKey(), advices.getValue().toArray(new MethodInterceptor[0]));
-		}
-	}
+        for (Entry<Method, List<MethodInterceptor>> advices : aspectMappings_.entrySet()) {
+            advices.getValue().sort(Comparator.comparingInt(OrderUtils::getOrder).reversed());
+            aspectMappings.put(advices.getKey(), advices.getValue().toArray(new MethodInterceptor[0]));
+        }
+    }
 
-	@Override
-	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-		final MethodInterceptor[] advices = aspectMappings.get(method);
-		if (advices == null) {
-			return proxy.invoke(target, args);
-		}
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        final MethodInterceptor[] advices = aspectMappings.get(method);
+        if (advices == null) {
+            return proxy.invoke(target, args);
+        }
 //		log.debug("Intercept method: [{}]", method.getName());
-		return new DefaultMethodInvocation(target, method, args, advices).proceed();
-	}
+        return new DefaultMethodInvocation(target, method, args, advices).proceed();
+    }
 
 }

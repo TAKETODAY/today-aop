@@ -42,31 +42,31 @@ import lombok.extern.slf4j.Slf4j;
 @Order(Ordered.HIGHEST_PRECEDENCE + 1)
 public class TimeAspect {
 
-	private final ThreadLocal<Long> time = new ThreadLocal<>();
+    private final ThreadLocal<Long> time = new ThreadLocal<>();
 
-	@AfterReturning(Timer.class)
-	public void afterReturning(@JoinPoint Joinpoint joinpoint) {
-		log.debug("TimeAspect @AfterReturning Use [{}] ms", System.currentTimeMillis() - time.get());
-	}
+    @AfterReturning(Timer.class)
+    public void afterReturning(@JoinPoint Joinpoint joinpoint) {
+        log.debug("TimeAspect @AfterReturning Use [{}] ms", System.currentTimeMillis() - time.get());
+    }
 
-	@AfterThrowing(Timer.class)
-	public void afterThrowing(@Throwing Throwable throwable) {
-		log.error("TimeAspect @AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
-	}
+    @AfterThrowing(Timer.class)
+    public void afterThrowing(@Throwing Throwable throwable) {
+        log.error("TimeAspect @AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
+    }
 
-	@Before(Timer.class)
-	public void before() {
-		time.set(System.currentTimeMillis());
-		log.debug("TimeAspect @Before method");
-	}
+    @Before(Timer.class)
+    public void before() {
+        time.set(System.currentTimeMillis());
+        log.debug("TimeAspect @Before method");
+    }
 
-	@Around(Timer.class)
-	public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
-		log.debug("TimeAspect @Around Before method");
+    @Around(Timer.class)
+    public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
+        log.debug("TimeAspect @Around Before method");
 //		int i = 1 / 0;
-		Object proceed = joinpoint.proceed();
-		log.debug("TimeAspect @Around After method");
-		return proceed;
-	}
+        Object proceed = joinpoint.proceed();
+        log.debug("TimeAspect @Around After method");
+        return proceed;
+    }
 
 }

@@ -36,15 +36,15 @@ import cn.taketoday.context.factory.BeanPostProcessor;
 @Order(Ordered.LOWEST_PRECEDENCE - Ordered.HIGHEST_PRECEDENCE)
 public class AutoProxyCreator implements BeanPostProcessor, BeanFactoryAware {
 
-	private BeanFactory beanFactory;
+    private BeanFactory beanFactory;
 
-	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
-		return new DefaultProxyFactory(new TargetSource(bean, bean.getClass()), beanFactory).getProxy();
-	}
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
+        return new DefaultProxyFactory(new TargetSource(bean, bean.getClass()), beanFactory).getProxy();
+    }
 
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
-	}
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
+    }
 }

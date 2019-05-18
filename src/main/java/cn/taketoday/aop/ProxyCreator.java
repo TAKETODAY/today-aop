@@ -29,11 +29,11 @@ import cn.taketoday.context.factory.BeanFactory;
  */
 public interface ProxyCreator {
 
-	/**
-	 * Create a proxy instance
-	 * 
-	 * @return a proxy instance
-	 */
-	Object createProxy(TargetSource targetSource, BeanFactory beanFactory);
+    /**
+     * Create a proxy instance
+     * 
+     * @return a proxy instance
+     */
+    Object createProxy(TargetSource targetSource, BeanFactory beanFactory);
 
 }

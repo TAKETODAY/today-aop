@@ -37,21 +37,21 @@ import test.demo.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
-	@Autowired
-	private UserDao userDao;
+    @Autowired
+    private UserDao userDao;
 
-	@Timer
-	@Logger("登录")
-	@Override
-	public User login(User user) {
-		log.debug("login");
+    @Timer
+    @Logger("登录")
+    @Override
+    public User login(User user) {
+        log.debug("login");
 //		int i = 1 / 0;
-		return userDao.login(user);
-	}
+        return userDao.login(user);
+    }
 
-	@Logger("注册")
-	@Override
-	public boolean register(User user) {
-		return userDao.save(user);
-	}
+    @Logger("注册")
+    @Override
+    public boolean register(User user) {
+        return userDao.save(user);
+    }
 }

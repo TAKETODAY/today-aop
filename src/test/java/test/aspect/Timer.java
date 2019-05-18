@@ -35,10 +35,10 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Timer {
 
-	/**
-	 * key
-	 * 
-	 * @return
-	 */
-	String value() default "";
+    /**
+     * key
+     * 
+     * @return
+     */
+    String value() default "";
 }

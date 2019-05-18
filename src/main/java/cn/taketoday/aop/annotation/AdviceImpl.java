@@ -34,52 +34,52 @@ import cn.taketoday.aop.advice.AbstractAdvice;
 @SuppressWarnings("all")
 public class AdviceImpl implements Advice {
 
-	private String[] pointcut = {};
-	private Class<?>[] target = null;
-	private String method[] = { "*" };
-	private Class<? extends Annotation>[] value;
-	private Class<? extends MethodInterceptor> interceptor = AbstractAdvice.class;
+    private String[] pointcut = {};
+    private Class<?>[] target = null;
+    private String method[] = { "*" };
+    private Class<? extends Annotation>[] value;
+    private Class<? extends MethodInterceptor> interceptor = AbstractAdvice.class;
 
-	@Override
-	public Class<? extends Annotation> annotationType() {
-		return Advice.class;
-	}
+    @Override
+    public Class<? extends Annotation> annotationType() {
+        return Advice.class;
+    }
 
-	@Override
-	public Class<? extends Annotation>[] value() {
-		return this.value;
-	}
+    @Override
+    public Class<? extends Annotation>[] value() {
+        return this.value;
+    }
 
-	@Override
-	public Class<?>[] target() {
-		return target;
-	}
+    @Override
+    public Class<?>[] target() {
+        return target;
+    }
 
-	@Override
-	public String[] method() {
-		return this.method;
-	}
+    @Override
+    public String[] method() {
+        return this.method;
+    }
 
-	@Override
-	public String[] pointcut() {
-		return this.pointcut;
-	}
+    @Override
+    public String[] pointcut() {
+        return this.pointcut;
+    }
 
-	@Override
-	public Class<? extends MethodInterceptor> interceptor() {
-		return this.interceptor;
-	}
+    @Override
+    public Class<? extends MethodInterceptor> interceptor() {
+        return this.interceptor;
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder()//
-				.append("{\n\t\"value\":\"").append(Arrays.toString(value))//
-				.append("\",\n\t\"method\":\"").append(Arrays.toString(method))//
-				.append("\",\n\t\"pointcut\":\"").append(Arrays.toString(pointcut))//
-				.append("\",\n\t\"target\":\"").append(Arrays.toString(target))//
-				.append("\",\n\t\"interceptor\":\"").append(interceptor)//
-				.append("\"\n}")//
-				.toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder()//
+                .append("{\n\t\"value\":\"").append(Arrays.toString(value))//
+                .append("\",\n\t\"method\":\"").append(Arrays.toString(method))//
+                .append("\",\n\t\"pointcut\":\"").append(Arrays.toString(pointcut))//
+                .append("\",\n\t\"target\":\"").append(Arrays.toString(target))//
+                .append("\",\n\t\"interceptor\":\"").append(interceptor)//
+                .append("\"\n}")//
+                .toString();
+    }
 
 }

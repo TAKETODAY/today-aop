@@ -37,144 +37,144 @@ import cn.taketoday.context.asm.Type;
  */
 @SuppressWarnings("all")
 abstract public class StringSwitcher {
-	
-	private static final Type STRING_SWITCHER = TypeUtils.parseType("cn.taketoday.aop.cglib.util.StringSwitcher");
-	private static final Signature INT_VALUE = TypeUtils.parseSignature("int intValue(String)");
-	private static final StringSwitcherKey KEY_FACTORY = (StringSwitcherKey) KeyFactory.create(StringSwitcherKey.class);
 
-	interface StringSwitcherKey {
-		public Object newInstance(String[] strings, int[] ints, boolean fixedInput);
-	}
+    private static final Type STRING_SWITCHER = TypeUtils.parseType("cn.taketoday.aop.cglib.util.StringSwitcher");
+    private static final Signature INT_VALUE = TypeUtils.parseSignature("int intValue(String)");
+    private static final StringSwitcherKey KEY_FACTORY = (StringSwitcherKey) KeyFactory.create(StringSwitcherKey.class);
 
-	/**
-	 * Helper method to create a StringSwitcher. For finer control over the
-	 * generated instance, use a new instance of StringSwitcher.Generator instead of
-	 * this static method.
-	 * 
-	 * @param strings
-	 *            the array of String keys; must be the same length as the value
-	 *            array
-	 * @param ints
-	 *            the array of integer results; must be the same length as the key
-	 *            array
-	 * @param fixedInput
-	 *            if false, an unknown key will be returned from {@link #intValue}
-	 *            as <code>-1</code>; if true, the result will be undefined, and the
-	 *            resulting code will be faster
-	 */
-	public static StringSwitcher create(String[] strings, int[] ints, boolean fixedInput) {
-		Generator gen = new Generator();
-		gen.setStrings(strings);
-		gen.setInts(ints);
-		gen.setFixedInput(fixedInput);
-		return gen.create();
-	}
+    interface StringSwitcherKey {
+        public Object newInstance(String[] strings, int[] ints, boolean fixedInput);
+    }
 
-	protected StringSwitcher() {
-	}
+    /**
+     * Helper method to create a StringSwitcher. For finer control over the
+     * generated instance, use a new instance of StringSwitcher.Generator instead of
+     * this static method.
+     * 
+     * @param strings
+     *            the array of String keys; must be the same length as the value
+     *            array
+     * @param ints
+     *            the array of integer results; must be the same length as the key
+     *            array
+     * @param fixedInput
+     *            if false, an unknown key will be returned from {@link #intValue}
+     *            as <code>-1</code>; if true, the result will be undefined, and the
+     *            resulting code will be faster
+     */
+    public static StringSwitcher create(String[] strings, int[] ints, boolean fixedInput) {
+        Generator gen = new Generator();
+        gen.setStrings(strings);
+        gen.setInts(ints);
+        gen.setFixedInput(fixedInput);
+        return gen.create();
+    }
 
-	/**
-	 * Return the integer associated with the given key.
-	 * 
-	 * @param s
-	 *            the key
-	 * @return the associated integer value, or <code>-1</code> if the key is
-	 *         unknown (unless <code>fixedInput</code> was specified when this
-	 *         <code>StringSwitcher</code> was created, in which case the return
-	 *         value for an unknown key is undefined)
-	 */
-	abstract public int intValue(String s);
+    protected StringSwitcher() {
+    }
 
-	public static class Generator extends AbstractClassGenerator {
-		private static final Source SOURCE = new Source(StringSwitcher.class.getName());
+    /**
+     * Return the integer associated with the given key.
+     * 
+     * @param s
+     *            the key
+     * @return the associated integer value, or <code>-1</code> if the key is
+     *         unknown (unless <code>fixedInput</code> was specified when this
+     *         <code>StringSwitcher</code> was created, in which case the return
+     *         value for an unknown key is undefined)
+     */
+    abstract public int intValue(String s);
 
-		private String[] strings;
-		private int[] ints;
-		private boolean fixedInput;
+    public static class Generator extends AbstractClassGenerator {
+        private static final Source SOURCE = new Source(StringSwitcher.class.getName());
 
-		public Generator() {
-			super(SOURCE);
-		}
+        private String[] strings;
+        private int[] ints;
+        private boolean fixedInput;
 
-		/**
-		 * Set the array of recognized Strings.
-		 * 
-		 * @param strings
-		 *            the array of String keys; must be the same length as the value
-		 *            array
-		 * @see #setInts
-		 */
-		public void setStrings(String[] strings) {
-			this.strings = strings;
-		}
+        public Generator() {
+            super(SOURCE);
+        }
 
-		/**
-		 * Set the array of integer results.
-		 * 
-		 * @param ints
-		 *            the array of integer results; must be the same length as the key
-		 *            array
-		 * @see #setStrings
-		 */
-		public void setInts(int[] ints) {
-			this.ints = ints;
-		}
+        /**
+         * Set the array of recognized Strings.
+         * 
+         * @param strings
+         *            the array of String keys; must be the same length as the value
+         *            array
+         * @see #setInts
+         */
+        public void setStrings(String[] strings) {
+            this.strings = strings;
+        }
 
-		/**
-		 * Configure how unknown String keys will be handled.
-		 * 
-		 * @param fixedInput
-		 *            if false, an unknown key will be returned from {@link #intValue}
-		 *            as <code>-1</code>; if true, the result will be undefined, and the
-		 *            resulting code will be faster
-		 */
-		public void setFixedInput(boolean fixedInput) {
-			this.fixedInput = fixedInput;
-		}
+        /**
+         * Set the array of integer results.
+         * 
+         * @param ints
+         *            the array of integer results; must be the same length as the key
+         *            array
+         * @see #setStrings
+         */
+        public void setInts(int[] ints) {
+            this.ints = ints;
+        }
 
-		protected ClassLoader getDefaultClassLoader() {
-			return getClass().getClassLoader();
-		}
+        /**
+         * Configure how unknown String keys will be handled.
+         * 
+         * @param fixedInput
+         *            if false, an unknown key will be returned from {@link #intValue}
+         *            as <code>-1</code>; if true, the result will be undefined, and the
+         *            resulting code will be faster
+         */
+        public void setFixedInput(boolean fixedInput) {
+            this.fixedInput = fixedInput;
+        }
 
-		/**
-		 * Generate the <code>StringSwitcher</code>.
-		 */
-		public StringSwitcher create() {
-			setNamePrefix(StringSwitcher.class.getName());
-			Object key = KEY_FACTORY.newInstance(strings, ints, fixedInput);
-			return (StringSwitcher) super.create(key);
-		}
+        protected ClassLoader getDefaultClassLoader() {
+            return getClass().getClassLoader();
+        }
 
-		public void generateClass(ClassVisitor v) throws Exception {
-			ClassEmitter ce = new ClassEmitter(v);
-			ce.begin_class(Constant.V1_2, Constant.ACC_PUBLIC, getClassName(), STRING_SWITCHER, null,
-					Constant.SOURCE_FILE);
-			EmitUtils.null_constructor(ce);
-			final CodeEmitter e = ce.begin_method(Constant.ACC_PUBLIC, INT_VALUE, null);
-			e.load_arg(0);
-			final List stringList = Arrays.asList(strings);
-			int style = fixedInput ? Constant.SWITCH_STYLE_HASHONLY : Constant.SWITCH_STYLE_HASH;
-			EmitUtils.string_switch(e, strings, style, new ObjectSwitchCallback() {
-				public void processCase(Object key, Label end) {
-					e.push(ints[stringList.indexOf(key)]);
-					e.return_value();
-				}
+        /**
+         * Generate the <code>StringSwitcher</code>.
+         */
+        public StringSwitcher create() {
+            setNamePrefix(StringSwitcher.class.getName());
+            Object key = KEY_FACTORY.newInstance(strings, ints, fixedInput);
+            return (StringSwitcher) super.create(key);
+        }
 
-				public void processDefault() {
-					e.push(-1);
-					e.return_value();
-				}
-			});
-			e.end_method();
-			ce.end_class();
-		}
+        public void generateClass(ClassVisitor v) throws Exception {
+            ClassEmitter ce = new ClassEmitter(v);
+            ce.begin_class(Constant.V1_2, Constant.ACC_PUBLIC, getClassName(), STRING_SWITCHER, null,
+                    Constant.SOURCE_FILE);
+            EmitUtils.null_constructor(ce);
+            final CodeEmitter e = ce.begin_method(Constant.ACC_PUBLIC, INT_VALUE, null);
+            e.load_arg(0);
+            final List stringList = Arrays.asList(strings);
+            int style = fixedInput ? Constant.SWITCH_STYLE_HASHONLY : Constant.SWITCH_STYLE_HASH;
+            EmitUtils.string_switch(e, strings, style, new ObjectSwitchCallback() {
+                public void processCase(Object key, Label end) {
+                    e.push(ints[stringList.indexOf(key)]);
+                    e.return_value();
+                }
 
-		protected Object firstInstance(Class type) {
-			return (StringSwitcher) ReflectUtils.newInstance(type);
-		}
+                public void processDefault() {
+                    e.push(-1);
+                    e.return_value();
+                }
+            });
+            e.end_method();
+            ce.end_class();
+        }
 
-		protected Object nextInstance(Object instance) {
-			return instance;
-		}
-	}
+        protected Object firstInstance(Class type) {
+            return (StringSwitcher) ReflectUtils.newInstance(type);
+        }
+
+        protected Object nextInstance(Object instance) {
+            return instance;
+        }
+    }
 }

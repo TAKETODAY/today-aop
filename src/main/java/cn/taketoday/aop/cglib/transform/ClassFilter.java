@@ -22,6 +22,6 @@ package cn.taketoday.aop.cglib.transform;
  */
 public interface ClassFilter {
 
-	boolean accept(String className);
+    boolean accept(String className);
 
 }

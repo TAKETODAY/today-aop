@@ -18,16 +18,16 @@ package cn.taketoday.aop.cglib.transform.impl;
 @SuppressWarnings("all")
 public interface FieldProvider {
 
-	String[] getFieldNames();
+    String[] getFieldNames();
 
-	Class[] getFieldTypes();
+    Class[] getFieldTypes();
 
-	void setField(int index, Object value);
+    void setField(int index, Object value);
 
-	Object getField(int index);
+    Object getField(int index);
 
-	void setField(String name, Object value);
+    void setField(String name, Object value);
 
-	Object getField(String name);
+    Object getField(String name);
 
 }

@@ -36,13 +36,13 @@ import cn.taketoday.context.listener.ApplicationListener;
 @Order(Ordered.LOWEST_PRECEDENCE)
 public class AspectsDestroyListener implements ApplicationListener<ContextCloseEvent> {
 
-	@Override
-	public void onApplicationEvent(ContextCloseEvent event) {
-		
-		LoggerFactory.getLogger(getClass()).info("Destroying Aspects Objects");
-		
-		final AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
-		aspectsRegistry.getAspects().clear();
-	}
+    @Override
+    public void onApplicationEvent(ContextCloseEvent event) {
+
+        LoggerFactory.getLogger(getClass()).info("Destroying Aspects Objects");
+
+        final AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
+        aspectsRegistry.getAspects().clear();
+    }
 
 }

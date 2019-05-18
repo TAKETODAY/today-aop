@@ -43,41 +43,41 @@ import cn.taketoday.context.utils.ClassUtils;
 @Order(Ordered.LOWEST_PRECEDENCE - Ordered.HIGHEST_PRECEDENCE)
 public class AspectsCreator implements ApplicationListener<ContextPreRefreshEvent> {
 
-	@Override
-	public void onApplicationEvent(ContextPreRefreshEvent event) {
+    @Override
+    public void onApplicationEvent(ContextPreRefreshEvent event) {
 
-		final Logger log = LoggerFactory.getLogger(getClass());
+        final Logger log = LoggerFactory.getLogger(getClass());
 
-		log.debug("Loading Aspect Objects");
+        log.debug("Loading Aspect Objects");
 
-		final AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
-		final ApplicationContext applicationContext = event.getApplicationContext();
+        final AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
+        final ApplicationContext applicationContext = event.getApplicationContext();
 
-		try {
+        try {
 
-			for (final BeanDefinition beanDefinition : applicationContext.getBeanDefinitionsMap().values()) {
+            for (final BeanDefinition beanDefinition : applicationContext.getBeanDefinitionsMap().values()) {
 
-				final Class<? extends Object> beanClass = beanDefinition.getBeanClass();
+                final Class<? extends Object> beanClass = beanDefinition.getBeanClass();
 
-				if (!beanClass.isAnnotationPresent(Aspect.class)) {
-					continue;
-				}
-				// fix use beanDefinition.getName()
-				final String aspectName = beanDefinition.getName();
+                if (!beanClass.isAnnotationPresent(Aspect.class)) {
+                    continue;
+                }
+                // fix use beanDefinition.getName()
+                final String aspectName = beanDefinition.getName();
 
-				log.debug("Found Aspect: [{}]", aspectName);
-				Object aspectInstance = applicationContext.getSingleton(aspectName);
-				if (aspectInstance == null) {
-					aspectInstance = ClassUtils.newInstance(beanDefinition, applicationContext);
-					applicationContext.registerSingleton(aspectName, aspectInstance);
-				}
-				aspectsRegistry.addAspect(aspectInstance);
-			}
-			aspectsRegistry.sortAspects();
-		}
-		catch (Throwable e) {
-			throw new ConfigurationException(e);
-		}
-	}
+                log.debug("Found Aspect: [{}]", aspectName);
+                Object aspectInstance = applicationContext.getSingleton(aspectName);
+                if (aspectInstance == null) {
+                    aspectInstance = ClassUtils.newInstance(beanDefinition, applicationContext);
+                    applicationContext.registerSingleton(aspectName, aspectInstance);
+                }
+                aspectsRegistry.addAspect(aspectInstance);
+            }
+            aspectsRegistry.sortAspects();
+        }
+        catch (Throwable e) {
+            throw new ConfigurationException(e);
+        }
+    }
 
 }

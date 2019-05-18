@@ -44,171 +44,171 @@ import cn.taketoday.context.utils.ExceptionUtils;
  */
 public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 
-	private final Object aspect;
-	private final Method adviceMethod;
-	private final byte[] adviceParameters;
-	private final int adviceParameterLength;
-	private final Class<?>[] adviceParameterTypes;
+    private final Object aspect;
+    private final Method adviceMethod;
+    private final byte[] adviceParameters;
+    private final int adviceParameterLength;
+    private final Class<?>[] adviceParameterTypes;
 
-	public AbstractAdvice(Method adviceMethod, Object aspect) {
+    public AbstractAdvice(Method adviceMethod, Object aspect) {
 
-		this.aspect = aspect;
-		this.adviceMethod = adviceMethod;
-		this.adviceParameterLength = adviceMethod.getParameterCount();
-		this.adviceParameters = new byte[adviceParameterLength];
-		this.adviceParameterTypes = adviceMethod.getParameterTypes();
+        this.aspect = aspect;
+        this.adviceMethod = adviceMethod;
+        this.adviceParameterLength = adviceMethod.getParameterCount();
+        this.adviceParameters = new byte[adviceParameterLength];
+        this.adviceParameterTypes = adviceMethod.getParameterTypes();
 
-		Parameter[] parameters = adviceMethod.getParameters();
-		for (int i = 0; i < parameters.length; i++) {
-			Parameter parameter = parameters[i];
-			adviceParameters[i] = Constant.TYPE_NULL;
-			if (parameter.isAnnotationPresent(JoinPoint.class)) {
-				adviceParameters[i] = Constant.TYPE_JOIN_POINT;
-			}
-			if (parameter.isAnnotationPresent(Argument.class)) {
-				adviceParameters[i] = Constant.TYPE_ARGUMENT;
-			}
-			if (parameter.isAnnotationPresent(Arguments.class)) {
-				adviceParameters[i] = Constant.TYPE_ARGUMENTS;
-			}
-			if (parameter.isAnnotationPresent(Returning.class)) {
-				adviceParameters[i] = Constant.TYPE_RETURNING;
-			}
-			if (parameter.isAnnotationPresent(Throwing.class)) {
-				adviceParameters[i] = Constant.TYPE_THROWING;
-			}
-			if (parameter.isAnnotationPresent(Annotated.class)) {
-				adviceParameters[i] = Constant.TYPE_ANNOTATED;
-			}
-		}
-	}
+        Parameter[] parameters = adviceMethod.getParameters();
+        for (int i = 0; i < parameters.length; i++) {
+            Parameter parameter = parameters[i];
+            adviceParameters[i] = Constant.TYPE_NULL;
+            if (parameter.isAnnotationPresent(JoinPoint.class)) {
+                adviceParameters[i] = Constant.TYPE_JOIN_POINT;
+            }
+            if (parameter.isAnnotationPresent(Argument.class)) {
+                adviceParameters[i] = Constant.TYPE_ARGUMENT;
+            }
+            if (parameter.isAnnotationPresent(Arguments.class)) {
+                adviceParameters[i] = Constant.TYPE_ARGUMENTS;
+            }
+            if (parameter.isAnnotationPresent(Returning.class)) {
+                adviceParameters[i] = Constant.TYPE_RETURNING;
+            }
+            if (parameter.isAnnotationPresent(Throwing.class)) {
+                adviceParameters[i] = Constant.TYPE_THROWING;
+            }
+            if (parameter.isAnnotationPresent(Annotated.class)) {
+                adviceParameters[i] = Constant.TYPE_ANNOTATED;
+            }
+        }
+    }
 
-	@Override
-	public abstract Object invoke(MethodInvocation invocation) throws Throwable;
+    @Override
+    public abstract Object invoke(MethodInvocation invocation) throws Throwable;
 
-	/**
-	 * 
-	 * @param methodInvocation
-	 * @param returnValue
-	 * @param throwable
-	 * @return
-	 * @throws Throwable
-	 */
-	protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
-			Object returnValue, Throwable throwable) throws Throwable //
-	{
-		if (adviceParameterLength == 0) {
-			return adviceMethod.invoke(aspect);
-		}
-		return adviceMethod.invoke(aspect, resolveParameter(methodInvocation, returnValue, throwable));
-	}
+    /**
+     * 
+     * @param methodInvocation
+     * @param returnValue
+     * @param throwable
+     * @return
+     * @throws Throwable
+     */
+    protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
+            Object returnValue, Throwable throwable) throws Throwable //
+    {
+        if (adviceParameterLength == 0) {
+            return adviceMethod.invoke(aspect);
+        }
+        return adviceMethod.invoke(aspect, resolveParameter(methodInvocation, returnValue, throwable));
+    }
 
-	/**
-	 * 
-	 * @param methodInvocation
-	 *            the join point
-	 * @param returnValue
-	 *            the method returned value
-	 * @param ex
-	 *            the exception
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	private final Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
+    /**
+     * 
+     * @param methodInvocation
+     *            the join point
+     * @param returnValue
+     *            the method returned value
+     * @param ex
+     *            the exception
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    private final Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
 
-		Object[] args = new Object[adviceParameterLength];
-		for (int i = 0; i < adviceParameterLength; i++) {
-			switch (adviceParameters[i])
-			{
-				case Constant.TYPE_THROWING : {
-					if (ex != null) {
-						final Class<?> parameterType = adviceParameterTypes[i];
-						final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
-						if (parameterType == Throwable.class //
-								|| parameterType.isAssignableFrom(throwable.getClass())) //
-						{
-							args[i] = throwable;
-						}
-					}
-					break;
-				}
-				case Constant.TYPE_ARGUMENT : {
-					// fix: NullPointerException
-					Object[] arguments = methodInvocation.getArguments();
-					if (arguments.length == 1) {
-						args[i] = arguments[0];
-						break;
-					}
-					// for every argument matching
-					for (Object argument : arguments) {
-						if (argument == null) {
-							continue;
-						}
-						if (argument.getClass() == adviceParameterTypes[i]) {
-							args[i] = argument;
-							break;
-						}
-					}
-					break;
-				}
-				case Constant.TYPE_ARGUMENTS :
-					args[i] = methodInvocation.getArguments();
-					break;
-				case Constant.TYPE_RETURNING :
-					args[i] = returnValue;
-					break;
-				case Constant.TYPE_ANNOTATED : {
-					args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) adviceParameterTypes[i]);
-					break;
-				}
-				case Constant.TYPE_JOIN_POINT : {
-					args[i] = methodInvocation;
-					break;
-				}
-				default: {
-					Class<?> parameterType = adviceParameterTypes[i];
-					if (Joinpoint.class.isAssignableFrom(parameterType)) {
-						args[i] = methodInvocation;
-					}
-					if (Annotation.class.isAssignableFrom(parameterType)) {
-						args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) parameterType);
-					}
-					if (ex != null) {
-						final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
-						if (parameterType == Throwable.class //
-								|| parameterType.isAssignableFrom(throwable.getClass())) //
-						{
-							args[i] = throwable;
-						}
-					}
-					if (returnValue != null && parameterType.isAssignableFrom(returnValue.getClass())) {
-						args[i] = returnValue;
-					}
-					break;
-				}
-			}
-		}
-		return args;
-	}
+        Object[] args = new Object[adviceParameterLength];
+        for (int i = 0; i < adviceParameterLength; i++) {
+            switch (adviceParameters[i])
+            {
+                case Constant.TYPE_THROWING : {
+                    if (ex != null) {
+                        final Class<?> parameterType = adviceParameterTypes[i];
+                        final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
+                        if (parameterType == Throwable.class //
+                                || parameterType.isAssignableFrom(throwable.getClass())) //
+                        {
+                            args[i] = throwable;
+                        }
+                    }
+                    break;
+                }
+                case Constant.TYPE_ARGUMENT : {
+                    // fix: NullPointerException
+                    Object[] arguments = methodInvocation.getArguments();
+                    if (arguments.length == 1) {
+                        args[i] = arguments[0];
+                        break;
+                    }
+                    // for every argument matching
+                    for (Object argument : arguments) {
+                        if (argument == null) {
+                            continue;
+                        }
+                        if (argument.getClass() == adviceParameterTypes[i]) {
+                            args[i] = argument;
+                            break;
+                        }
+                    }
+                    break;
+                }
+                case Constant.TYPE_ARGUMENTS :
+                    args[i] = methodInvocation.getArguments();
+                    break;
+                case Constant.TYPE_RETURNING :
+                    args[i] = returnValue;
+                    break;
+                case Constant.TYPE_ANNOTATED : {
+                    args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) adviceParameterTypes[i]);
+                    break;
+                }
+                case Constant.TYPE_JOIN_POINT : {
+                    args[i] = methodInvocation;
+                    break;
+                }
+                default: {
+                    Class<?> parameterType = adviceParameterTypes[i];
+                    if (Joinpoint.class.isAssignableFrom(parameterType)) {
+                        args[i] = methodInvocation;
+                    }
+                    if (Annotation.class.isAssignableFrom(parameterType)) {
+                        args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) parameterType);
+                    }
+                    if (ex != null) {
+                        final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
+                        if (parameterType == Throwable.class //
+                                || parameterType.isAssignableFrom(throwable.getClass())) //
+                        {
+                            args[i] = throwable;
+                        }
+                    }
+                    if (returnValue != null && parameterType.isAssignableFrom(returnValue.getClass())) {
+                        args[i] = returnValue;
+                    }
+                    break;
+                }
+            }
+        }
+        return args;
+    }
 
-	/**
-	 * resolve an annotation
-	 * 
-	 * @param methodInvocation
-	 *            the join point
-	 * @param annotationClass
-	 *            given annotation class
-	 * @return
-	 */
-	private final Object resolveAnnotation(//
-			MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) //
-	{
-		final Method method = methodInvocation.getMethod();
-		Annotation annotation = method.getAnnotation(annotationClass);
-		if (annotation == null) {
-			annotation = method.getDeclaringClass().getAnnotation(annotationClass);
-		}
-		return annotation;
-	}
+    /**
+     * resolve an annotation
+     * 
+     * @param methodInvocation
+     *            the join point
+     * @param annotationClass
+     *            given annotation class
+     * @return
+     */
+    private final Object resolveAnnotation(//
+            MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) //
+    {
+        final Method method = methodInvocation.getMethod();
+        Annotation annotation = method.getAnnotation(annotationClass);
+        if (annotation == null) {
+            annotation = method.getDeclaringClass().getAnnotation(annotationClass);
+        }
+        return annotation;
+    }
 
 }

@@ -35,35 +35,35 @@ import test.demo.domain.User;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-	private Map<String, User> users = new HashMap<>();
+    private Map<String, User> users = new HashMap<>();
 
-	public UserDaoImpl() {
-		users.put("666", new User(1, "杨海健", 20, "666", "666", "男", new Date()));
-		users.put("6666", new User(2, "杨海健1", 20, "6666", "6666", "男", new Date()));
-		users.put("66666", new User(3, "杨海健2", 20, "66666", "66666", "男", new Date()));
-		users.put("666666", new User(4, "杨海健3", 20, "666666", "666666", "男", new Date()));
-	}
+    public UserDaoImpl() {
+        users.put("666", new User(1, "杨海健", 20, "666", "666", "男", new Date()));
+        users.put("6666", new User(2, "杨海健1", 20, "6666", "6666", "男", new Date()));
+        users.put("66666", new User(3, "杨海健2", 20, "66666", "66666", "男", new Date()));
+        users.put("666666", new User(4, "杨海健3", 20, "666666", "666666", "男", new Date()));
+    }
 
-	@Override
-	public boolean save(User user) {
+    @Override
+    public boolean save(User user) {
 
-		users.put(user.getUserId(), user);
+        users.put(user.getUserId(), user);
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public User login(User user) {
+    @Override
+    public User login(User user) {
 
-		User user_ = users.get(user.getUserId());
+        User user_ = users.get(user.getUserId());
 
-		if (user_ == null) {
-			return null;
-		}
-		if (!user_.getPasswd().equals(user.getPasswd())) {
-			return null;
-		}
-		return user_;
-	}
+        if (user_ == null) {
+            return null;
+        }
+        if (!user_.getPasswd().equals(user.getPasswd())) {
+            return null;
+        }
+        return user_;
+    }
 
 }

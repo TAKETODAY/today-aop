@@ -33,65 +33,65 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class DefaultMethodInvocation implements MethodInvocation {
 
-	private final Object target;
-	private final Method method;
-	private final Object[] args;
-	private final MethodInterceptor[] advices;
+    private final Object target;
+    private final Method method;
+    private final Object[] args;
+    private final MethodInterceptor[] advices;
 
-	/**
-	 * a flag show that current index of advice
-	 */
-	private int currentAdviceIndex = 0;
+    /**
+     * a flag show that current index of advice
+     */
+    private int currentAdviceIndex = 0;
 
-	private final int adviceLength;
+    private final int adviceLength;
 
-	public DefaultMethodInvocation(Object target, Method method, Object[] arguments, MethodInterceptor[] advices) {
-		this.target = target;
-		this.method = method;
-		this.args = arguments;
-		this.advices = advices;
-		this.adviceLength = advices.length;
-	}
+    public DefaultMethodInvocation(Object target, Method method, Object[] arguments, MethodInterceptor[] advices) {
+        this.target = target;
+        this.method = method;
+        this.args = arguments;
+        this.advices = advices;
+        this.adviceLength = advices.length;
+    }
 
-	@Override
-	public Method getMethod() {
-		return method;
-	}
+    @Override
+    public Method getMethod() {
+        return method;
+    }
 
-	@Override
-	public Object[] getArguments() {
-		return args;
-	}
+    @Override
+    public Object[] getArguments() {
+        return args;
+    }
 
-	@Override
-	public Object proceed() throws Throwable {
+    @Override
+    public Object proceed() throws Throwable {
 
-		if (currentAdviceIndex == adviceLength) {
-			return method.invoke(target, args);
-		}
-		return advices[currentAdviceIndex++].invoke(this);
-	}
+        if (currentAdviceIndex == adviceLength) {
+            return method.invoke(target, args);
+        }
+        return advices[currentAdviceIndex++].invoke(this);
+    }
 
-	@Override
-	public Object getThis() {
-		return target;
-	}
+    @Override
+    public Object getThis() {
+        return target;
+    }
 
-	@Override
-	public AccessibleObject getStaticPart() {
-		return method;
-	}
+    @Override
+    public AccessibleObject getStaticPart() {
+        return method;
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder()//
-				.append("{\n\t\"target\":\"").append(target)//
-				.append("\",\n\t\"method\":\"").append(method)//
-				.append("\",\n\t\"arguments\":\"").append(Arrays.toString(args))//
-				.append("\",\n\t\"advices\":\"").append(Arrays.toString(advices))//
-				.append("\",\n\t\"currentAdviceIndex\":\"").append(currentAdviceIndex)//
-				.append("\"\n}")//
-				.toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder()//
+                .append("{\n\t\"target\":\"").append(target)//
+                .append("\",\n\t\"method\":\"").append(method)//
+                .append("\",\n\t\"arguments\":\"").append(Arrays.toString(args))//
+                .append("\",\n\t\"advices\":\"").append(Arrays.toString(advices))//
+                .append("\",\n\t\"currentAdviceIndex\":\"").append(currentAdviceIndex)//
+                .append("\"\n}")//
+                .toString();
+    }
 
 }

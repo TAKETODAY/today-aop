@@ -38,34 +38,34 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CglibProxyCreator implements ProxyCreator {
 
-	@Override
-	public Object createProxy(TargetSource targetSource, BeanFactory beanFactory) {
+    @Override
+    public Object createProxy(TargetSource targetSource, BeanFactory beanFactory) {
 
-		log.debug("Creating Cglib Proxy, target source is: [{}]", targetSource);
+        log.debug("Creating Cglib Proxy, target source is: [{}]", targetSource);
 
-		Class<?> targetClass = targetSource.getTargetClass();
-		Enhancer enhancer = new Enhancer();
-		enhancer.setSuperclass(targetClass);
-		enhancer.setInterfaces(targetSource.getInterfaces());
-		enhancer.setInterceptDuringConstruction(false);
-		enhancer.setCallback(new CglibMethodInterceptor(targetSource));
+        Class<?> targetClass = targetSource.getTargetClass();
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(targetClass);
+        enhancer.setInterfaces(targetSource.getInterfaces());
+        enhancer.setInterceptDuringConstruction(false);
+        enhancer.setCallback(new CglibMethodInterceptor(targetSource));
 
-		// fix: Superclass has no null constructors but no arguments were given
-		Constructor<?>[] constructors = targetClass.getConstructors();
-		if (constructors == null || constructors.length == 0) {
-			throw new ConfigurationException("You must provide at least one public constructor");
-		}
+        // fix: Superclass has no null constructors but no arguments were given
+        Constructor<?>[] constructors = targetClass.getConstructors();
+        if (constructors == null || constructors.length == 0) {
+            throw new ConfigurationException("You must provide at least one public constructor");
+        }
 
-		for (Constructor<?> constructor : constructors) {
-			if (constructor.getParameterCount() == 0) {// <init>()
-				return enhancer.create();
-			}
-			else if (constructor.isAnnotationPresent(Autowired.class)) {
-				final Object[] resolveParameter = ContextUtils.resolveParameter(constructor, beanFactory);
-				return enhancer.create(constructor.getParameterTypes(), resolveParameter);
-			}
-		}
-		throw new ConfigurationException("Your provided constructors must at least one annotated @{}", Autowired.class.getName());
-	}
+        for (Constructor<?> constructor : constructors) {
+            if (constructor.getParameterCount() == 0) {// <init>()
+                return enhancer.create();
+            }
+            else if (constructor.isAnnotationPresent(Autowired.class)) {
+                final Object[] resolveParameter = ContextUtils.resolveParameter(constructor, beanFactory);
+                return enhancer.create(constructor.getParameterTypes(), resolveParameter);
+            }
+        }
+        throw new ConfigurationException("Your provided constructors must at least one annotated @{}", Autowired.class.getName());
+    }
 
 }

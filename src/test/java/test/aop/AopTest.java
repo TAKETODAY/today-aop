@@ -39,45 +39,44 @@ import test.demo.service.UserService;
 @Slf4j
 public class AopTest {
 
-	private long start;
+    private long start;
 
-	@Before
-	public void before() {
-		start = System.currentTimeMillis();
-	}
+    @Before
+    public void before() {
+        start = System.currentTimeMillis();
+    }
 
-	@After
-	public void over() {
-		System.out.println(System.currentTimeMillis() - start + "ms");
-	}
+    @After
+    public void over() {
+        System.out.println(System.currentTimeMillis() - start + "ms");
+    }
 
-	@Test
-	public void test_Login() throws NoSuchBeanDefinitionException {
+    @Test
+    public void test_Login() throws NoSuchBeanDefinitionException {
 
-		try (ApplicationContext applicationContext = new StandardApplicationContext("","")) {
+        try (ApplicationContext applicationContext = new StandardApplicationContext("", "")) {
 
-			UserService bean = applicationContext.getBean(UserService.class);
-			User user = new User();
-			user.setPasswd("666");
-			
-			user.setUserId("666");
-			long start = System.currentTimeMillis();
-			User login = bean.login(user);
-			
+            UserService bean = applicationContext.getBean(UserService.class);
+            User user = new User();
+            user.setPasswd("666");
+
+            user.setUserId("666");
+            long start = System.currentTimeMillis();
+            User login = bean.login(user);
+
 //			for (int i = 0; i < 1000; i++) {
 //				login = bean.login(user);
 //			}
-			
-			log.debug("{}ms", System.currentTimeMillis() - start);
-			
-			log.debug("Result:[{}]", login);
-			log.debug("{}ms", System.currentTimeMillis() - start);
-			
-			
-			TestInterceptor bean2 = applicationContext.getBean(TestInterceptor.class);
 
-			System.err.println(bean2);
-		}
-	}
+            log.debug("{}ms", System.currentTimeMillis() - start);
+
+            log.debug("Result:[{}]", login);
+            log.debug("{}ms", System.currentTimeMillis() - start);
+
+            TestInterceptor bean2 = applicationContext.getBean(TestInterceptor.class);
+
+            System.err.println(bean2);
+        }
+    }
 
 }

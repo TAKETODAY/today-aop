@@ -33,15 +33,15 @@ import cn.taketoday.context.annotation.Order;
 @Order(4)
 public class MethodAfterReturningAdvice extends MethodAfterAdvice {
 
-	public MethodAfterReturningAdvice(Method method, Object aspect) {
-		super(method, aspect);
-	}
+    public MethodAfterReturningAdvice(Method method, Object aspect) {
+        super(method, aspect);
+    }
 
-	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-		final Object returnValue = methodInvocation.proceed();
-		invokeAdviceMethod(methodInvocation, returnValue, null);
-		return returnValue;
-	}
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        final Object returnValue = methodInvocation.proceed();
+        invokeAdviceMethod(methodInvocation, returnValue, null);
+        return returnValue;
+    }
 
 }

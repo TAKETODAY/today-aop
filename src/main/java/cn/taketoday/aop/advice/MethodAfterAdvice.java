@@ -34,13 +34,13 @@ import cn.taketoday.context.annotation.Order;
 @Order(3)
 public class MethodAfterAdvice extends AbstractAdvice implements AfterAdvice {
 
-	public MethodAfterAdvice(Method method, Object aspect) {
-		super(method, aspect);
-	}
+    public MethodAfterAdvice(Method method, Object aspect) {
+        super(method, aspect);
+    }
 
-	@Override
-	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-		return invokeAdviceMethod(methodInvocation, methodInvocation.proceed(), null);
-	}
+    @Override
+    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+        return invokeAdviceMethod(methodInvocation, methodInvocation.proceed(), null);
+    }
 
 }

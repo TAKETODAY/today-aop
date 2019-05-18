@@ -18,7 +18,7 @@ package cn.taketoday.aop.cglib.core;
 import cn.taketoday.context.asm.Label;
 
 public interface ObjectSwitchCallback {
-	void processCase(Object key, Label end) throws Exception;
+    void processCase(Object key, Label end) throws Exception;
 
-	void processDefault() throws Exception;
+    void processDefault() throws Exception;
 }

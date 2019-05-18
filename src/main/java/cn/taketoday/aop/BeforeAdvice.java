@@ -27,5 +27,5 @@ import org.aopalliance.aop.Advice;
  *         2018-10-13 11:26
  */
 public interface BeforeAdvice extends Advice {
-	
+
 }

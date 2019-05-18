@@ -16,5 +16,5 @@
 package cn.taketoday.aop.cglib.core;
 
 public interface Transformer {
-	Object transform(Object value);
+    Object transform(Object value);
 }

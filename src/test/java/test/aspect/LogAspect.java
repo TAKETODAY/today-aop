@@ -49,43 +49,43 @@ import test.demo.service.UserService;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class LogAspect {
 
-	@Autowired
-	public LogAspect(UserService service) {
-		log.debug("{}", service);
-	}
+    @Autowired
+    public LogAspect(UserService service) {
+        log.debug("{}", service);
+    }
 
-	@AfterReturning(Logger.class)
+    @AfterReturning(Logger.class)
 //	public void afterReturning(@Returning Object returnValue) {
-	public void afterReturning() {
+    public void afterReturning() {
 //		log.debug("LogAspect @AfterReturning returnValue: [{}]", returnValue);
-		log.debug("LogAspect @AfterReturning");
-	}
+        log.debug("LogAspect @AfterReturning");
+    }
 
-	@AfterThrowing(Logger.class)
-	public void afterThrowing(@Throwing Throwable throwable) {
-		log.error("LogAspect @AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
-	}
+    @AfterThrowing(Logger.class)
+    public void afterThrowing(@Throwing Throwable throwable) {
+        log.error("LogAspect @AfterThrowing With Msg: [{}]", throwable.getMessage(), throwable);
+    }
 
-	@Before(Logger.class)
-	public void before(@Annotated Logger logger) {
+    @Before(Logger.class)
+    public void before(@Annotated Logger logger) {
 //	public void before(@Annotated Logger logger, @Argument User user) {
 //		log.debug("LogAspect @Before method in class with logger: [{}] , Argument:[{}]", logger.value(), user);
-		log.debug("LogAspect @Before method in class with logger: [{}]", logger.value());
-	}
+        log.debug("LogAspect @Before method in class with logger: [{}]", logger.value());
+    }
 
-	@After(Logger.class)
-	public Object after(@Returning User returnValue, @Arguments Object[] arguments) {
-		log.debug("LogAspect @After method in class");
-		return returnValue.setSex("女");
-	}
+    @After(Logger.class)
+    public Object after(@Returning User returnValue, @Arguments Object[] arguments) {
+        log.debug("LogAspect @After method in class");
+        return returnValue.setSex("女");
+    }
 
-	@Around(Logger.class)
-	public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
-		log.debug("LogAspect @Around Before method");
+    @Around(Logger.class)
+    public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
+        log.debug("LogAspect @Around Before method");
 //		int i = 1 / 0;
-		Object proceed = joinpoint.proceed();
-		log.debug("LogAspect @Around After method");
-		return proceed;
-	}
+        Object proceed = joinpoint.proceed();
+        log.debug("LogAspect @Around After method");
+        return proceed;
+    }
 
 }

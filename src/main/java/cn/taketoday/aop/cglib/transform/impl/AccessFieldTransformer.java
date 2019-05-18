@@ -23,35 +23,35 @@ import cn.taketoday.aop.cglib.transform.ClassEmitterTransformer;
 import cn.taketoday.context.asm.Type;
 
 public class AccessFieldTransformer extends ClassEmitterTransformer {
-	private Callback callback;
+    private Callback callback;
 
-	public AccessFieldTransformer(Callback callback) {
-		this.callback = callback;
-	}
+    public AccessFieldTransformer(Callback callback) {
+        this.callback = callback;
+    }
 
-	public interface Callback {
-		String getPropertyName(Type owner, String fieldName);
-	}
+    public interface Callback {
+        String getPropertyName(Type owner, String fieldName);
+    }
 
-	public void declare_field(int access, final String name, Type type, Object value) {
-		super.declare_field(access, name, type, value);
+    public void declare_field(int access, final String name, Type type, Object value) {
+        super.declare_field(access, name, type, value);
 
-		String property = TypeUtils.upperFirst(callback.getPropertyName(getClassType(), name));
-		if (property != null) {
-			CodeEmitter e;
-			e = begin_method(Constant.ACC_PUBLIC, new Signature("get" + property, type, Constant.TYPES_EMPTY), null);
-			e.load_this();
-			e.getfield(name);
-			e.return_value();
-			e.end_method();
+        String property = TypeUtils.upperFirst(callback.getPropertyName(getClassType(), name));
+        if (property != null) {
+            CodeEmitter e;
+            e = begin_method(Constant.ACC_PUBLIC, new Signature("get" + property, type, Constant.TYPES_EMPTY), null);
+            e.load_this();
+            e.getfield(name);
+            e.return_value();
+            e.end_method();
 
-			e = begin_method(Constant.ACC_PUBLIC, new Signature("set" + property, Type.VOID_TYPE, new Type[] { type }),
-					null);
-			e.load_this();
-			e.load_arg(0);
-			e.putfield(name);
-			e.return_value();
-			e.end_method();
-		}
-	}
+            e = begin_method(Constant.ACC_PUBLIC, new Signature("set" + property, Type.VOID_TYPE, new Type[] { type }),
+                    null);
+            e.load_this();
+            e.load_arg(0);
+            e.putfield(name);
+            e.return_value();
+            e.end_method();
+        }
+    }
 }
