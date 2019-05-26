@@ -65,7 +65,7 @@ public class CglibProxyCreator implements ProxyCreator {
                 return enhancer.create(constructor.getParameterTypes(), resolveParameter);
             }
         }
-        throw new ConfigurationException("Your provided constructors must at least one annotated @{}", Autowired.class.getName());
+        throw new ConfigurationException("Your provided constructors must at least one annotated @" + Autowired.class.getName());
     }
 
 }

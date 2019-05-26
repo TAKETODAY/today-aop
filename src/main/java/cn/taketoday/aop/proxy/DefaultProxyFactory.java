@@ -118,8 +118,7 @@ public class DefaultProxyFactory implements ProxyFactory {
         catch (Throwable ex) {
             ex = ExceptionUtils.unwrapThrowable(ex);
             throw new ConfigurationException(//
-                    "An Exception Occured When Creating A Target Proxy Instance With Msg: [{}]", //
-                    ex.getMessage(), ex//
+                    "An Exception Occured When Creating A Target Proxy Instance With Msg: [" + ex.getMessage() + "]", ex//
             );
         }
     }
@@ -150,9 +149,8 @@ public class DefaultProxyFactory implements ProxyFactory {
             MethodInterceptor methodInterceptor = null;
             if (aspectMethod == null) { // method interceptor
                 if (!(aspect instanceof MethodInterceptor)) {
-                    throw new ConfigurationException("[{}] must be implement: [{}]", //
-                            aspect.getClass().getName(), MethodInterceptor.class.getName()//
-                    );
+                    throw new ConfigurationException("[" + aspect.getClass().getName() + //
+                            "] must be implement: [" + MethodInterceptor.class.getName() + "]");
                 }
                 methodInterceptor = (MethodInterceptor) aspect;
             }
@@ -290,9 +288,8 @@ public class DefaultProxyFactory implements ProxyFactory {
     {
 
         if (interceptor == AbstractAdvice.class || !MethodInterceptor.class.isAssignableFrom(interceptor)) {
-            throw new ConfigurationException("You must be implement: [{}] or [{}]", //
-                    AbstractAdvice.class.getName(), MethodInterceptor.class.getName()//
-            );
+            throw new ConfigurationException("You must be implement: [" + AbstractAdvice.class.getName() + //
+                    "] or [" + MethodInterceptor.class.getName() + "]");
         }
 
         if (AbstractAdvice.class.isAssignableFrom(interceptor)) {
