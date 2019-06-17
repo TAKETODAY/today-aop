@@ -37,6 +37,7 @@ import cn.taketoday.aop.advice.AspectsRegistry;
 import cn.taketoday.aop.annotation.Advice;
 import cn.taketoday.aop.annotation.AdviceImpl;
 import cn.taketoday.aop.annotation.Aspect;
+import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.BeanFactory;
 import cn.taketoday.context.utils.ClassUtils;
@@ -54,23 +55,23 @@ public class DefaultProxyFactory implements ProxyFactory {
 
     private static final CglibProxyCreator CGLIB_PROXY_CREATOR = new CglibProxyCreator();;
 
-    private final BeanFactory beanFactory;
     private final TargetSource targetSource;
+    private final ApplicationContext applicationContext;
     private final Map<Method, List<MethodInterceptor>> aspectMappings = new HashMap<>(16, 1.0f);
 
     public DefaultProxyFactory() {
         this(null, null);
     }
 
-    public DefaultProxyFactory(TargetSource targetSource, BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
+    public DefaultProxyFactory(TargetSource targetSource, ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
         this.targetSource = targetSource;
     }
 
     @Override
     public Object getProxy() {
 
-        List<Object> aspects = AspectsRegistry.getInstance().getAspects();
+        List<Object> aspects = getAspects();
 
         try {
 
@@ -111,7 +112,7 @@ public class DefaultProxyFactory implements ProxyFactory {
             }
             if (weaved) {
                 targetSource.setAspectMappings(aspectMappings);
-                return CGLIB_PROXY_CREATOR.createProxy(targetSource, beanFactory);
+                return CGLIB_PROXY_CREATOR.createProxy(targetSource, applicationContext);
             }
             return targetSource.getTarget();
         }
@@ -121,6 +122,17 @@ public class DefaultProxyFactory implements ProxyFactory {
                     "An Exception Occured When Creating A Target Proxy Instance With Msg: [" + ex.getMessage() + "]", ex//
             );
         }
+    }
+
+    protected List<Object> getAspects() {
+
+        final AspectsRegistry instance = AspectsRegistry.getInstance();
+
+        if (!instance.isAspectsLoaded()) {
+            instance.loadAspects(applicationContext);
+        }
+
+        return instance.getAspects();
     }
 
     /**
@@ -155,7 +167,7 @@ public class DefaultProxyFactory implements ProxyFactory {
                 methodInterceptor = (MethodInterceptor) aspect;
             }
             else {
-                methodInterceptor = getInterceptor(aspect, aspectMethod, interceptor, beanFactory);
+                methodInterceptor = getInterceptor(aspect, aspectMethod, interceptor, applicationContext);
             }
             log.debug("Found Interceptor: [{}]", methodInterceptor);
 

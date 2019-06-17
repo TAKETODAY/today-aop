@@ -22,6 +22,14 @@ package cn.taketoday.aop.advice;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.taketoday.aop.annotation.Aspect;
+import cn.taketoday.context.bean.BeanDefinition;
+import cn.taketoday.context.exception.ConfigurationException;
+import cn.taketoday.context.factory.ConfigurableBeanFactory;
+import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.OrderUtils;
 import lombok.Getter;
 
@@ -30,7 +38,6 @@ import lombok.Getter;
  * 
  *         2018-11-10 18:48
  */
-
 public enum AspectsRegistry {
 
     ASPECTS_REGISTRY;
@@ -38,9 +45,7 @@ public enum AspectsRegistry {
     @Getter
     private final List<Object> aspects = new ArrayList<>();
 
-    private AspectsRegistry() {
-
-    }
+    private boolean aspectsLoaded;
 
     public void addAspect(Object aspect) {
         aspects.add(aspect);
@@ -52,6 +57,46 @@ public enum AspectsRegistry {
 
     public void sortAspects() {
         OrderUtils.reversedSort(aspects);
+    }
+
+    public boolean isAspectsLoaded() {
+        return aspectsLoaded;
+    }
+
+    public void setAspectsLoaded(boolean aspectsLoaded) {
+        this.aspectsLoaded = aspectsLoaded;
+    }
+
+    public void loadAspects(final ConfigurableBeanFactory applicationContext) {
+        final Logger log = LoggerFactory.getLogger(getClass());
+
+        log.debug("Loading Aspect Objects");
+
+        setAspectsLoaded(true);
+        try {
+            
+            for (final BeanDefinition beanDefinition : applicationContext.getBeanDefinitions().values()) {
+
+                final Class<? extends Object> beanClass = beanDefinition.getBeanClass();
+
+                if (beanClass.isAnnotationPresent(Aspect.class)) {
+                    // fix use beanDefinition.getName()
+                    final String aspectName = beanDefinition.getName();
+                    log.debug("Found Aspect: [{}]", aspectName);
+                    
+                    Object aspectInstance = applicationContext.getSingleton(aspectName);
+                    if (aspectInstance == null) {
+                        aspectInstance = ClassUtils.newInstance(beanDefinition, applicationContext);
+                        applicationContext.registerSingleton(aspectName, aspectInstance);
+                    }
+                    addAspect(aspectInstance);
+                }
+            }
+            sortAspects();
+        }
+        catch (Throwable e) {
+            throw new ConfigurationException(e);
+        }
     }
 
 }

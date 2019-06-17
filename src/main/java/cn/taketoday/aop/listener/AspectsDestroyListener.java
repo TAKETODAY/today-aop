@@ -43,6 +43,7 @@ public class AspectsDestroyListener implements ApplicationListener<ContextCloseE
 
         final AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
         aspectsRegistry.getAspects().clear();
+        aspectsRegistry.setAspectsLoaded(false);
     }
 
 }

@@ -19,11 +19,11 @@
  */
 package cn.taketoday.aop.proxy;
 
+import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.Order;
 import cn.taketoday.context.annotation.Singleton;
-import cn.taketoday.context.aware.BeanFactoryAware;
-import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.aware.ApplicationContextAware;
 import cn.taketoday.context.factory.BeanPostProcessor;
 
 /**
@@ -34,17 +34,17 @@ import cn.taketoday.context.factory.BeanPostProcessor;
  */
 @Singleton
 @Order(Ordered.LOWEST_PRECEDENCE - Ordered.HIGHEST_PRECEDENCE)
-public class AutoProxyCreator implements BeanPostProcessor, BeanFactoryAware {
+public class AutoProxyCreator implements BeanPostProcessor, ApplicationContextAware {
 
-    private BeanFactory beanFactory;
+    private ApplicationContext applicationContext;
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
-        return new DefaultProxyFactory(new TargetSource(bean, bean.getClass()), beanFactory).getProxy();
+        return new DefaultProxyFactory(new TargetSource(bean, bean.getClass()), applicationContext).getProxy();
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 }

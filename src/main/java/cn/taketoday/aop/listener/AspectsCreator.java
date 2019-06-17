@@ -19,20 +19,12 @@
  */
 package cn.taketoday.aop.listener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cn.taketoday.aop.advice.AspectsRegistry;
-import cn.taketoday.aop.annotation.Aspect;
-import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.ContextListener;
 import cn.taketoday.context.annotation.Order;
-import cn.taketoday.context.bean.BeanDefinition;
 import cn.taketoday.context.event.ContextPreRefreshEvent;
-import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.listener.ApplicationListener;
-import cn.taketoday.context.utils.ClassUtils;
 
 /**
  * @author TODAY <br>
@@ -45,39 +37,11 @@ public class AspectsCreator implements ApplicationListener<ContextPreRefreshEven
 
     @Override
     public void onApplicationEvent(ContextPreRefreshEvent event) {
-
-        final Logger log = LoggerFactory.getLogger(getClass());
-
-        log.debug("Loading Aspect Objects");
-
-        final AspectsRegistry aspectsRegistry = AspectsRegistry.getInstance();
-        final ApplicationContext applicationContext = event.getApplicationContext();
-
-        try {
-
-            for (final BeanDefinition beanDefinition : applicationContext.getBeanDefinitionsMap().values()) {
-
-                final Class<? extends Object> beanClass = beanDefinition.getBeanClass();
-
-                if (!beanClass.isAnnotationPresent(Aspect.class)) {
-                    continue;
-                }
-                // fix use beanDefinition.getName()
-                final String aspectName = beanDefinition.getName();
-
-                log.debug("Found Aspect: [{}]", aspectName);
-                Object aspectInstance = applicationContext.getSingleton(aspectName);
-                if (aspectInstance == null) {
-                    aspectInstance = ClassUtils.newInstance(beanDefinition, applicationContext);
-                    applicationContext.registerSingleton(aspectName, aspectInstance);
-                }
-                aspectsRegistry.addAspect(aspectInstance);
-            }
-            aspectsRegistry.sortAspects();
+        final AspectsRegistry instance = AspectsRegistry.getInstance();
+        if (instance.isAspectsLoaded()) {
+            return;
         }
-        catch (Throwable e) {
-            throw new ConfigurationException(e);
-        }
+        instance.loadAspects(event.getApplicationContext());
     }
 
 }
