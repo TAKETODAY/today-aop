@@ -31,7 +31,10 @@ public class LogAspect {
 
 
 ## v1.0.5
-- fix: Superclass has no null constructors but no arguments were given
+
+- :bug: fix: Superclass has no null constructors but no arguments were given
+- :bug: fix: #4 Aspects not created
+
 
 
 
