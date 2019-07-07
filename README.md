@@ -11,7 +11,7 @@
 <dependency>
     <groupId>cn.taketoday</groupId>
     <artifactId>today-aop</artifactId>
-    <version>1.0.4.RELEASE</version>
+    <version>1.0.5.RELEASE</version>
 </dependency>
 
 ```
@@ -21,7 +21,7 @@
 ## 案例
 - [DEMO](https://github.com/TAKETODAY/today-web-demo)
 
-### 使用说明
+## 使用说明
 
 > 使用@Aspect标注一个切面
 
@@ -67,7 +67,7 @@ public @interface Logger {
 }
 
 @Service
-public class UserServiceImpl implements UserService {
+public class DefaultUserService implements UserService {
 
 	@Autowired
 	private UserDao userDao;
