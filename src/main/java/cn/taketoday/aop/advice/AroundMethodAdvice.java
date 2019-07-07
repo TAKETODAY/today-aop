@@ -24,16 +24,11 @@ import java.lang.reflect.Method;
 import org.aopalliance.intercept.MethodInvocation;
 
 import cn.taketoday.context.annotation.Order;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
- * 
- * @author Today <br>
+ * @author TODAY <br>
  *         2018-11-10 13:14
  */
-@Setter
-@Getter
 @Order(1)
 public class AroundMethodAdvice extends AbstractAdvice {
 

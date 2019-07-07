@@ -38,7 +38,7 @@ import cn.taketoday.aop.annotation.Throwing;
 import cn.taketoday.context.utils.ExceptionUtils;
 
 /**
- * @author Today <br>
+ * @author TODAY <br>
  * 
  *         2018-11-10 11:26
  */
@@ -87,12 +87,16 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
     public abstract Object invoke(MethodInvocation invocation) throws Throwable;
 
     /**
+     * Invoke advice method
      * 
      * @param methodInvocation
+     *            Target method invocation
      * @param returnValue
+     *            Target method return value
      * @param throwable
-     * @return
+     *            Target method throws {@link Exception}
      * @throws Throwable
+     *             If any {@link Exception} occurred
      */
     protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
             Object returnValue, Throwable throwable) throws Throwable //
@@ -104,14 +108,15 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
     }
 
     /**
+     * Resolve method parameter list
      * 
      * @param methodInvocation
-     *            the join point
+     *            The join point
      * @param returnValue
-     *            the method returned value
+     *            The method returned value
      * @param ex
-     *            the exception
-     * @return
+     *            The exception
+     * @return Method parameter list
      */
     @SuppressWarnings("unchecked")
     private final Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
@@ -192,13 +197,13 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
     }
 
     /**
-     * resolve an annotation
+     * Resolve an annotation
      * 
      * @param methodInvocation
-     *            the join point
+     *            The join point
      * @param annotationClass
-     *            given annotation class
-     * @return
+     *            Given annotation class
+     * @return Annotation
      */
     private final Object resolveAnnotation(//
             MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) //

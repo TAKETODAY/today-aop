@@ -29,7 +29,7 @@ import cn.taketoday.context.factory.BeanPostProcessor;
 /**
  * Auto create proxy
  * 
- * @author Today <br>
+ * @author TODAY <br>
  *         2018-11-10 13:13
  */
 @Singleton

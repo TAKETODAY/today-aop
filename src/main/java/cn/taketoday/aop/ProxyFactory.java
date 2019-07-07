@@ -20,14 +20,13 @@
 package cn.taketoday.aop;
 
 /**
- * 
- * @author Today <br>
+ * @author TODAY <br>
  *         2018-11-10 16:45
  */
 public interface ProxyFactory {
 
     /**
-     * get proxy instance
+     * Get proxy instance
      * 
      * @return
      */

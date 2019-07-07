@@ -26,7 +26,7 @@ import cn.taketoday.context.asm.Type;
 
 /**
  * @author Juozas Baliuka <a href="mailto:baliuka@mwm.lt">baliuka@mwm.lt</a>
- * @author Today <br>
+ * @author TODAY <br>
  *         2018-11-10 16:46
  */
 public interface Constant extends cn.taketoday.context.Constant, Opcodes {

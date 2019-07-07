@@ -34,7 +34,7 @@ import cn.taketoday.context.utils.OrderUtils;
 import lombok.Getter;
 
 /**
- * @author Today <br>
+ * @author TODAY <br>
  * 
  *         2018-11-10 18:48
  */
@@ -74,7 +74,7 @@ public enum AspectsRegistry {
 
         setAspectsLoaded(true);
         try {
-            
+
             for (final BeanDefinition beanDefinition : applicationContext.getBeanDefinitions().values()) {
 
                 final Class<? extends Object> beanClass = beanDefinition.getBeanClass();
@@ -83,7 +83,7 @@ public enum AspectsRegistry {
                     // fix use beanDefinition.getName()
                     final String aspectName = beanDefinition.getName();
                     log.debug("Found Aspect: [{}]", aspectName);
-                    
+
                     Object aspectInstance = applicationContext.getSingleton(aspectName);
                     if (aspectInstance == null) {
                         aspectInstance = ClassUtils.newInstance(beanDefinition, applicationContext);
