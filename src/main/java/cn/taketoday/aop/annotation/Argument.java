@@ -19,20 +19,17 @@
  */
 package cn.taketoday.aop.annotation;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.PARAMETER })
 /**
- * @author Today <br>
- * 
+ * @author TODAY <br>
  *         2018-11-12 17:57
  */
+@Target({ ElementType.PARAMETER })
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Argument {
 
 }

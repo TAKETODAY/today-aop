@@ -21,7 +21,6 @@ package cn.taketoday.aop.annotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -31,47 +30,25 @@ import org.aopalliance.intercept.MethodInterceptor;
 import cn.taketoday.aop.advice.AbstractAdvice;
 
 /**
- * @author Today <br>
- * 
+ * @author TODAY <br>
  *         2018-11-10 13:10
  */
-@Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface Advice {
 
-    /**
-     * annotated with
-     * 
-     * @return
-     */
+    /** Annotated with */
     Class<? extends Annotation>[] value() default {};
 
-    /**
-     * package name
-     * 
-     * @return
-     */
+    /** Package name */
     String[] pointcut() default {};
 
-    /**
-     * target classes
-     * 
-     * @return
-     */
+    /** Target classes */
     Class<?>[] target() default {};
 
-    /**
-     * method in class
-     * 
-     * @return
-     */
+    /** Method in class */
     String[] method() default {};
 
-    /**
-     * 
-     * @return
-     */
     Class<? extends MethodInterceptor> interceptor() default AbstractAdvice.class;
 
 }

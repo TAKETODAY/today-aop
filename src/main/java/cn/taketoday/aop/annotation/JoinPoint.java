@@ -24,13 +24,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.PARAMETER })
 /**
- * @author Today <br>
- * 
+ * @author TODAY<br>
  *         2018-11-12 17:32
  */
+@Target({ ElementType.PARAMETER })
+@Retention(RetentionPolicy.RUNTIME)
 public @interface JoinPoint {
 
 }

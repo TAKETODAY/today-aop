@@ -20,7 +20,6 @@
 package cn.taketoday.aop.annotation;
 
 import java.lang.annotation.Annotation;
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,41 +28,24 @@ import java.lang.annotation.Target;
 import cn.taketoday.aop.advice.MethodAfterAdvice;
 
 /**
- * @author Today <br>
+ * @author TODAY <br>
  *         2018-08-09 18:56
  */
-@Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE })
 @Advice(interceptor = MethodAfterAdvice.class)
+@Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface After {
 
-    /**
-     * annotated with
-     * 
-     * @return
-     */
+    /** Annotated with */
     Class<? extends Annotation>[] value() default {};
 
-    /**
-     * package name
-     * 
-     * @return
-     */
+    /** Package name */
     String[] pointcut() default {};
 
-    /**
-     * target classes
-     * 
-     * @return
-     */
+    /** Target classes */
     Class<?>[] target() default {};
 
-    /**
-     * method in class
-     * 
-     * @return
-     */
+    /** Method in class */
     String[] method() default {};
 
 }

@@ -119,7 +119,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
      * @return Method parameter list
      */
     @SuppressWarnings("unchecked")
-    private final Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
+    protected Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
 
         Object[] args = new Object[adviceParameterLength];
         for (int i = 0; i < adviceParameterLength; i++) {
