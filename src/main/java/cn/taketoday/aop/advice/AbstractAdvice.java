@@ -110,16 +110,16 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
     /**
      * Resolve method parameter list
      * 
-     * @param methodInvocation
+     * @param invocation
      *            The join point
-     * @param returnValue
+     * @param value
      *            The method returned value
      * @param ex
      *            The exception
      * @return Method parameter list
      */
     @SuppressWarnings("unchecked")
-    protected Object[] resolveParameter(MethodInvocation methodInvocation, Object returnValue, Throwable ex) {
+    protected Object[] resolveParameter(final MethodInvocation invocation, final Object value, final Throwable ex) {
 
         Object[] args = new Object[adviceParameterLength];
         for (int i = 0; i < adviceParameterLength; i++) {
@@ -139,7 +139,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
                 }
                 case Constant.TYPE_ARGUMENT : {
                     // fix: NullPointerException
-                    Object[] arguments = methodInvocation.getArguments();
+                    Object[] arguments = invocation.getArguments();
                     if (arguments.length == 1) {
                         args[i] = arguments[0];
                         break;
@@ -157,26 +157,26 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
                     break;
                 }
                 case Constant.TYPE_ARGUMENTS :
-                    args[i] = methodInvocation.getArguments();
+                    args[i] = invocation.getArguments();
                     break;
                 case Constant.TYPE_RETURNING :
-                    args[i] = returnValue;
+                    args[i] = value;
                     break;
                 case Constant.TYPE_ANNOTATED : {
-                    args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) adviceParameterTypes[i]);
+                    args[i] = resolveAnnotation(invocation, (Class<? extends Annotation>) adviceParameterTypes[i]);
                     break;
                 }
                 case Constant.TYPE_JOIN_POINT : {
-                    args[i] = methodInvocation;
+                    args[i] = invocation;
                     break;
                 }
                 default: {
                     Class<?> parameterType = adviceParameterTypes[i];
                     if (Joinpoint.class.isAssignableFrom(parameterType)) {
-                        args[i] = methodInvocation;
+                        args[i] = invocation;
                     }
                     if (Annotation.class.isAssignableFrom(parameterType)) {
-                        args[i] = resolveAnnotation(methodInvocation, (Class<? extends Annotation>) parameterType);
+                        args[i] = resolveAnnotation(invocation, (Class<? extends Annotation>) parameterType);
                     }
                     if (ex != null) {
                         final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
@@ -186,8 +186,8 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
                             args[i] = throwable;
                         }
                     }
-                    if (returnValue != null && parameterType.isAssignableFrom(returnValue.getClass())) {
-                        args[i] = returnValue;
+                    if (value != null && parameterType.isAssignableFrom(value.getClass())) {
+                        args[i] = value;
                     }
                     break;
                 }
