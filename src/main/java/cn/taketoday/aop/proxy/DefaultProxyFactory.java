@@ -169,24 +169,30 @@ public class DefaultProxyFactory implements ProxyFactory {
             else {
                 methodInterceptor = getInterceptor(aspect, aspectMethod, interceptor, applicationContext);
             }
-            log.debug("Found Interceptor: [{}]", methodInterceptor);
+            log.trace("Found Interceptor: [{}]", methodInterceptor);
 
             boolean isAllMethodsWeaved = false;
+
+            boolean traceEnabled = ClassUtils.traceEnabled;
             // annotation matching
             for (Class<? extends Annotation> annotation : advice.value()) {
                 if (targetClass.isAnnotationPresent(annotation)) {
                     weaved = true;
                     isAllMethodsWeaved = true;
                     // all method matched
-                    log.debug("Class: [{}] Present An Annotation Named: [{}] All Method Will Be Weaving: [{}]", //
-                            targetClass.getName(), annotation, advice);
+                    if (traceEnabled) {
+                        log.trace("Class: [{}] Present An Annotation Named: [{}] All Method Will Be Weaving: [{}]", //
+                                targetClass.getName(), annotation, advice);
+                    }
 
                     for (Method targetMethod : targetDeclaredMethods) {// all methods
                         weaving(methodInterceptor, targetMethod, aspectMappings);
                     }
                     continue;
                 }
-                log.debug("Class: [{}] Not Present An Annotation Named: [{}]", targetClass.getName(), annotation);
+                if (traceEnabled) {
+                    log.trace("Class: [{}] Not Present An Annotation Named: [{}]", targetClass.getName(), annotation);
+                }
                 // method annotation match start
                 for (Method targetMethod : targetDeclaredMethods) {
                     if (targetMethod.isAnnotationPresent(annotation)) {
