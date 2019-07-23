@@ -28,9 +28,9 @@ import cn.taketoday.context.listener.ApplicationListener;
 
 /**
  * @author TODAY <br>
- * 
  *         2018-11-10 13:20
  */
+@Deprecated
 @ContextListener
 @Order(Ordered.LOWEST_PRECEDENCE - Ordered.HIGHEST_PRECEDENCE)
 public class AspectsCreator implements ApplicationListener<ContextPreRefreshEvent> {
