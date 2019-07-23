@@ -19,6 +19,7 @@
 ## v1.0.5
 - :bug: fix: Superclass has no null constructors but no arguments were given
 - :bug: fix: #4 Aspects not created
+- :bookmark: release v1.0.5 2019/7/24-1:54
 
 
 ## v1.0.4
