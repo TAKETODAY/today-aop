@@ -22,7 +22,6 @@ package cn.taketoday.aop.proxy;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,7 @@ import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.BeanFactory;
 import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ExceptionUtils;
+import cn.taketoday.context.utils.ObjectUtils;
 import cn.taketoday.context.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,13 +76,13 @@ public class DefaultProxyFactory implements ProxyFactory {
         try {
 
             boolean weaved = false;
-            for (Object aspect : aspects) {
-                Class<?> aspectClass = aspect.getClass(); // aspect class
-                Class<?> targetClass = targetSource.getTargetClass(); // target class
+            for (final Object aspect : aspects) {
+                final Class<?> aspectClass = aspect.getClass(); // aspect class
+                final Class<?> targetClass = targetSource.getTargetClass(); // target class
 
-                if (aspect instanceof MethodInterceptor) {
+                if (aspect instanceof MethodInterceptor) { // 直接实现的: MethodInterceptor
                     // create interceptor chain
-                    Collection<Advice> advices = ClassUtils.getAnnotation(aspectClass, Advice.class, AdviceImpl.class);
+                    final Advice[] advices = ClassUtils.getAnnotationArray(aspectClass, Advice.class, AdviceImpl.class);
 
                     // matching class start
                     if (matchClass(targetClass, advices)) { // matched
@@ -90,23 +90,24 @@ public class DefaultProxyFactory implements ProxyFactory {
                     }
                 }
 
-                for (Method aspectMethod : aspectClass.getDeclaredMethods()) {// all advice methods
+                // matching all methods
+                // ---------------------
 
-                    Collection<Advice> advices = ClassUtils.getAnnotation(aspectMethod, Advice.class, AdviceImpl.class);
-                    if (advices.isEmpty()) {
-                        continue;
-                    }
+                for (final Method aspectMethod : aspectClass.getDeclaredMethods()) {// all advice methods
 
-                    // matching class start
-                    if (!matchClass(targetClass, advices)) {
-                        continue;
-                    }
-                    // matching methods start
-                    if (weaved) {
-                        matchMethod(aspect, aspectMethod, targetClass, advices);
-                    }
-                    else {
-                        weaved = matchMethod(aspect, aspectMethod, targetClass, advices);
+                    final Advice[] advices = ClassUtils.getAnnotationArray(aspectMethod, Advice.class, AdviceImpl.class);
+                    if (ObjectUtils.isNotEmpty(advices)) {
+                        // matching class start
+                        if (!matchClass(targetClass, advices)) {
+                            continue;
+                        }
+                        // matching methods start
+                        if (weaved) {
+                            matchMethod(aspect, aspectMethod, targetClass, advices);
+                        }
+                        else {
+                            weaved = matchMethod(aspect, aspectMethod, targetClass, advices);
+                        }
                     }
                 }
             }
@@ -124,6 +125,11 @@ public class DefaultProxyFactory implements ProxyFactory {
         }
     }
 
+    /**
+     * Get all Aspects
+     * 
+     * @return All Aspects
+     */
     protected List<Object> getAspects() {
 
         final AspectsRegistry instance = AspectsRegistry.getInstance();
@@ -149,13 +155,13 @@ public class DefaultProxyFactory implements ProxyFactory {
      * @return
      * @throws Throwable
      */
-    private boolean matchMethod(Object aspect, //
-            Method aspectMethod, Class<?> targetClass, Collection<Advice> advices) throws Throwable //
+    private boolean matchMethod(final Object aspect, //
+            final Method aspectMethod, final Class<?> targetClass, final Advice[] advices) throws Throwable //
     {
         boolean weaved = false;
         Method[] targetDeclaredMethods = targetClass.getDeclaredMethods();
 
-        for (Advice advice : advices) {
+        for (final Advice advice : advices) {
             Class<? extends MethodInterceptor> interceptor = advice.interceptor(); // interceptor class
 
             MethodInterceptor methodInterceptor = null;
@@ -214,14 +220,8 @@ public class DefaultProxyFactory implements ProxyFactory {
         return weaved;
     }
 
-    /**
-     * 
-     * @param targetDeclaredMethods
-     * @param advice
-     * @param methodInterceptor
-     */
-    private boolean regexMatchMethod(Method[] targetDeclaredMethods, //
-            Advice advice, MethodInterceptor methodInterceptor) //
+    private boolean regexMatchMethod(final Method[] targetDeclaredMethods, //
+            final Advice advice, final MethodInterceptor methodInterceptor) //
     {
         String[] methodsStr = advice.method();
         boolean weaved = false;
@@ -254,11 +254,11 @@ public class DefaultProxyFactory implements ProxyFactory {
      *            advice methods
      * @return if class matched
      */
-    public static boolean matchClass(Class<?> targetClass, Collection<Advice> advices) {
+    public static boolean matchClass(final Class<?> targetClass, final Advice[] advices) {
 
-        for (Advice advice : advices) {
+        for (final Advice advice : advices) {
             // target class match start
-            for (Class<?> target : advice.target()) {
+            for (final Class<?> target : advice.target()) {
                 if (target == targetClass) {
                     return true;
                 }
@@ -301,7 +301,7 @@ public class DefaultProxyFactory implements ProxyFactory {
      *            interceptor type
      * @throws Throwable
      */
-    public static MethodInterceptor getInterceptor(Object aspect, //
+    public static MethodInterceptor getInterceptor(final Object aspect, //
             Method aspectMethod, Class<? extends MethodInterceptor> interceptor, BeanFactory beanFactory) throws Throwable //
     {
 
