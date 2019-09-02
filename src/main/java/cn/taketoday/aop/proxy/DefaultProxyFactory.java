@@ -120,7 +120,7 @@ public class DefaultProxyFactory implements ProxyFactory {
         catch (Throwable ex) {
             ex = ExceptionUtils.unwrapThrowable(ex);
             throw new ConfigurationException(//
-                    "An Exception Occured When Creating A Target Proxy Instance With Msg: [" + ex.getMessage() + "]", ex//
+                    "An Exception Occured When Creating A Target Proxy Instance With Msg: [" + ex + "]", ex//
             );
         }
     }

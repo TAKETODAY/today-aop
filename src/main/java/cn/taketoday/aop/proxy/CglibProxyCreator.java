@@ -22,12 +22,13 @@ package cn.taketoday.aop.proxy;
 import java.lang.reflect.Constructor;
 
 import cn.taketoday.aop.ProxyCreator;
-import cn.taketoday.aop.cglib.proxy.Enhancer;
 import cn.taketoday.aop.intercept.CglibMethodInterceptor;
 import cn.taketoday.context.annotation.Autowired;
+import cn.taketoday.context.cglib.proxy.Enhancer;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.BeanFactory;
 import cn.taketoday.context.utils.ContextUtils;
+import cn.taketoday.context.utils.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,21 +52,30 @@ public class CglibProxyCreator implements ProxyCreator {
         enhancer.setCallback(new CglibMethodInterceptor(targetSource));
 
         // fix: Superclass has no null constructors but no arguments were given
-        Constructor<?>[] constructors = targetClass.getConstructors();
-        if (constructors == null || constructors.length == 0) {
-            throw new ConfigurationException("You must provide at least one public constructor");
+        final Constructor<?>[] constructors = targetClass.getDeclaredConstructors();
+
+        if (ObjectUtils.isEmpty(constructors)) {
+            throw new ConfigurationException("You must provide at least one constructor");
         }
 
-        for (Constructor<?> constructor : constructors) {
-            if (constructor.getParameterCount() == 0) {// <init>()
-                return enhancer.create();
-            }
-            else if (constructor.isAnnotationPresent(Autowired.class)) {
-                final Object[] resolveParameter = ContextUtils.resolveParameter(constructor, beanFactory);
-                return enhancer.create(constructor.getParameterTypes(), resolveParameter);
+        if (constructors.length == 1) { // 只有一个构造器
+            return doEnhance(beanFactory, enhancer, constructors[0]);
+        }
+
+        for (final Constructor<?> constructor : constructors) { // 多个构造器时选用标注有Autowired的
+            if (constructor.isAnnotationPresent(Autowired.class)) {
+                return doEnhance(beanFactory, enhancer, constructor);
             }
         }
         throw new ConfigurationException("Your provided constructors must at least one annotated @" + Autowired.class.getName());
+    }
+
+    protected Object doEnhance(final BeanFactory beanFactory, final Enhancer enhancer, final Constructor<?> constructor) {
+        if (constructor.getParameterCount() == 0) {// <init>()
+            return enhancer.create();
+        }
+        final Object[] resolveParameter = ContextUtils.resolveParameter(constructor, beanFactory);
+        return enhancer.create(constructor.getParameterTypes(), resolveParameter);
     }
 
 }
