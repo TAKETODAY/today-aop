@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.StandardApplicationContext;
+import cn.taketoday.context.cglib.core.DebuggingClassWriter;
 import cn.taketoday.context.exception.NoSuchBeanDefinitionException;
 import lombok.extern.slf4j.Slf4j;
 import test.demo.domain.User;
@@ -40,7 +41,9 @@ import test.demo.service.UserService;
 public class AopTest {
 
     private long start;
-
+    static {
+        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:/debug");
+    }
     @Before
     public void before() {
         start = System.currentTimeMillis();

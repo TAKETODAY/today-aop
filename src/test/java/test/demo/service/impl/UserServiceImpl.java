@@ -37,8 +37,12 @@ import test.demo.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
+    final private UserDao userDao;
+
     @Autowired
-    private UserDao userDao;
+    public UserServiceImpl(UserDao userDao, UserDao user) {
+        this.userDao = userDao;
+    }
 
     @Timer
     @Logger("登录")

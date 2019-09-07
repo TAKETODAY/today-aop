@@ -23,12 +23,11 @@ import java.lang.reflect.Constructor;
 
 import cn.taketoday.aop.ProxyCreator;
 import cn.taketoday.aop.intercept.CglibMethodInterceptor;
-import cn.taketoday.context.annotation.Autowired;
 import cn.taketoday.context.cglib.proxy.Enhancer;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ContextUtils;
-import cn.taketoday.context.utils.ObjectUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -44,30 +43,19 @@ public class CglibProxyCreator implements ProxyCreator {
 
         log.debug("Creating Cglib Proxy, target source is: [{}]", targetSource);
 
-        Class<?> targetClass = targetSource.getTargetClass();
-        Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(targetClass);
-        enhancer.setInterfaces(targetSource.getInterfaces());
-        enhancer.setInterceptDuringConstruction(false);
-        enhancer.setCallback(new CglibMethodInterceptor(targetSource));
+        final Class<?> targetClass = targetSource.getTargetClass();
+        final Enhancer enhancer = new Enhancer()//
+                .setSuperclass(targetClass)//
+                .setInterfaces(targetSource.getInterfaces())//
+                .setInterceptDuringConstruction(false)//
+                .setCallback(new CglibMethodInterceptor(targetSource));
 
-        // fix: Superclass has no null constructors but no arguments were given
-        final Constructor<?>[] constructors = targetClass.getDeclaredConstructors();
-
-        if (ObjectUtils.isEmpty(constructors)) {
-            throw new ConfigurationException("You must provide at least one constructor");
+        try {
+            return doEnhance(beanFactory, enhancer, ClassUtils.obtainConstructor(targetClass));
         }
-
-        if (constructors.length == 1) { // 只有一个构造器
-            return doEnhance(beanFactory, enhancer, constructors[0]);
+        catch (NoSuchMethodException e) {
+            throw new ConfigurationException("You must provide at least one suitable Constructor", e);
         }
-
-        for (final Constructor<?> constructor : constructors) { // 多个构造器时选用标注有Autowired的
-            if (constructor.isAnnotationPresent(Autowired.class)) {
-                return doEnhance(beanFactory, enhancer, constructor);
-            }
-        }
-        throw new ConfigurationException("Your provided constructors must at least one annotated @" + Autowired.class.getName());
     }
 
     protected Object doEnhance(final BeanFactory beanFactory, final Enhancer enhancer, final Constructor<?> constructor) {

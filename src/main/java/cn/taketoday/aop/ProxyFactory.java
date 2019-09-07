@@ -28,7 +28,7 @@ public interface ProxyFactory {
     /**
      * Get proxy instance
      * 
-     * @return
+     * @return proxy instance
      */
     Object getProxy();
 }

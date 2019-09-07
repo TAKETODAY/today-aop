@@ -46,16 +46,19 @@ public class CglibMethodInterceptor implements cn.taketoday.context.cglib.proxy.
     public CglibMethodInterceptor(TargetSource targetSource) {
         this.target = targetSource.getTarget();
         Map<Method, List<MethodInterceptor>> aspectMappings_ = targetSource.getAspectMappings();
-        aspectMappings = new HashMap<>(aspectMappings_.size(), 1.0f);
+        aspectMappings = new HashMap<>(aspectMappings_.size());
 
         for (Entry<Method, List<MethodInterceptor>> advices : aspectMappings_.entrySet()) {
-            advices.getValue().sort(Comparator.comparingInt(OrderUtils::getOrder).reversed());
-            aspectMappings.put(advices.getKey(), advices.getValue().toArray(new MethodInterceptor[0]));
+            final List<MethodInterceptor> interceptors = advices.getValue();
+            interceptors.sort(Comparator.comparingInt(OrderUtils::getOrder).reversed());
+            aspectMappings.put(advices.getKey(), interceptors.toArray(new MethodInterceptor[0]));
         }
     }
 
     @Override
-    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+    public Object intercept(final Object obj, //
+            final Method method, final Object[] args, final MethodProxy proxy) throws Throwable //
+    {
         final MethodInterceptor[] advices = aspectMappings.get(method);
         if (advices == null) {
             return proxy.invoke(target, args);

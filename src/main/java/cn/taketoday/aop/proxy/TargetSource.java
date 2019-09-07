@@ -51,11 +51,7 @@ public class TargetSource {
 
     @Override
     public String toString() {
-        return new StringBuilder()//
-                .append("{\"targetClass\":\"").append(targetClass)//
-                .append("\",\"interfaces\":\"").append(Arrays.toString(interfaces))//
-                .append("\",\"target\":\"").append(target)//
-                .append("\"}")//
-                .toString();
+        return String.format("{\"target\":\"%s\",\"targetClass\":\"%s\",\"interfaces\":\"%s\",\"aspectMappings\":\"%s\"}", //
+                target, targetClass, Arrays.toString(interfaces), aspectMappings);
     }
 }
