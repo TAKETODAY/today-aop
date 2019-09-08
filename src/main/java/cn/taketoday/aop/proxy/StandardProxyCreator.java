@@ -149,7 +149,7 @@ public class StandardProxyCreator implements ProxyCreator {
             final Type targetType = TypeUtils.parseType(targetClass);
 
             ce.beginClass(JAVA_VERSION, ACC_PUBLIC, getClassName(), targetType,
-                    array(TypeUtils.getTypes(targetClass.getInterfaces())), SOURCE_FILE);
+                          array(TypeUtils.getTypes(targetClass.getInterfaces())), SOURCE_FILE);
 
             ce.declare_field(Constant.ACC_PRIVATE | Constant.ACC_FINAL, "target", targetType, null);
 

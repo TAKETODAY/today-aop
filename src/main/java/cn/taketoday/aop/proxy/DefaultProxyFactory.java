@@ -155,8 +155,8 @@ public class DefaultProxyFactory implements ProxyFactory {
      * @return
      * @throws Throwable
      */
-    private boolean matchMethod(final Object aspect, //
-            final Method aspectMethod, final Class<?> targetClass, final Advice[] advices) throws Throwable //
+    private boolean matchMethod(final Object aspect, final Method aspectMethod, //
+                                final Class<?> targetClass, final Advice[] advices) throws Throwable //
     {
         boolean weaved = false;
         Method[] targetDeclaredMethods = targetClass.getDeclaredMethods();
@@ -188,7 +188,7 @@ public class DefaultProxyFactory implements ProxyFactory {
                     // all method matched
                     if (traceEnabled) {
                         log.trace("Class: [{}] Present An Annotation Named: [{}] All Method Will Be Weaving: [{}]", //
-                                targetClass.getName(), annotation, advice);
+                                  targetClass.getName(), annotation, advice);
                     }
 
                     for (Method targetMethod : targetDeclaredMethods) {// all methods
@@ -221,7 +221,7 @@ public class DefaultProxyFactory implements ProxyFactory {
     }
 
     private boolean regexMatchMethod(final Method[] targetDeclaredMethods, //
-            final Advice advice, final MethodInterceptor methodInterceptor) //
+                                     final Advice advice, final MethodInterceptor methodInterceptor) //
     {
         String[] methodsStr = advice.method();
         boolean weaved = false;
@@ -234,7 +234,7 @@ public class DefaultProxyFactory implements ProxyFactory {
             for (String methodRegex : methodRegexs) {
                 for (Method targetMethod : targetDeclaredMethods) {
                     if (!aspectMappings.containsKey(targetMethod) && //
-                            Pattern.matches(methodRegex, targetMethod.getName())) //
+                        Pattern.matches(methodRegex, targetMethod.getName())) //
                     {
                         weaved = true;
                         weaving(methodInterceptor, targetMethod, aspectMappings);
@@ -301,8 +301,9 @@ public class DefaultProxyFactory implements ProxyFactory {
      *            interceptor type
      * @throws Throwable
      */
-    public static MethodInterceptor getInterceptor(final Object aspect, //
-            Method aspectMethod, Class<? extends MethodInterceptor> interceptor, BeanFactory beanFactory) throws Throwable //
+    public static MethodInterceptor getInterceptor(final Object aspect, Method aspectMethod, //
+                                                   final Class<? extends MethodInterceptor> interceptor, //
+                                                   final BeanFactory beanFactory) throws Throwable //
     {
 
         if (interceptor == AbstractAdvice.class || !MethodInterceptor.class.isAssignableFrom(interceptor)) {
@@ -334,7 +335,9 @@ public class DefaultProxyFactory implements ProxyFactory {
      * @param aspectMappings
      *            aspect mappings
      */
-    public static void weaving(MethodInterceptor advice, Method targetMethod, Map<Method, List<MethodInterceptor>> aspectMappings) {
+    public static void weaving(MethodInterceptor advice, Method targetMethod,//
+                               Map<Method, List<MethodInterceptor>> aspectMappings) //
+    {
         List<MethodInterceptor> aspectMapping = aspectMappings.get(targetMethod);
         if (aspectMapping == null) {
             aspectMapping = new ArrayList<>();

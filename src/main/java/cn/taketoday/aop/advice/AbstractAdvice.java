@@ -99,7 +99,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
      *             If any {@link Exception} occurred
      */
     protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
-            Object returnValue, Throwable throwable) throws Throwable //
+                                        Object returnValue, Throwable throwable) throws Throwable //
     {
         if (adviceParameterLength == 0) {
             return adviceMethod.invoke(aspect);
@@ -130,7 +130,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
                         final Class<?> parameterType = adviceParameterTypes[i];
                         final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
                         if (parameterType == Throwable.class //
-                                || parameterType.isAssignableFrom(throwable.getClass())) //
+                            || parameterType.isAssignableFrom(throwable.getClass())) //
                         {
                             args[i] = throwable;
                         }
@@ -181,7 +181,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
                     if (ex != null) {
                         final Throwable throwable = ExceptionUtils.unwrapThrowable(ex);
                         if (parameterType == Throwable.class //
-                                || parameterType.isAssignableFrom(throwable.getClass())) //
+                            || parameterType.isAssignableFrom(throwable.getClass())) //
                         {
                             args[i] = throwable;
                         }
@@ -205,9 +205,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
      *            Given annotation class
      * @return Annotation
      */
-    private final Object resolveAnnotation(//
-            MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) //
-    {
+    private final Object resolveAnnotation(MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) {
         final Method method = methodInvocation.getMethod();
         Annotation annotation = method.getAnnotation(annotationClass);
         if (annotation == null) {

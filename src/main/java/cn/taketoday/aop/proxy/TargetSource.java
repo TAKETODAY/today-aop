@@ -52,6 +52,6 @@ public class TargetSource {
     @Override
     public String toString() {
         return String.format("{\"target\":\"%s\",\"targetClass\":\"%s\",\"interfaces\":\"%s\",\"aspectMappings\":\"%s\"}", //
-                target, targetClass, Arrays.toString(interfaces), aspectMappings);
+                             target, targetClass, Arrays.toString(interfaces), aspectMappings);
     }
 }

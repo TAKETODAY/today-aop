@@ -57,7 +57,7 @@ public class CglibMethodInterceptor implements cn.taketoday.context.cglib.proxy.
 
     @Override
     public Object intercept(final Object obj, //
-            final Method method, final Object[] args, final MethodProxy proxy) throws Throwable //
+                            final Method method, final Object[] args, final MethodProxy proxy) throws Throwable //
     {
         final MethodInterceptor[] advices = aspectMappings.get(method);
         if (advices == null) {
