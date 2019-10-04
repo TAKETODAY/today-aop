@@ -164,7 +164,7 @@ public class AopGen {
             final Type targetType = TypeUtils.parseType(targetClass);
 
             ce.beginClass(JAVA_VERSION, ACC_PUBLIC, getClassName(), targetType,
-                    array(TypeUtils.getTypes(targetClass.getInterfaces())), SOURCE_FILE);
+                          array(TypeUtils.getTypes(targetClass.getInterfaces())), SOURCE_FILE);
 
             ce.declare_field(Constant.ACC_PRIVATE | Constant.ACC_FINAL, "target", targetType, null);
 
@@ -176,7 +176,7 @@ public class AopGen {
 
                 final Type[] add = TypeUtils.add(types, targetType, true); // 子类构造器参数
                 final Signature parseConstructor = TypeUtils.parseConstructor(add);
-                
+
                 final CodeEmitter cone = ce.beginMethod(ACC_PUBLIC, parseConstructor);
 
                 cone.load_this();
@@ -200,21 +200,22 @@ public class AopGen {
 
                 final int modifiers = method.getModifiers();
 
-                if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers)) || Modifier.isFinal(modifiers)) {
+                if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers)) || Modifier.isFinal(
+                                                                                                            modifiers)) {
                     continue;
                 }
-                
+
                 final MethodInfo methodInfo = ReflectUtils.getMethodInfo(method);
 
                 final boolean isStatic = Modifier.isStatic(modifiers);
 
                 if ((target == null) ^ isStatic) {
-                    throw new IllegalArgumentException("Static method " + (isStatic ? "not " : Constant.BLANK) + "expected");
+                    throw new IllegalArgumentException("Static method " + (isStatic ? "not " : Constant.BLANK)
+                            + "expected");
                 }
-                
+
                 final CodeEmitter codeEmitter = EmitUtils.beginMethod(ce, methodInfo, modifiers);
 
-                
                 codeEmitter.load_this();
                 codeEmitter.getfield(ce.getClassInfo().getType(), "target", targetType);
 

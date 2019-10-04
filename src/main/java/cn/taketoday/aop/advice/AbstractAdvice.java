@@ -123,8 +123,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 
         Object[] args = new Object[adviceParameterLength];
         for (int i = 0; i < adviceParameterLength; i++) {
-            switch (adviceParameters[i])
-            {
+            switch (adviceParameters[i]) {
                 case Constant.TYPE_THROWING : {
                     if (ex != null) {
                         final Class<?> parameterType = adviceParameterTypes[i];
@@ -205,7 +204,8 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
      *            Given annotation class
      * @return Annotation
      */
-    private final Object resolveAnnotation(MethodInvocation methodInvocation, Class<? extends Annotation> annotationClass) {
+    private final Object resolveAnnotation(MethodInvocation methodInvocation,
+                                           Class<? extends Annotation> annotationClass) {
         final Method method = methodInvocation.getMethod();
         Annotation annotation = method.getAnnotation(annotationClass);
         if (annotation == null) {

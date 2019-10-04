@@ -185,7 +185,8 @@ public class StandardProxyCreator implements ProxyCreator {
 
                 final int modifiers = method.getModifiers();
 
-                if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers)) || Modifier.isFinal(modifiers)) {
+                if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers))
+                        || Modifier.isFinal(modifiers)) {
                     continue;
                 }
 

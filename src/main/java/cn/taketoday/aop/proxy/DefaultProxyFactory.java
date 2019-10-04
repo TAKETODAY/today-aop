@@ -95,7 +95,8 @@ public class DefaultProxyFactory implements ProxyFactory {
 
                 for (final Method aspectMethod : aspectClass.getDeclaredMethods()) {// all advice methods
 
-                    final Advice[] advices = ClassUtils.getAnnotationArray(aspectMethod, Advice.class, AdviceImpl.class);
+                    final Advice[] advices = ClassUtils.getAnnotationArray(aspectMethod, Advice.class,
+                                                                           AdviceImpl.class);
                     if (ObjectUtils.isNotEmpty(advices)) {
                         // matching class start
                         if (!matchClass(targetClass, advices)) {
@@ -120,7 +121,9 @@ public class DefaultProxyFactory implements ProxyFactory {
         catch (Throwable ex) {
             ex = ExceptionUtils.unwrapThrowable(ex);
             throw new ConfigurationException(//
-                    "An Exception Occured When Creating A Target Proxy Instance With Msg: [" + ex + "]", ex//
+                                             "An Exception Occured When Creating A Target Proxy Instance With Msg: ["
+                                                     + ex + "]",
+                                             ex//
             );
         }
     }
@@ -335,7 +338,7 @@ public class DefaultProxyFactory implements ProxyFactory {
      * @param aspectMappings
      *            aspect mappings
      */
-    public static void weaving(MethodInterceptor advice, Method targetMethod,//
+    public static void weaving(MethodInterceptor advice, Method targetMethod, //
                                Map<Method, List<MethodInterceptor>> aspectMappings) //
     {
         List<MethodInterceptor> aspectMapping = aspectMappings.get(targetMethod);

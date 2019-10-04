@@ -44,6 +44,7 @@ public class AopTest {
     static {
         System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:/debug");
     }
+
     @Before
     public void before() {
         start = System.currentTimeMillis();
