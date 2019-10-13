@@ -24,6 +24,7 @@ import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.Autowired;
 import cn.taketoday.context.annotation.Order;
 import cn.taketoday.context.annotation.Singleton;
+import cn.taketoday.context.bean.BeanDefinition;
 import cn.taketoday.context.factory.BeanPostProcessor;
 
 /**
@@ -44,7 +45,7 @@ public class AutoProxyCreator implements BeanPostProcessor {
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws Exception {
+    public Object postProcessAfterInitialization(Object bean, BeanDefinition beanDefinition) throws Exception {
         return new DefaultProxyFactory(new TargetSource(bean, bean.getClass()), applicationContext).getProxy();
     }
 
