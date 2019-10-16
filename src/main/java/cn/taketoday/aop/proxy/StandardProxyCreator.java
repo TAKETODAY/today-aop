@@ -62,7 +62,7 @@ public class StandardProxyCreator implements ProxyCreator {
         log.debug("Creating Standard Proxy, target source is: [{}]", targetSource);
 
         final Class<?> targetClass = targetSource.getTargetClass();
-        final StandardProxyGenerator proxyGenerator = new StandardProxyGenerator();
+        final StandardProxyGenerator proxyGenerator = new StandardProxyGenerator(beanFactory);
         proxyGenerator.setTarget(targetSource.getTarget());
         proxyGenerator.setTargetClass(targetClass);
 
@@ -87,9 +87,11 @@ public class StandardProxyCreator implements ProxyCreator {
         private Class<?> targetClass;
         private Class<?>[] parameterTypes;
         private Constructor<?> targetConstructor;
-
-        public StandardProxyGenerator() {
+        private final BeanFactory beanFactory;
+        
+        public StandardProxyGenerator(BeanFactory beanFactory) {
             super(SOURCE);
+            this.beanFactory = beanFactory;
         }
 
         public void setTarget(Object target) {
@@ -128,7 +130,7 @@ public class StandardProxyCreator implements ProxyCreator {
             System.arraycopy(types, 0, copy, 0, types.length);
             copy[types.length] = targetClass;
 
-            final Object[] arg = ContextUtils.resolveParameter(targetConstructor, ContextUtils.getApplicationContext());
+            final Object[] arg = ContextUtils.resolveParameter(targetConstructor, beanFactory);
             Object[] args = new Object[parameterTypes.length + 1];
             System.arraycopy(arg, 0, args, 0, arg.length);
             args[types.length] = target;
