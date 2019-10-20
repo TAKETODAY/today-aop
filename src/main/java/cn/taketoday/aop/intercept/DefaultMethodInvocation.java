@@ -20,6 +20,7 @@
 package cn.taketoday.aop.intercept;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -67,7 +68,12 @@ public class DefaultMethodInvocation implements MethodInvocation {
     public Object proceed() throws Throwable {
 
         if (currentAdviceIndex == adviceLength) {
-            return method.invoke(target, args);
+            try {
+                return method.invoke(target, args);
+            }
+            catch (InvocationTargetException e) {
+                throw e.getTargetException();
+            }
         }
         return advices[currentAdviceIndex++].invoke(this);
     }
