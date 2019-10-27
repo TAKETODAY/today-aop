@@ -164,23 +164,22 @@ public class StandardProxyCreator implements ProxyCreator {
                 final Type[] add = TypeUtils.add(types, targetType, true); // 子类构造器参数
                 final Signature parseConstructor = TypeUtils.parseConstructor(add);
 
-                final CodeEmitter cone = ce.beginMethod(ACC_PUBLIC, parseConstructor);
+                final CodeEmitter code = ce.beginMethod(ACC_PUBLIC, parseConstructor);
 
-                cone.load_this();
-
-                cone.dup();
+                code.load_this();
+                code.dup();
 
                 final int length = types.length;
                 if (length > 0) {
-                    cone.load_args(0, length);
+                    code.load_args(0, length);
                 }
-                cone.super_invoke_constructor(TypeUtils.parseConstructor(types));
+                code.super_invoke_constructor(TypeUtils.parseConstructor(types));
 
-                cone.load_arg(length);
-                cone.putfield("target");
+                code.load_arg(length);
+                code.putfield("target");
 
-                cone.return_value();
-                cone.end_method();
+                code.return_value();
+                code.end_method();
             }
 
             for (Method method : targetClass.getDeclaredMethods()) {

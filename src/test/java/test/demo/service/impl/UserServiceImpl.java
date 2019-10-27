@@ -29,8 +29,7 @@ import test.demo.domain.User;
 import test.demo.service.UserService;
 
 /**
- * 
- * @author Today <br>
+ * @author TODAY <br>
  *         2018-11-11 09:25
  */
 @Slf4j
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
     final private UserDao userDao;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao, UserDao user) {
+    public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
@@ -57,5 +56,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean register(User user) {
         return userDao.save(user);
+    }
+
+    @Override
+    public boolean remove(User user) {
+        
+        log.debug("remove");
+
+        return true;
     }
 }

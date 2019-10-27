@@ -58,7 +58,8 @@ public class CglibProxyCreator implements ProxyCreator {
         }
     }
 
-    protected Object doEnhance(final BeanFactory beanFactory, final Enhancer enhancer,
+    protected Object doEnhance(final BeanFactory beanFactory,
+                               final Enhancer enhancer,
                                final Constructor<?> constructor) {
         if (constructor.getParameterCount() == 0) {// <init>()
             return enhancer.create();

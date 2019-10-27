@@ -27,7 +27,6 @@ import cn.taketoday.context.annotation.Order;
 
 /**
  * @author TODAY <br>
- * 
  *         2018-10-13 11:25
  */
 @Order(5)
@@ -38,15 +37,13 @@ public class MethodAfterThrowingAdvice extends MethodAfterAdvice {
     }
 
     @Override
-    public Object invoke(MethodInvocation methodInvocation) throws Throwable {
+    public Object invoke(final MethodInvocation methodInvocation) throws Throwable {
 
         try {
-
             return methodInvocation.proceed();
         }
         catch (Throwable ex) {
-            invokeAdviceMethod(methodInvocation, null, ex);
-            throw ex;
+            return invokeAdviceMethod(methodInvocation, null, ex); // fix Use 
         }
     }
 

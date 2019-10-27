@@ -37,6 +37,7 @@ import cn.taketoday.context.asm.Type;
 import cn.taketoday.context.cglib.core.AbstractClassGenerator;
 import cn.taketoday.context.cglib.core.ClassEmitter;
 import cn.taketoday.context.cglib.core.CodeEmitter;
+import cn.taketoday.context.cglib.core.DebuggingClassWriter;
 import cn.taketoday.context.cglib.core.EmitUtils;
 import cn.taketoday.context.cglib.core.KeyFactory;
 import cn.taketoday.context.cglib.core.MethodInfo;
@@ -55,9 +56,9 @@ import test.demo.service.UserService;
  */
 public class AopGen {
 
-//    static {
-//        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:/debug");
-//    }
+    static {
+        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:/debug");
+    }
 
     public static void main(String[] args) {
 
@@ -200,8 +201,7 @@ public class AopGen {
 
                 final int modifiers = method.getModifiers();
 
-                if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers)) || Modifier.isFinal(
-                                                                                                            modifiers)) {
+                if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers)) || Modifier.isFinal(modifiers)) {
                     continue;
                 }
 
@@ -210,8 +210,7 @@ public class AopGen {
                 final boolean isStatic = Modifier.isStatic(modifiers);
 
                 if ((target == null) ^ isStatic) {
-                    throw new IllegalArgumentException("Static method " + (isStatic ? "not " : Constant.BLANK)
-                            + "expected");
+                    throw new IllegalArgumentException("Static method " + (isStatic ? "not " : Constant.BLANK) + "expected");
                 }
 
                 final CodeEmitter codeEmitter = EmitUtils.beginMethod(ce, methodInfo, modifiers);

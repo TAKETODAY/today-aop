@@ -35,17 +35,18 @@ import cn.taketoday.aop.annotation.Arguments;
 import cn.taketoday.aop.annotation.JoinPoint;
 import cn.taketoday.aop.annotation.Returning;
 import cn.taketoday.aop.annotation.Throwing;
+import cn.taketoday.context.invoker.MethodInvoker;
 import cn.taketoday.context.utils.ExceptionUtils;
 
 /**
  * @author TODAY <br>
- * 
  *         2018-11-10 11:26
  */
 public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 
     private final Object aspect;
-    private final Method adviceMethod;
+    //    private final Method adviceMethod;
+    private final MethodInvoker invoker;
     private final byte[] adviceParameters;
     private final int adviceParameterLength;
     private final Class<?>[] adviceParameterTypes;
@@ -53,7 +54,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
     public AbstractAdvice(Method adviceMethod, Object aspect) {
 
         this.aspect = aspect;
-        this.adviceMethod = adviceMethod;
+        this.invoker = MethodInvoker.create(adviceMethod);
         this.adviceParameterLength = adviceMethod.getParameterCount();
         this.adviceParameters = new byte[adviceParameterLength];
         this.adviceParameterTypes = adviceMethod.getParameterTypes();
@@ -89,7 +90,7 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
     /**
      * Invoke advice method
      * 
-     * @param methodInvocation
+     * @param i
      *            Target method invocation
      * @param returnValue
      *            Target method return value
@@ -98,13 +99,14 @@ public abstract class AbstractAdvice implements Advice, MethodInterceptor {
      * @throws Throwable
      *             If any {@link Exception} occurred
      */
-    protected Object invokeAdviceMethod(MethodInvocation methodInvocation, //
-                                        Object returnValue, Throwable throwable) throws Throwable //
+    protected Object invokeAdviceMethod(final MethodInvocation i,
+                                        final Object returnValue,
+                                        final Throwable throwable) throws Throwable //
     {
         if (adviceParameterLength == 0) {
-            return adviceMethod.invoke(aspect);
+            return invoker.invoke(aspect, null);
         }
-        return adviceMethod.invoke(aspect, resolveParameter(methodInvocation, returnValue, throwable));
+        return invoker.invoke(aspect, resolveParameter(i, returnValue, throwable));
     }
 
     /**

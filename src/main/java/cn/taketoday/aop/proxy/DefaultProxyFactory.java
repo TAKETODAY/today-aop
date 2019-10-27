@@ -80,10 +80,9 @@ public class DefaultProxyFactory implements ProxyFactory {
                 final Class<?> aspectClass = aspect.getClass(); // aspect class
                 final Class<?> targetClass = targetSource.getTargetClass(); // target class
 
-                if (aspect instanceof MethodInterceptor) { // 直接实现的: MethodInterceptor
+                if (aspect instanceof MethodInterceptor) { // 直接实现的MethodInterceptor
                     // create interceptor chain
                     final Advice[] advices = ClassUtils.getAnnotationArray(aspectClass, Advice.class, AdviceImpl.class);
-
                     // matching class start
                     if (matchClass(targetClass, advices)) { // matched
                         weaved = matchMethod(aspect, null, targetClass, advices);
@@ -95,7 +94,8 @@ public class DefaultProxyFactory implements ProxyFactory {
 
                 for (final Method aspectMethod : aspectClass.getDeclaredMethods()) {// all advice methods
 
-                    final Advice[] advices = ClassUtils.getAnnotationArray(aspectMethod, Advice.class,
+                    final Advice[] advices = ClassUtils.getAnnotationArray(aspectMethod,
+                                                                           Advice.class,
                                                                            AdviceImpl.class);
                     if (ObjectUtils.isNotEmpty(advices)) {
                         // matching class start
@@ -120,10 +120,8 @@ public class DefaultProxyFactory implements ProxyFactory {
         }
         catch (Throwable ex) {
             ex = ExceptionUtils.unwrapThrowable(ex);
-            throw new ConfigurationException(//
-                                             "An Exception Occured When Creating A Target Proxy Instance With Msg: ["
-                                                     + ex + "]",
-                                             ex//
+            throw new ConfigurationException("An Exception Occured When Creating A Target Proxy Instance With Msg: ["
+                    + ex + ']', ex//
             );
         }
     }
@@ -170,8 +168,8 @@ public class DefaultProxyFactory implements ProxyFactory {
             MethodInterceptor methodInterceptor = null;
             if (aspectMethod == null) { // method interceptor
                 if (!(aspect instanceof MethodInterceptor)) {
-                    throw new ConfigurationException("[" + aspect.getClass().getName() + //
-                            "] must be implement: [" + MethodInterceptor.class.getName() + "]");
+                    throw new ConfigurationException('[' + aspect.getClass().getName() +
+                            "] must be implement: [" + MethodInterceptor.class.getName() + ']');
                 }
                 methodInterceptor = (MethodInterceptor) aspect;
             }
@@ -304,8 +302,9 @@ public class DefaultProxyFactory implements ProxyFactory {
      *            interceptor type
      * @throws Throwable
      */
-    public static MethodInterceptor getInterceptor(final Object aspect, Method aspectMethod, //
-                                                   final Class<? extends MethodInterceptor> interceptor, //
+    public static MethodInterceptor getInterceptor(final Object aspect,
+                                                   Method aspectMethod,
+                                                   final Class<? extends MethodInterceptor> interceptor,
                                                    final BeanFactory beanFactory) throws Throwable //
     {
 

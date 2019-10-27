@@ -27,6 +27,8 @@ import java.util.Arrays;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+import cn.taketoday.context.cglib.proxy.MethodProxy;
+
 /**
  * 
  * @author TODAY <br>
@@ -35,8 +37,9 @@ import org.aopalliance.intercept.MethodInvocation;
 public class DefaultMethodInvocation implements MethodInvocation {
 
     private final Object target;
-    private final Method method;
     private final Object[] args;
+    private final Method method;
+    private final MethodProxy proxy;
     private final MethodInterceptor[] advices;
 
     /**
@@ -46,13 +49,18 @@ public class DefaultMethodInvocation implements MethodInvocation {
 
     private final int adviceLength;
 
-    public DefaultMethodInvocation(Object target, Method method, Object[] arguments, MethodInterceptor[] advices) {
+    public DefaultMethodInvocation(Object target, //@off
+                                   Method method, 
+                                   MethodProxy proxy, 
+                                   Object[] arguments, 
+                                   MethodInterceptor[] advices) {
+        this.proxy = proxy;
         this.target = target;
         this.method = method;
         this.args = arguments;
         this.advices = advices;
         this.adviceLength = advices.length;
-    }
+    } //@on
 
     @Override
     public Method getMethod() {
@@ -69,7 +77,7 @@ public class DefaultMethodInvocation implements MethodInvocation {
 
         if (currentAdviceIndex == adviceLength) {
             try {
-                return method.invoke(target, args);
+                return proxy.invoke(target, args);
             }
             catch (InvocationTargetException e) {
                 throw e.getTargetException();

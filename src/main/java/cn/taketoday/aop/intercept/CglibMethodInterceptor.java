@@ -56,15 +56,17 @@ public class CglibMethodInterceptor implements cn.taketoday.context.cglib.proxy.
     }
 
     @Override
-    public Object intercept(final Object obj, //
-                            final Method method, final Object[] args, final MethodProxy proxy) throws Throwable //
+    public Object intercept(final Object obj,
+                            final Method method,
+                            final Object[] args,
+                            final MethodProxy proxy) throws Throwable //
     {
         final MethodInterceptor[] advices = aspectMappings.get(method);
         if (advices == null) {
             return proxy.invoke(target, args);
         }
-//		log.debug("Intercept method: [{}]", method.getName());
-        return new DefaultMethodInvocation(target, method, args, advices).proceed();
+        // log.debug("Intercept method: [{}]", method.getName());
+        return new DefaultMethodInvocation(target, method, proxy, args, advices).proceed();
     }
 
 }

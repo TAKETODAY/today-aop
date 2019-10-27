@@ -28,6 +28,8 @@ import java.lang.annotation.Target;
 import org.aopalliance.intercept.MethodInterceptor;
 
 import cn.taketoday.aop.advice.AbstractAdvice;
+import cn.taketoday.aop.advice.ClassMatcher;
+import cn.taketoday.aop.advice.MethodMatcher;
 
 /**
  * @author TODAY <br>
@@ -49,6 +51,9 @@ public @interface Advice {
     /** Method in class */
     String[] method() default {};
 
+    Class<? extends ClassMatcher> classMatcher() default ClassMatcher.class;
+    Class<? extends MethodMatcher> methodMatcher() default MethodMatcher.class;
+    
     Class<? extends MethodInterceptor> interceptor() default AbstractAdvice.class;
 
 }

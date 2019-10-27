@@ -49,7 +49,7 @@ public class TestInterceptor implements MethodInterceptor {
 
         Object proceed = invocation.proceed();
 
-        log.debug("MethodInterceptor afetr");
+        log.debug("MethodInterceptor after");
 
         return proceed;
     }

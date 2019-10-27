@@ -25,6 +25,8 @@ import java.util.Arrays;
 import org.aopalliance.intercept.MethodInterceptor;
 
 import cn.taketoday.aop.advice.AbstractAdvice;
+import cn.taketoday.aop.advice.ClassMatcher;
+import cn.taketoday.aop.advice.MethodMatcher;
 
 /**
  * @author Today <br>
@@ -38,6 +40,8 @@ public class AdviceImpl implements Advice {
     private Class<?>[] target = null;
     private String method[] = { "*" };
     private Class<? extends Annotation>[] value;
+    private Class<? extends ClassMatcher> classMatcher;
+    private Class<? extends MethodMatcher> methodMatcher;
     private Class<? extends MethodInterceptor> interceptor = AbstractAdvice.class;
 
     @Override
@@ -80,6 +84,16 @@ public class AdviceImpl implements Advice {
                 .append("\",\n\t\"interceptor\":\"").append(interceptor)//
                 .append("\"\n}")//
                 .toString();
+    }
+
+    @Override
+    public Class<? extends ClassMatcher> classMatcher() {
+        return classMatcher;
+    }
+
+    @Override
+    public Class<? extends MethodMatcher> methodMatcher() {
+        return methodMatcher;
     }
 
 }

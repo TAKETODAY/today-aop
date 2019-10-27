@@ -28,8 +28,10 @@ import test.demo.domain.User;
  */
 public interface UserService {
 
-    public boolean register(User user);
+    boolean register(User user);
 
-    public User login(User user);
+    User login(User user);
+
+    boolean remove(User user);
 
 }
