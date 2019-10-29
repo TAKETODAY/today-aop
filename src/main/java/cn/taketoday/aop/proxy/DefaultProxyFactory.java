@@ -57,7 +57,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 
     private final TargetSource targetSource;
     private final ApplicationContext applicationContext;
-    private final Map<Method, List<MethodInterceptor>> aspectMappings = new HashMap<>(16, 1.0f);
+    private final Map<Method, List<MethodInterceptor>> aspectMappings = new HashMap<>(16);
 
     public DefaultProxyFactory() {
         this(null, null);
