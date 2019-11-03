@@ -46,12 +46,12 @@
         <system>Github Issues</system>
         <url>https://github.com/TAKETODAY/today-aop/issues</url>
     </issueManagement>
-    
+
     <properties>
         <skipTests>true</skipTests>
         <context.version>latest</context.version>
     </properties>
-    
+
     <dependencies>
 
         <dependency>
@@ -60,11 +60,12 @@
             <version>1.18.0</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
