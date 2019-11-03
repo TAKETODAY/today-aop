@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(User user) {
         log.debug("login");
-//		int i = 1 / 0;
+        //		int i = 1 / 0;
         return userDao.login(user);
     }
 
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean remove(User user) {
-        
+
         log.debug("remove");
 
         return true;

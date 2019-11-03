@@ -55,9 +55,9 @@ public class LogAspect {
     }
 
     @AfterReturning(Logger.class)
-//	public void afterReturning(@Returning Object returnValue) {
+    //	public void afterReturning(@Returning Object returnValue) {
     public void afterReturning() {
-//		log.debug("LogAspect @AfterReturning returnValue: [{}]", returnValue);
+        //		log.debug("LogAspect @AfterReturning returnValue: [{}]", returnValue);
         log.debug("LogAspect @AfterReturning");
     }
 
@@ -68,8 +68,8 @@ public class LogAspect {
 
     @Before(Logger.class)
     public void before(@Annotated Logger logger) {
-//	public void before(@Annotated Logger logger, @Argument User user) {
-//		log.debug("LogAspect @Before method in class with logger: [{}] , Argument:[{}]", logger.value(), user);
+        //	public void before(@Annotated Logger logger, @Argument User user) {
+        //		log.debug("LogAspect @Before method in class with logger: [{}] , Argument:[{}]", logger.value(), user);
         log.debug("LogAspect @Before method in class with logger: [{}]", logger.value());
     }
 
@@ -82,7 +82,7 @@ public class LogAspect {
     @Around(Logger.class)
     public Object around(@JoinPoint Joinpoint joinpoint) throws Throwable {
         log.debug("LogAspect @Around Before method");
-//		int i = 1 / 0;
+        //		int i = 1 / 0;
         Object proceed = joinpoint.proceed();
         log.debug("LogAspect @Around After method");
         return proceed;

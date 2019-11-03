@@ -43,18 +43,20 @@ import cn.taketoday.context.cglib.core.ReflectUtils;
 import cn.taketoday.context.cglib.core.Signature;
 import cn.taketoday.context.cglib.core.TypeUtils;
 import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.logger.Logger;
+import cn.taketoday.context.logger.LoggerFactory;
 import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ContextUtils;
 import cn.taketoday.context.utils.ObjectUtils;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * @author TODAY <br>
  *         2019-09-07 10:44
  */
-@Slf4j
 public class StandardProxyCreator implements ProxyCreator {
+
+    private static final Logger log = LoggerFactory.getLogger(StandardProxyCreator.class);
 
     @Override
     public Object createProxy(TargetSource targetSource, BeanFactory beanFactory) {
@@ -88,7 +90,7 @@ public class StandardProxyCreator implements ProxyCreator {
         private Class<?>[] parameterTypes;
         private Constructor<?> targetConstructor;
         private final BeanFactory beanFactory;
-        
+
         public StandardProxyGenerator(BeanFactory beanFactory) {
             super(SOURCE);
             this.beanFactory = beanFactory;
@@ -187,7 +189,7 @@ public class StandardProxyCreator implements ProxyCreator {
                 final int modifiers = method.getModifiers();
 
                 if ((!Modifier.isProtected(modifiers) && !Modifier.isPublic(modifiers))
-                        || Modifier.isFinal(modifiers)) {
+                    || Modifier.isFinal(modifiers)) {
                     continue;
                 }
 

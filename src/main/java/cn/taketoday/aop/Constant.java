@@ -26,7 +26,7 @@ package cn.taketoday.aop;
 public interface Constant extends cn.taketoday.context.Constant {
 
     /* Indicates the ASM API version that is used throughout cglib */
-//	int			ASM_API					= ASM7;
+    //	int			ASM_API					= ASM7;
 
     /*************************************************
      * Parameter Types

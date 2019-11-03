@@ -68,9 +68,9 @@ public class AopTest {
             long start = System.currentTimeMillis();
             User login = bean.login(user);
 
-//			for (int i = 0; i < 1000; i++) {
-//				login = bean.login(user);
-//			}
+            //			for (int i = 0; i < 1000; i++) {
+            //				login = bean.login(user);
+            //			}
 
             log.debug("{}ms", System.currentTimeMillis() - start);
 

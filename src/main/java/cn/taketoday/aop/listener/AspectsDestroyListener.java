@@ -19,14 +19,13 @@
  */
 package cn.taketoday.aop.listener;
 
-import org.slf4j.LoggerFactory;
-
 import cn.taketoday.aop.advice.AspectsRegistry;
 import cn.taketoday.context.Ordered;
 import cn.taketoday.context.annotation.ContextListener;
 import cn.taketoday.context.annotation.Order;
 import cn.taketoday.context.event.ContextCloseEvent;
 import cn.taketoday.context.listener.ApplicationListener;
+import cn.taketoday.context.logger.LoggerFactory;
 
 /**
  * @author TODAY <br>

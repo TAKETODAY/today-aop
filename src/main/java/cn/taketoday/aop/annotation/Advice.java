@@ -52,8 +52,9 @@ public @interface Advice {
     String[] method() default {};
 
     Class<? extends ClassMatcher> classMatcher() default ClassMatcher.class;
+
     Class<? extends MethodMatcher> methodMatcher() default MethodMatcher.class;
-    
+
     Class<? extends MethodInterceptor> interceptor() default AbstractAdvice.class;
 
 }

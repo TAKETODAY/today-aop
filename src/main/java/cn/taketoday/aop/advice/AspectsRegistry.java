@@ -22,12 +22,11 @@ package cn.taketoday.aop.advice;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.context.bean.BeanDefinition;
 import cn.taketoday.context.factory.ConfigurableBeanFactory;
+import cn.taketoday.context.logger.Logger;
+import cn.taketoday.context.logger.LoggerFactory;
 import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ExceptionUtils;
 import cn.taketoday.context.utils.OrderUtils;

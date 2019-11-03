@@ -39,19 +39,21 @@ import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.logger.Logger;
+import cn.taketoday.context.logger.LoggerFactory;
 import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ExceptionUtils;
 import cn.taketoday.context.utils.ObjectUtils;
 import cn.taketoday.context.utils.StringUtils;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * @author TODAY <br>
  *         2018-11-10 13:13
  */
-@Slf4j
 public class DefaultProxyFactory implements ProxyFactory {
+
+    private static final Logger log = LoggerFactory.getLogger(DefaultProxyFactory.class);
 
     private static final CglibProxyCreator CGLIB_PROXY_CREATOR = new CglibProxyCreator();;
 

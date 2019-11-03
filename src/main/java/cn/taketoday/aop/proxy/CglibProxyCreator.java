@@ -26,17 +26,19 @@ import cn.taketoday.aop.intercept.CglibMethodInterceptor;
 import cn.taketoday.context.cglib.proxy.Enhancer;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.BeanFactory;
+import cn.taketoday.context.logger.Logger;
+import cn.taketoday.context.logger.LoggerFactory;
 import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ContextUtils;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * @author TODAY <br>
  *         2018-11-10 13:03
  */
-@Slf4j
 public class CglibProxyCreator implements ProxyCreator {
+
+    private static final Logger log = LoggerFactory.getLogger(CglibProxyCreator.class);
 
     @Override
     public Object createProxy(TargetSource targetSource, BeanFactory beanFactory) {

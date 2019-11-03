@@ -46,7 +46,7 @@ public class UserServiceImpl$$AopGen extends UserServiceImpl {
             new StandardMethodInvocation(targetInvocation, user).proceed();
         }
         catch (Throwable e) {
-            
+
         }
         return super.login(user);
     }

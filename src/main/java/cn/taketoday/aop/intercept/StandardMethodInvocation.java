@@ -68,7 +68,6 @@ public class StandardMethodInvocation implements MethodInvocation {
         return target.advices[currentAdviceIndex++].invoke(this);
     }
 
-    
     @Override
     public Object getThis() {
         return target.getThis();
