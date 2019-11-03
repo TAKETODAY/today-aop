@@ -16,6 +16,8 @@
 
 ```
 [Maven Central](https://search.maven.org/artifact/cn.taketoday/today-aop/1.0.4.RELEASE/jar)
+## v1.0.6
+- :sparkles: 仿照SpringCache做了一个切面缓存
 
 ## v1.0.5
 - :bug: fix: Superclass has no null constructors but no arguments were given
