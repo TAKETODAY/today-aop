@@ -20,7 +20,6 @@
 package cn.taketoday.aop;
 
 /**
- * @author Juozas Baliuka <a href="mailto:baliuka@mwm.lt">baliuka@mwm.lt</a>
  * @author TODAY <br>
  *         2018-11-10 16:46
  */

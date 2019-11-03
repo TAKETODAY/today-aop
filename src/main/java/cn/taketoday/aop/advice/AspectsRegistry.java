@@ -77,9 +77,7 @@ public enum AspectsRegistry {
 
             for (final BeanDefinition beanDefinition : applicationContext.getBeanDefinitions().values()) {
 
-                final Class<? extends Object> beanClass = beanDefinition.getBeanClass();
-
-                if (beanClass.isAnnotationPresent(Aspect.class)) {
+                if (beanDefinition.isAnnotationPresent(Aspect.class)) {
                     // fix use beanDefinition.getName()
                     final String aspectName = beanDefinition.getName();
                     log.debug("Found Aspect: [{}]", aspectName);
