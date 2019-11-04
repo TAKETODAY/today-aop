@@ -17,38 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package test.demo.domain;
+package test.demo.mapper;
 
-import java.io.Serializable;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import cn.taketoday.context.annotation.Repository;
+import test.demo.domain.User;
 
 /**
  * 
- * @author Today
- *
+ * @author Today <br>
+ *         2018-12-24 19:11
  */
-@Setter
-@Getter
-@AllArgsConstructor
-public final class Article implements Serializable {
+@Repository
+public interface UserMapper {
 
-    private static final long serialVersionUID = 1930544427904752617L;
+    User findByEmail(String email);
 
-    private Integer id = null;
-    private String title = null;
-    private String content = null;
-    private User author = null;
+    User findByOpenId(String openId);
 
-    public Article() {
+    User login(User user);
 
-    }
-
-    @Override
-    public String toString() {
-        return "{\n\t\"id\":\"" + id + "\",\n\t\"title\":\"" + title + "\",\n\t\"content\":\"" + content + "\",\n\t\"author\":\"" + author + "\"\n}";
-    }
+    void save(User user);
 
 }

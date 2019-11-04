@@ -66,9 +66,9 @@ public class AopGen {
 
             UserService userService = applicationContext.getBean(UserService.class);
             User user = new User();
-            user.setPasswd("666");
+            user.setPassword("666");
 
-            user.setUserId("666");
+            user.setEmail("666");
             User login = userService.login(user);
 
             Generator<UserService> g = new Generator<>();

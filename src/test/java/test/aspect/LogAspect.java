@@ -76,7 +76,7 @@ public class LogAspect {
     @After(Logger.class)
     public Object after(@Returning User returnValue, @Arguments Object[] arguments) {
         log.debug("LogAspect @After method in class");
-        return returnValue.setSex("女");
+        return returnValue.setIntroduce("女");
     }
 
     @Around(Logger.class)

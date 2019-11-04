@@ -19,7 +19,6 @@
  */
 package test.demo.dao.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,21 +32,22 @@ import test.demo.domain.User;
  *         2018-07-06 17:40:34
  */
 @Repository
-public class UserDaoImpl implements UserDao {
+public class MemUserDao implements UserDao {
 
     private Map<String, User> users = new HashMap<>();
 
-    public UserDaoImpl() {
-        users.put("666", new User(1, "杨海健", 20, "666", "666", "男", new Date()));
-        users.put("6666", new User(2, "杨海健1", 20, "6666", "6666", "男", new Date()));
-        users.put("66666", new User(3, "杨海健2", 20, "66666", "66666", "男", new Date()));
-        users.put("666666", new User(4, "杨海健3", 20, "666666", "666666", "男", new Date()));
+    public MemUserDao() {
+        users.put("666", new User().setPassword("666"));
+        users.put("6666", new User().setPassword("6666"));
+        users.put("66666", new User().setPassword("66666"));
+        users.put("666666", new User().setPassword("666666"));
+        users.put("taketoday@foxmail.com", new User().setPassword("130447AD788ACD4E5A06BF83136E78CB"));
     }
 
     @Override
     public boolean save(User user) {
 
-        users.put(user.getUserId(), user);
+        users.put(user.getEmail(), user);
 
         return true;
     }
@@ -55,12 +55,12 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User login(User user) {
 
-        User user_ = users.get(user.getUserId());
+        User user_ = users.get(user.getEmail());
 
         if (user_ == null) {
             return null;
         }
-        if (!user_.getPasswd().equals(user.getPasswd())) {
+        if (!user_.getPassword().equals(user.getPassword())) {
             return null;
         }
         return user_;

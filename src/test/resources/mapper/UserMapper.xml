@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Original Author -> 杨海健 (taketoday@foxmail.com) https://taketoday.cn
+  Copyright © Today & 2017 - 2018 All Rights Reserved.
+  
+  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER
+ 
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+ 
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+ 
+  You should have received a copy of the GNU General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test.demo.mapper.UserMapper">
+
+	<resultMap id="BaseResultMap" type="test.demo.domain.User">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="site" jdbcType="VARCHAR" property="site"/>
+		<result column="type" jdbcType="VARCHAR" property="type"/>
+		<result column="email" jdbcType="VARCHAR" property="email"/>
+		<result column="image" jdbcType="VARCHAR" property="image"/>
+		<result column="status" jdbcType="SMALLINT" property="state"/>
+		<result column="password" jdbcType="VARCHAR" property="password"/>
+		<result column="background" jdbcType="VARCHAR" property="background"/>
+		<result column="introduce" jdbcType="VARCHAR" property="introduce"/>
+	</resultMap>
+
+
+	<sql id="Base_Column_List">
+		`id`, `name`, `site`, `type`, `email`, `image`, `password`, `introduce`, `status`,`background`
+	</sql>
+
+	<select id="findById" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		from user where id = #{id}
+	</select>
+
+	<delete id="deleteById" parameterType="java.lang.Long">
+		delete from user where id = #{id}
+	</delete>
+
+	<insert id="save" parameterType="test.demo.domain.User">
+		insert into
+		user (`id`, `name`, `site`, `type`, `email`, `image`, `introduce`)
+		values (
+		#{id},
+		#{name},
+		#{site},
+		#{type},
+		#{email},
+		#{image},
+		#{introduce}
+		)
+	</insert>
+
+	<update id="update" parameterType="test.demo.domain.User">
+		update user
+		<set>
+			<if test="status != 0">
+				status = #{status},
+			</if>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="email != null">
+				email = #{email},
+			</if>
+			<if test="site != null">
+				site = #{site},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="password != null">
+				password = #{password},
+			</if>
+			<if test="image != null">
+				image = #{image},
+			</if>
+			<if test="introduce != null">
+				introduce = #{introduce},
+			</if>
+			<if test="background != null">
+				background = #{background},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<select id="findAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List"/>
+		FROM user
+	</select>
+
+	<select id="findByEmail" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM user WHERE email=#{email}
+	</select>
+
+	<select id="login" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"/>
+		FROM user WHERE email=#{email} and password = #{password}
+	</select>
+
+</mapper>
+

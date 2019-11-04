@@ -20,52 +20,55 @@
 package test.demo.domain;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Today <br>
+ * 
+ *         2018-12-06 19:56
+ */
 @Setter
 @Getter
-@AllArgsConstructor
-//@Singleton
+@SuppressWarnings("serial")
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 8795680197276813853L;
-
-    private Integer id = null;
-    private String userName = null;
-    private Integer age = null;
-    private String passwd = null;
-    private String userId = null;
-    private String sex = null;
-
-    private Date brithday = null;
+    /** id register time */
+    private long id;
+    /** state */
+    private byte state;
+    /** name */
+    private String name;
+    /** email */
+    private String email;
+    /** web site */
+    private String site;
+    /** type */
+    private String type;
+    /** passwd */
+    private String password;
+    /** avatar */
+    private String image;
+    /** description */
+    private String introduce;
+    /** back ground **/
+    private String background;
 
     @Override
     public String toString() {
         return new StringBuilder()//
-                .append("{\n\t\"id\":\"")//
-                .append(id)//
-                .append("\",\n\t\"userName\":\"")//
-                .append(userName)//
-                .append("\",\n\t\"age\":\"")//
-                .append(age)//
-                .append("\",\n\t\"passwd\":\"")//
-                .append(passwd)//
-                .append("\",\n\t\"userId\":\"")//
-                .append(userId)//
-                .append("\",\n\t\"sex\":\"")//
-                .append(sex)//
-                .append("\",\n\t\"brithday\":\"")//
-                .append(brithday)//
-                .append("\"\n}")//
-                .toString();
-    }
-
-    public User() {
-
+                .append("{\n\t\"id\":\"").append(id)//
+                .append("\",\n\t\"name\":\"").append(name)//
+                .append("\",\n\t\"site\":\"").append(site)//
+                .append("\",\n\t\"type\":\"").append(type)//
+                .append("\",\n\t\"state\":\"").append(state)//
+                .append("\",\n\t\"image\":\"").append(image)//
+                .append("\",\n\t\"email\":\"").append(email)//
+                .append("\",\n\t\"password\":\"").append(password)//
+                .append("\",\n\t\"background\":\"").append(background)//
+                .append("\",\n\t\"introduce\":\"").append(introduce)//
+                .append("\"\n}").toString();
     }
 
 }

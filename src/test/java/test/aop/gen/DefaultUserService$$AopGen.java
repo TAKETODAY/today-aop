@@ -23,18 +23,18 @@ import cn.taketoday.aop.intercept.StandardMethodInvocation;
 import cn.taketoday.aop.intercept.StandardMethodInvocation.TargetMethodInvocation;
 import test.demo.dao.UserDao;
 import test.demo.domain.User;
-import test.demo.service.impl.UserServiceImpl;
+import test.demo.service.impl.DefaultUserService;
 
 /**
  * @author TODAY <br>
  *         2019-10-23 12:49
  */
-public class UserServiceImpl$$AopGen extends UserServiceImpl {
+public class DefaultUserService$$AopGen extends DefaultUserService {
 
-    private final UserServiceImpl target;
+    private final DefaultUserService target;
     private final TargetMethodInvocation targetInvocation;
 
-    public UserServiceImpl$$AopGen(UserDao userDao, UserServiceImpl target, TargetMethodInvocation targetInvocation) {
+    public DefaultUserService$$AopGen(UserDao userDao, DefaultUserService target, TargetMethodInvocation targetInvocation) {
         super(userDao);
         this.target = target;
         this.targetInvocation = targetInvocation;
@@ -56,7 +56,7 @@ public class UserServiceImpl$$AopGen extends UserServiceImpl {
         return super.register(user);
     }
 
-    public UserServiceImpl getTarget() {
+    public DefaultUserService getTarget() {
         return target;
     }
 }

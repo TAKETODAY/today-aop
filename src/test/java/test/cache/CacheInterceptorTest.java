@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package test.aop;
+package test.cache;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,25 +25,24 @@ import org.junit.Test;
 
 import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.StandardApplicationContext;
-import cn.taketoday.context.cglib.core.DebuggingClassWriter;
 import cn.taketoday.context.exception.NoSuchBeanDefinitionException;
-import lombok.extern.slf4j.Slf4j;
+import cn.taketoday.context.logger.Logger;
+import cn.taketoday.context.logger.LoggerFactory;
 import test.demo.domain.User;
-import test.demo.interceptor.TestInterceptor;
 import test.demo.service.UserService;
+import test.demo.service.impl.CacheableUserService;
+import test.demo.service.impl.DefaultUserService;
 
 /**
  * @author Today <br>
  * 
- *         2018-08-10 21:29
+ *         2018-12-24 22:34
  */
-@Slf4j
-public class AopTest {
+public class CacheInterceptorTest {
+
+    private static final Logger log = LoggerFactory.getLogger(CacheInterceptorTest.class);
 
     private long start;
-    static {
-        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:/debug");
-    }
 
     @Before
     public void before() {
@@ -60,25 +59,24 @@ public class AopTest {
 
         try (ApplicationContext applicationContext = new StandardApplicationContext("", "")) {
 
-            UserService bean = applicationContext.getBean(UserService.class);
+            UserService bean = applicationContext.getBean(DefaultUserService.class);
             User user = new User();
-            user.setPassword("666");
-            user.setEmail("666");
+            user.setEmail("taketoday@foxmail.com");
+            user.setPassword("130447AD788ACD4E5A06BF83136E78CB");
             long start = System.currentTimeMillis();
             User login = bean.login(user);
-
-            //			for (int i = 0; i < 1000; i++) {
-            //				login = bean.login(user);
-            //			}
+            login = bean.login(user);
 
             log.debug("{}ms", System.currentTimeMillis() - start);
-
             log.debug("Result:[{}]", login);
             log.debug("{}ms", System.currentTimeMillis() - start);
 
-            TestInterceptor bean2 = applicationContext.getBean(TestInterceptor.class);
+            // CacheableUserService
 
-            System.err.println(bean2);
+            final CacheableUserService userService = applicationContext.getBean(CacheableUserService.class);
+
+            login = userService.login(user);
+            log.debug("Result:[{}]", login);
         }
     }
 

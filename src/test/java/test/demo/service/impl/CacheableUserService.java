@@ -19,50 +19,53 @@
  */
 package test.demo.service.impl;
 
+import java.util.concurrent.TimeUnit;
+
+import cn.taketoday.cache.annotation.CacheConfig;
+import cn.taketoday.cache.annotation.CachePut;
+import cn.taketoday.cache.annotation.Cacheable;
+import cn.taketoday.cache.annotation.EnableRedissonCaching;
 import cn.taketoday.context.annotation.Autowired;
 import cn.taketoday.context.annotation.Service;
 import lombok.extern.slf4j.Slf4j;
-import test.aspect.Logger;
-import test.aspect.Timer;
-import test.demo.dao.UserDao;
 import test.demo.domain.User;
+import test.demo.mapper.UserMapper;
 import test.demo.service.UserService;
 
 /**
  * @author TODAY <br>
- *         2018-11-11 09:25
+ *         2018-11-15 16:52
  */
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
-
-    final private UserDao userDao;
+//@EnableCaching
+@EnableRedissonCaching
+@CacheConfig(cacheName = "loginUser")
+public class CacheableUserService implements UserService {
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
-    }
+    private UserMapper userMapper;
 
-    @Timer
-    @Logger("登录")
     @Override
+    @Cacheable(key = "userEmail_${user.email}", condition = "${!empty user.email}", expire = 2000,
+               timeUnit = TimeUnit.MILLISECONDS, sync = true)
+    //  @Cacheable(cacheName = "loginUser", sync = false)
     public User login(User user) {
-        log.debug("login");
-        //		int i = 1 / 0;
-        return userDao.login(user);
+        log.debug("login userMapper");
+
+        return userMapper.login(user);
     }
 
-    @Logger("注册")
     @Override
+    @CachePut(cacheName = "loginUser")
     public boolean register(User user) {
-        return userDao.save(user);
+        userMapper.save(user);
+        return false;
     }
 
     @Override
     public boolean remove(User user) {
-
-        log.debug("remove");
-
-        return true;
+        return false;
     }
+
 }
