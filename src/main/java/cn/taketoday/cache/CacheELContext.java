@@ -121,15 +121,12 @@ public class CacheELContext extends ELContext {
     }
 
     @Override
-    public void notifyAfterEvaluation(String expr) {
-    }
+    public void notifyAfterEvaluation(String expr) {}
 
     @Override
-    public void notifyBeforeEvaluation(String expr) {
-    }
+    public void notifyBeforeEvaluation(String expr) {}
 
     @Override
-    public void notifyPropertyResolved(Object base, Object property) {
-    }
+    public void notifyPropertyResolved(Object base, Object property) {}
 
 }
