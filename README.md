@@ -5,7 +5,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/8ffb960eb2b04507977aeb409d51dea3)](https://www.codacy.com/app/TAKETODAY/today-aop?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TAKETODAY/today-aop&amp;utm_campaign=Badge_Grade)
 ![Java CI](https://github.com/TAKETODAY/today-aop/workflows/Java%20CI/badge.svg)
 
-## 安装
+## 🛠️ 安装
 
 ```xml
 
@@ -22,7 +22,7 @@
 ## 案例
 - [DEMO](https://github.com/TAKETODAY/today-web-demo)
 
-## 使用说明
+## :memo: 使用说明
 
 > 使用@Aspect标注一个切面
 
@@ -135,11 +135,7 @@ public void test_Login() throws NoSuchBeanDefinitionException {
 }
 ```
 
-### 联系方式
-- 邮箱 taketoday@foxmail.com
-
-
-### 开源协议
+### :memo: 开源协议
 
 请查看 [GNU GENERAL PUBLIC LICENSE](https://github.com/TAKETODAY/today-aop/blob/master/LICENSE)
 
