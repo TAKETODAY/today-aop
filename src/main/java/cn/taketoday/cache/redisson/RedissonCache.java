@@ -60,7 +60,7 @@ public class RedissonCache extends AbstractCache implements Cache {
                                       final CacheConfig cacheConfig,
                                       final Object key, final Object value)//
     {
-        if (cache instanceof RMapCache && cacheConfig != null) {
+        if (cacheConfig != null && cache instanceof RMapCache) {
             final TimeUnit timeUnit = cacheConfig.timeUnit();
             ((RMapCache) cache).fastPut(key, value, cacheConfig.expire(), timeUnit, cacheConfig.maxIdleTime(), timeUnit);
         }

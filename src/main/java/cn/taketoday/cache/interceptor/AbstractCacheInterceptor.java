@@ -25,8 +25,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 import javax.el.ELManager;
@@ -48,6 +46,7 @@ import cn.taketoday.context.ApplicationContext;
 import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.InitializingBean;
 import cn.taketoday.context.utils.ClassUtils;
+import cn.taketoday.context.utils.ConcurrentCache;
 import cn.taketoday.context.utils.ContextUtils;
 import cn.taketoday.context.utils.StringUtils;
 
@@ -135,54 +134,46 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
     // ExpressionOperations
     //-----------------------------------------------------
 
-    final static class Operations {
+    interface Operations {
 
-        protected static final String KEY_ROOT = "root";
-        protected static final String KEY_RESULT = "result";
+        String KEY_ROOT = "root";
+        String KEY_RESULT = "result";
 
-        private static final StandardELContext SHARED_EL_CONTEXT = //
+        StandardELContext SHARED_EL_CONTEXT = //
                 ContextUtils.getApplicationContext()
                         .getEnvironment()
                         .getELProcessor()
                         .getELManager()
                         .getELContext();
-        private static final ExpressionFactory EXPRESSION_FACTORY = ELManager.getExpressionFactory();
-        private static final ConcurrentMap<MethodKey, String[]> METHOD_NAMES_CACHE = new ConcurrentHashMap<>(128);
-        private static final Function<MethodKey, String[]> METHOD_NAMES_FUNCTION = new Function<MethodKey, String[]>() {
-            @Override
-            public String[] apply(MethodKey t) {
-                return ClassUtils.getMethodArgsNames(t.targetMethod);
-            }
-        };
+        
+        ExpressionFactory EXPRESSION_FACTORY = ELManager.getExpressionFactory();
+        ConcurrentCache<MethodKey, String[]> METHOD_NAMES_CACHE = new ConcurrentCache<>(512);
+        ConcurrentCache<MethodKey, CacheConfiguration> CACHE_OPERATION = new ConcurrentCache<>(512);
+        Function<MethodKey, String[]> METHOD_NAMES_FUNCTION = (target) -> ClassUtils.getMethodArgsNames(target.targetMethod);
 
-        private static final ConcurrentMap<MethodKey, CacheConfiguration> CACHE_OPERATION = new ConcurrentHashMap<>(128);
-        private static final Function<MethodKey, CacheConfiguration> CACHE_OPERATION_FUNCTION = new Function<MethodKey, CacheConfiguration>() {
+        Function<MethodKey, CacheConfiguration> CACHE_OPERATION_FUNCTION = (target) -> {
 
-            @Override
-            public CacheConfiguration apply(MethodKey t) {
+            final Method method = target.targetMethod;
+            final Class<? extends Annotation> annClass = target.annotationClass;
 
-                final Method method = t.targetMethod;
-                final Class<? extends Annotation> annClass = t.annotationClass;
-
-                // Find target method [annClass] AnnotationAttributes
-                AnnotationAttributes attributes = ClassUtils.getAnnotationAttributes(annClass, method);
-                final Class<?> declaringClass = method.getDeclaringClass();
+            // Find target method [annClass] AnnotationAttributes
+            AnnotationAttributes attributes = ClassUtils.getAnnotationAttributes(annClass, method);
+            final Class<?> declaringClass = method.getDeclaringClass();
+            if (attributes == null) {
+                attributes = ClassUtils.getAnnotationAttributes(annClass, declaringClass);
                 if (attributes == null) {
-                    attributes = ClassUtils.getAnnotationAttributes(annClass, declaringClass);
-                    if (attributes == null) {
-                        throw new IllegalStateException("Unexpected exception has occurred, may be it's a bug");
-                    }
+                    throw new IllegalStateException("Unexpected exception has occurred, may be it's a bug");
                 }
-
-                final CacheConfiguration configuration = //
-                        ClassUtils.injectAttributes(attributes, annClass, new CacheConfiguration(annClass));
-
-                final CacheConfig cacheConfig = ClassUtils.getAnnotation(CacheConfig.class, declaringClass);
-                if (cacheConfig != null) {
-                    configuration.mergeCacheConfigAttributes(cacheConfig);
-                }
-                return configuration;
             }
+
+            final CacheConfiguration configuration = //
+                    ClassUtils.injectAttributes(attributes, annClass, new CacheConfiguration(annClass));
+
+            final CacheConfig cacheConfig = ClassUtils.getAnnotation(CacheConfig.class, declaringClass);
+            if (cacheConfig != null) {
+                configuration.mergeCacheConfigAttributes(cacheConfig);
+            }
+            return configuration;
         };
 
         // methods
@@ -198,14 +189,19 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
          * @return {@link Annotation} instance
          */
         static <A extends Annotation> CacheConfiguration prepareAnnotation(final MethodKey methodKey) {
-            return CACHE_OPERATION.computeIfAbsent(methodKey, CACHE_OPERATION_FUNCTION);
+            return CACHE_OPERATION.get(methodKey, CACHE_OPERATION_FUNCTION);
         }
 
         /**
+         * Create a key for the target method
+         * 
          * @param key
+         *            Key expression
          * @param context
+         *            Cache el context
          * @param invocation
-         * @return
+         *            Target Method Invocation
+         * @return Cache key
          */
         static Object createKey(final String key, final CacheELContext context, final MethodInvocation invocation) {
 
@@ -215,9 +211,13 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
         }
 
         /**
+         * Test condition Expression
+         * 
          * @param condition
+         *            condition expression
          * @param context
-         * @return
+         *            Cache EL Context
+         * @return returns If pass the condition
          */
         static boolean isConditionPassing(final String condition, final CacheELContext context) {
 
@@ -228,9 +228,14 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
         }
 
         /**
+         * Test unless Expression
+         * 
          * @param unless
+         *            unless express
          * @param result
+         *            method return value
          * @param context
+         *            Cache el context
          */
         static boolean allowPutCache(final String unless, final Object result, final CacheELContext context) {
 
@@ -255,7 +260,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
                                           final Object[] arguments,
                                           final Map<String, Object> beans) //
         {
-            final String[] names = METHOD_NAMES_CACHE.computeIfAbsent(methodKey, METHOD_NAMES_FUNCTION);
+            final String[] names = METHOD_NAMES_CACHE.get(methodKey, METHOD_NAMES_FUNCTION);
             for (int i = 0; i < names.length; i++) {
                 beans.put(names[i], arguments[i]);
             }

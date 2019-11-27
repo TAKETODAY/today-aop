@@ -20,7 +20,6 @@
 package cn.taketoday.cache;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.el.BeanNameELResolver;
@@ -88,26 +87,6 @@ public class CacheELContext extends ELContext {
     @Override
     public VariableMapper getVariableMapper() {
         return this.delegate.getVariableMapper();
-    }
-
-    @Override
-    public Locale getLocale() {
-        return this.delegate.getLocale();
-    }
-
-    @Override
-    public void putContext(Class<?> key, Object contextObject) {
-        this.delegate.putContext(key, contextObject);
-    }
-
-    @Override
-    public Object getContext(Class<?> key) {
-        return this.delegate.getContext(key);
-    }
-
-    @Override
-    public void setLocale(Locale locale) {
-        this.delegate.setLocale(locale);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class DefaultCacheKey implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final DefaultCacheKey EMPTY = new DefaultCacheKey(new Object[0]);
+    public static final DefaultCacheKey EMPTY = new DefaultCacheKey(Constant.EMPTY_OBJECT);
 
     private final int hash;
     private final Object[] params;
