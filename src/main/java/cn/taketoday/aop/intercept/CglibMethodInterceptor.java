@@ -51,7 +51,7 @@ public class CglibMethodInterceptor implements cn.taketoday.context.cglib.proxy.
         for (Entry<Method, List<MethodInterceptor>> advices : aspectMappings_.entrySet()) {
             final List<MethodInterceptor> interceptors = advices.getValue();
             interceptors.sort(Comparator.comparingInt(OrderUtils::getOrder).reversed());
-            aspectMappings.put(advices.getKey(), interceptors.toArray(new MethodInterceptor[0]));
+            aspectMappings.put(advices.getKey(), interceptors.toArray(new MethodInterceptor[interceptors.size()]));
         }
     }
 
