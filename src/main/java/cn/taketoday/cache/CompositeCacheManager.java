@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import cn.taketoday.cache.annotation.CacheConfig;
@@ -40,10 +41,12 @@ public class CompositeCacheManager implements CacheManager {
     public CompositeCacheManager() {}
 
     public CompositeCacheManager(CacheManager... cacheManagers) {
+        Objects.requireNonNull(cacheManagers, "cacheManager s can't be null");
         Collections.addAll(this.cacheManagers, cacheManagers);
     }
 
     public void addCacheManagers(Collection<CacheManager> cacheManagers) {
+        Objects.requireNonNull(cacheManagers, "cacheManager s can't be null");
         this.cacheManagers.addAll(cacheManagers);
     }
 

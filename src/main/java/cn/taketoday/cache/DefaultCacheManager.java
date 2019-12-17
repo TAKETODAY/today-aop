@@ -22,6 +22,7 @@ package cn.taketoday.cache;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -44,6 +45,7 @@ public class DefaultCacheManager implements CacheManager {
     }
 
     public DefaultCacheManager(String... cacheNames) {
+        Objects.requireNonNull(cacheNames, "cacheNames s can't be null");
         setCacheNames(Arrays.asList(cacheNames));
     }
 
@@ -96,6 +98,6 @@ public class DefaultCacheManager implements CacheManager {
      * @return the DefaultMapCache
      */
     protected Cache createCache(String name) {
-        return new DefaultMapCache(name, new ConcurrentHashMap<>(256));
+        return new ConcurrentMapCache(name);
     }
 }

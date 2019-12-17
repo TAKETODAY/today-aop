@@ -26,18 +26,26 @@ package cn.taketoday.cache;
  */
 public abstract class AbstractCache implements Cache {
 
+    private String name;
+
     @Override
-    public final Object get(Object key) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public final Object get(final Object key) {
         final Object ret = lookupValue(key);
-        if (ret == Constant.EMPTY_OBJECT) {
-            return null;
-        }
-        return ret;
+        return ret == Constant.EMPTY_OBJECT ? null : ret;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T get(Object key, Class<T> type) {
+    public <T> T get(final Object key, final Class<T> type) {
         final Object value = get(key);
         if (value != null && type != null && !type.isInstance(value)) {
             throw new IllegalStateException("Cached value is not of required type [" + type.getName() + "]: " + value);
@@ -47,8 +55,19 @@ public abstract class AbstractCache implements Cache {
 
     protected abstract Object lookupValue(Object key);
 
+    protected <T> Object lookupValue(final Object key, final CacheCallback<T> valueLoader)
+            throws CacheValueRetrievalException //
+    {
+        try {
+            return valueLoader.call();
+        }
+        catch (Throwable e) {
+            throw new CacheValueRetrievalException(key, valueLoader, e);
+        }
+    }
+
     @Override
-    public final void put(Object key, Object value) {
+    public final void put(final Object key, final Object value) {
         putInternal(key, value == null ? Constant.EMPTY_OBJECT : value);
     }
 

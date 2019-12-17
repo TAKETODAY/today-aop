@@ -20,7 +20,6 @@
 package cn.taketoday.cache;
 
 /**
- * 
  * @author TODAY <br>
  *         2019-02-27 17:11
  */

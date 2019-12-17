@@ -20,6 +20,7 @@
 package cn.taketoday.cache.interceptor;
 
 import cn.taketoday.cache.Cache;
+import cn.taketoday.cache.CacheCallback;
 
 /**
  * @author TODAY <br>
@@ -49,6 +50,22 @@ public class CacheOperations {
         catch (RuntimeException ex) {
             getExceptionResolver().resolveGetException(ex, cache, key);
             return null;
+        }
+    }
+
+    /**
+     * Execute {@link Cache#get(Object)} on the specified {@link Cache} and invoke
+     * the error handler if an exception occurs. Return {@code null} if the handler
+     * does not throw any exception, which simulates a cache miss in case of error.
+     * 
+     * @see Cache#get(Object)
+     */
+    public Object get(final Cache cache, final Object key, CacheCallback<Object> valueLoader) {
+        try {
+            return cache.get(key, valueLoader);
+        }
+        catch (RuntimeException ex) {
+            return getExceptionResolver().resolveGetException(ex, cache, key);
         }
     }
 

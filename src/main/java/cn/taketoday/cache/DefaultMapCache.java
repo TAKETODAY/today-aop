@@ -28,7 +28,6 @@ import java.util.Map;
  */
 public class DefaultMapCache extends AbstractCache {
 
-    private final String name;
     private final Map<Object, Object> store;
 
     public DefaultMapCache(String name) {
@@ -36,13 +35,8 @@ public class DefaultMapCache extends AbstractCache {
     }
 
     protected DefaultMapCache(String name, Map<Object, Object> store) {
-        this.name = name;
+        this.setName(name);
         this.store = store;
-    }
-
-    @Override
-    public final String getName() {
-        return this.name;
     }
 
     @Override
@@ -68,15 +62,7 @@ public class DefaultMapCache extends AbstractCache {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T get(Object key, CacheCallback<T> cacheCallback) {
-        final Object ret = this.store.computeIfAbsent(key, r -> {
-            try {
-                return cacheCallback.call();
-            }
-            catch (Throwable ex) {
-                throw new CacheValueRetrievalException(key, cacheCallback, ex);
-            }
-        });
-        return (T) ret;
+        return (T) this.store.computeIfAbsent(key, k -> lookupValue(k, cacheCallback));
     }
 
 }

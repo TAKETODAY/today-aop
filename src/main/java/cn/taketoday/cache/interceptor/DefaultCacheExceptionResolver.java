@@ -37,8 +37,8 @@ public class DefaultCacheExceptionResolver implements CacheExceptionResolver {
     }
 
     @Override
-    public void resolveGetException(RuntimeException exception, Cache cache, Object key) {
-        throw exception;
+    public Object resolveGetException(RuntimeException exception, Cache cache, Object key) {
+        return null;
     }
 
     @Override

@@ -147,9 +147,9 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
                         .getELContext();
         
         ExpressionFactory EXPRESSION_FACTORY = ELManager.getExpressionFactory();
-        ConcurrentCache<MethodKey, String[]> METHOD_NAMES_CACHE = new ConcurrentCache<>(512);
+        ConcurrentCache<MethodKey, String[]> ARGS_NAMES_CACHE = new ConcurrentCache<>(512);
         ConcurrentCache<MethodKey, CacheConfiguration> CACHE_OPERATION = new ConcurrentCache<>(512);
-        Function<MethodKey, String[]> METHOD_NAMES_FUNCTION = (target) -> ClassUtils.getMethodArgsNames(target.targetMethod);
+        Function<MethodKey, String[]> ARGS_NAMES_FUNCTION = (target) -> ClassUtils.getMethodArgsNames(target.targetMethod);
 
         Function<MethodKey, CacheConfiguration> CACHE_OPERATION_FUNCTION = (target) -> {
 
@@ -260,7 +260,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
                                           final Object[] arguments,
                                           final Map<String, Object> beans) //
         {
-            final String[] names = METHOD_NAMES_CACHE.get(methodKey, METHOD_NAMES_FUNCTION);
+            final String[] names = ARGS_NAMES_CACHE.get(methodKey, ARGS_NAMES_FUNCTION);
             for (int i = 0; i < names.length; i++) {
                 beans.put(names[i], arguments[i]);
             }

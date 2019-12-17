@@ -19,6 +19,7 @@
  */
 package cn.taketoday.cache.redisson;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.redisson.api.RLock;
@@ -41,18 +42,14 @@ public class RedissonCache extends AbstractCache implements Cache {
     private final CacheConfig cacheConfig;
     private final RMap<Object, Object> cache;
 
-    public RedissonCache(RMap<Object, Object> map, CacheConfig cacheConfig) {
-        this.cache = map;
-        this.cacheConfig = cacheConfig;
-
-        //if (cacheConfig == null && map instanceof RMapCache) {
-        //  throw new IllegalArgumentException("cache must be a 'org.redisson.api.RMapCache'");
-        //}
+    public RedissonCache(RMap<Object, Object> cache) {
+        this(cache, null);
     }
 
-    @Override
-    public String getName() {
-        return cache.getName();
+    public RedissonCache(RMap<Object, Object> cache, CacheConfig cacheConfig) {
+        this.cache = Objects.requireNonNull(cache, "cache must not be null");
+        this.cacheConfig = cacheConfig;
+        setName(cache.getName());
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })

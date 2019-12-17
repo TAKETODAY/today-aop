@@ -49,8 +49,9 @@ public interface CacheExceptionResolver {
      * @param key
      *            the key used to get the item
      * @see Cache#get(Object)
+     * @return cache value
      */
-    void resolveGetException(RuntimeException exception, Cache cache, Object key);
+    Object resolveGetException(RuntimeException exception, Cache cache, Object key);
 
     /**
      * Handle the given runtime exception thrown by the cache provider when updating
