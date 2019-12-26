@@ -122,9 +122,8 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
         if (getCacheManager() == null) {
             setCacheManager(applicationContext.getBean(CacheManager.class));
         }
-        if (getCacheManager() == null) {
-            throw new ConfigurationException("You must provide a 'CacheManager'");
-        }
+
+        ConfigurationException.nonNull(getCacheManager(), "You must provide a 'CacheManager'");
 
         if (getExceptionResolver() == null) {
             setExceptionResolver(applicationContext.getBean(CacheExceptionResolver.class));
@@ -145,7 +144,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
                         .getELProcessor()
                         .getELManager()
                         .getELContext();
-        
+
         ExpressionFactory EXPRESSION_FACTORY = ELManager.getExpressionFactory();
         ConcurrentCache<MethodKey, String[]> ARGS_NAMES_CACHE = new ConcurrentCache<>(512);
         ConcurrentCache<MethodKey, CacheConfiguration> CACHE_OPERATION = new ConcurrentCache<>(512);
