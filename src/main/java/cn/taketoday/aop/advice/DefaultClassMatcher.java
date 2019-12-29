@@ -24,8 +24,6 @@ import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
 import cn.taketoday.aop.annotation.Advice;
-import cn.taketoday.aop.annotation.AdviceImpl;
-import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.StringUtils;
 
 /**
@@ -38,7 +36,7 @@ public class DefaultClassMatcher implements ClassMatcher {
     public boolean matches(Object aspect, Class<?> targetClass) {
         final Class<?> aspectClass = aspect.getClass(); // aspect class
 
-        final Advice[] advices = ClassUtils.getAnnotationArray(aspectClass, Advice.class, AdviceImpl.class);
+//        final Advice[] advices = ClassUtils.getAnnotationArray(aspectClass, Advice.class, AdviceImpl.class);
 
         return false;
     }

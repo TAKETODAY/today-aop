@@ -45,7 +45,6 @@ import cn.taketoday.context.utils.ClassUtils;
 import cn.taketoday.context.utils.ConcurrentCache;
 import cn.taketoday.context.utils.ContextUtils;
 import cn.taketoday.context.utils.StringUtils;
-import cn.taketoday.expression.ELManager;
 import cn.taketoday.expression.ExpressionFactory;
 import cn.taketoday.expression.StandardELContext;
 
@@ -140,11 +139,11 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
         StandardELContext SHARED_EL_CONTEXT = //
                 ContextUtils.getApplicationContext()
                         .getEnvironment()
-                        .getELProcessor()
+                        .getExpressionProcessor()
                         .getELManager()
                         .getELContext();
 
-        ExpressionFactory EXPRESSION_FACTORY = ELManager.getExpressionFactory();
+        ExpressionFactory EXPRESSION_FACTORY = ExpressionFactory.getSharedInstance();
         ConcurrentCache<MethodKey, String[]> ARGS_NAMES_CACHE = new ConcurrentCache<>(512);
         ConcurrentCache<MethodKey, CacheConfiguration> CACHE_OPERATION = new ConcurrentCache<>(512);
         Function<MethodKey, String[]> ARGS_NAMES_FUNCTION = (target) -> ClassUtils.getMethodArgsNames(target.targetMethod);
