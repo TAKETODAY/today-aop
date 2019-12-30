@@ -24,11 +24,11 @@ import java.util.List;
 
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.context.bean.BeanDefinition;
+import cn.taketoday.context.exception.ConfigurationException;
 import cn.taketoday.context.factory.ConfigurableBeanFactory;
 import cn.taketoday.context.logger.Logger;
 import cn.taketoday.context.logger.LoggerFactory;
 import cn.taketoday.context.utils.ClassUtils;
-import cn.taketoday.context.utils.ExceptionUtils;
 import cn.taketoday.context.utils.OrderUtils;
 import lombok.Getter;
 
@@ -92,7 +92,7 @@ public enum AspectsRegistry {
             sortAspects();
         }
         catch (Throwable e) {
-            throw ExceptionUtils.newConfigurationException(e);
+            throw new ConfigurationException(e);
         }
     }
 
