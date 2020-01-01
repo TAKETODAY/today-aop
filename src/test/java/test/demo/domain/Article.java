@@ -48,7 +48,8 @@ public final class Article implements Serializable {
 
     @Override
     public String toString() {
-        return "{\n\t\"id\":\"" + id + "\",\n\t\"title\":\"" + title + "\",\n\t\"content\":\"" + content + "\",\n\t\"author\":\"" + author + "\"\n}";
+        return "{\n\t\"id\":\"" + id + "\",\n\t\"title\":\"" + title + "\",\n\t\"content\":\"" + content + "\",\n\t\"author\":\"" + author
+                + "\"\n}";
     }
 
 }
