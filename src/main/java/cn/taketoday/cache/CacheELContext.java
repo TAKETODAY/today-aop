@@ -26,7 +26,6 @@ import cn.taketoday.expression.BeanNameELResolver;
 import cn.taketoday.expression.CompositeELResolver;
 import cn.taketoday.expression.ELContext;
 import cn.taketoday.expression.ELResolver;
-import cn.taketoday.expression.EvaluationListener;
 import cn.taketoday.expression.FunctionMapper;
 import cn.taketoday.expression.StandardELContext;
 import cn.taketoday.expression.VariableMapper;
@@ -92,19 +91,5 @@ public class CacheELContext extends ELContext {
     public void setPropertyResolved(Object base, Object property) {
         setPropertyResolved(true);
     }
-
-    @Override
-    public void addEvaluationListener(EvaluationListener listener) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void notifyAfterEvaluation(String expr) {}
-
-    @Override
-    public void notifyBeforeEvaluation(String expr) {}
-
-    @Override
-    public void notifyPropertyResolved(Object base, Object property) {}
 
 }
