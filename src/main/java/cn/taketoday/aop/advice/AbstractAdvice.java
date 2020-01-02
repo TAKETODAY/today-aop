@@ -45,7 +45,7 @@ import cn.taketoday.context.utils.ExceptionUtils;
 public abstract class AbstractAdvice implements Advice, MethodInterceptor {
 
     private final Object aspect;
-    //    private final Method adviceMethod;
+    //private final Method adviceMethod;
     private final MethodInvoker invoker;
     private final byte[] adviceParameters;
     private final int adviceParameterLength;
