@@ -51,10 +51,10 @@ public class CacheExpressionContext extends ExpressionContext {
     }
 
     @Override
-    public ExpressionResolver getELResolver() {
+    public ExpressionResolver getResolver() {
 
         if (elResolver == null) {
-            ExpressionResolver elResolver = delegate.getELResolver();
+            ExpressionResolver elResolver = delegate.getResolver();
             CompositeExpressionResolver resolver = new CompositeExpressionResolver(2);
 
             resolver.add(new BeanNameExpressionResolver(new LocalBeanNameResolver(beans)));

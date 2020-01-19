@@ -140,8 +140,8 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
                 ContextUtils.getApplicationContext()
                         .getEnvironment()
                         .getExpressionProcessor()
-                        .getELManager()
-                        .getELContext();
+                        .getManager()
+                        .getContext();
 
         ExpressionFactory EXPRESSION_FACTORY = ExpressionFactory.getSharedInstance();
         ConcurrentCache<MethodKey, String[]> ARGS_NAMES_CACHE = new ConcurrentCache<>(512);
