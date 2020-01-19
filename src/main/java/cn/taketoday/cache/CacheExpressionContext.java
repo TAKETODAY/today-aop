@@ -22,43 +22,42 @@ package cn.taketoday.cache;
 import java.util.HashMap;
 import java.util.Map;
 
-import cn.taketoday.expression.BeanNameELResolver;
-import cn.taketoday.expression.CompositeELResolver;
-import cn.taketoday.expression.ELContext;
-import cn.taketoday.expression.ELResolver;
+import cn.taketoday.expression.BeanNameExpressionResolver;
+import cn.taketoday.expression.CompositeExpressionResolver;
+import cn.taketoday.expression.ExpressionContext;
+import cn.taketoday.expression.ExpressionResolver;
 import cn.taketoday.expression.FunctionMapper;
-import cn.taketoday.expression.StandardELContext;
+import cn.taketoday.expression.StandardExpressionContext;
 import cn.taketoday.expression.VariableMapper;
 import cn.taketoday.expression.lang.LocalBeanNameResolver;
 
 /**
- * 
  * @author TODAY <br>
  *         2019-02-17 20:40
  */
-public class CacheELContext extends ELContext {
+public class CacheExpressionContext extends ExpressionContext {
 
-    private ELResolver elResolver;
+    private ExpressionResolver elResolver;
     private final Map<String, Object> beans;
-    private final StandardELContext delegate;
+    private final StandardExpressionContext delegate;
 
-    public CacheELContext(StandardELContext delegate) {
+    public CacheExpressionContext(StandardExpressionContext delegate) {
         this(delegate, new HashMap<>(8, 1.0f));
     }
 
-    public CacheELContext(StandardELContext delegate, Map<String, Object> beans) {
+    public CacheExpressionContext(StandardExpressionContext delegate, Map<String, Object> beans) {
         this.beans = beans;
         this.delegate = delegate;
     }
 
     @Override
-    public ELResolver getELResolver() {
+    public ExpressionResolver getELResolver() {
 
         if (elResolver == null) {
-            ELResolver elResolver = delegate.getELResolver();
-            CompositeELResolver resolver = new CompositeELResolver(2);
+            ExpressionResolver elResolver = delegate.getELResolver();
+            CompositeExpressionResolver resolver = new CompositeExpressionResolver(2);
 
-            resolver.add(new BeanNameELResolver(new LocalBeanNameResolver(beans)));
+            resolver.add(new BeanNameExpressionResolver(new LocalBeanNameResolver(beans)));
             resolver.add(elResolver);
             this.elResolver = resolver;
         }

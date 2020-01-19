@@ -31,7 +31,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
 import cn.taketoday.cache.Cache;
-import cn.taketoday.cache.CacheELContext;
+import cn.taketoday.cache.CacheExpressionContext;
 import cn.taketoday.cache.CacheManager;
 import cn.taketoday.cache.DefaultCacheKey;
 import cn.taketoday.cache.NoSuchCacheException;
@@ -46,7 +46,7 @@ import cn.taketoday.context.utils.ConcurrentCache;
 import cn.taketoday.context.utils.ContextUtils;
 import cn.taketoday.context.utils.StringUtils;
 import cn.taketoday.expression.ExpressionFactory;
-import cn.taketoday.expression.StandardELContext;
+import cn.taketoday.expression.StandardExpressionContext;
 
 /**
  * @author TODAY <br>
@@ -136,7 +136,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
         String KEY_ROOT = "root";
         String KEY_RESULT = "result";
 
-        StandardELContext SHARED_EL_CONTEXT = //
+        StandardExpressionContext SHARED_EL_CONTEXT = //
                 ContextUtils.getApplicationContext()
                         .getEnvironment()
                         .getExpressionProcessor()
@@ -200,7 +200,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
          *            Target Method Invocation
          * @return Cache key
          */
-        static Object createKey(final String key, final CacheELContext context, final MethodInvocation invocation) {
+        static Object createKey(final String key, final CacheExpressionContext context, final MethodInvocation invocation) {
 
             return key.isEmpty()
                     ? new DefaultCacheKey(invocation.getArguments())
@@ -216,7 +216,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
          *            Cache EL Context
          * @return returns If pass the condition
          */
-        static boolean isConditionPassing(final String condition, final CacheELContext context) {
+        static boolean isConditionPassing(final String condition, final CacheExpressionContext context) {
 
             if (StringUtils.isEmpty(condition)) { //if its empty returns true
                 return true;
@@ -234,7 +234,7 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
          * @param context
          *            Cache el context
          */
-        static boolean allowPutCache(final String unless, final Object result, final CacheELContext context) {
+        static boolean allowPutCache(final String unless, final Object result, final CacheExpressionContext context) {
 
             if (StringUtils.isNotEmpty(unless)) {
                 context.putBean(KEY_RESULT, result);
@@ -263,11 +263,11 @@ public abstract class AbstractCacheInterceptor extends CacheOperations implement
             }
         }
 
-        static CacheELContext prepareELContext(final MethodKey methodKey, final MethodInvocation invocation) {
+        static CacheExpressionContext prepareELContext(final MethodKey methodKey, final MethodInvocation invocation) {
             final Map<String, Object> beans = new HashMap<>();
             prepareParameterNames(methodKey, invocation.getArguments(), beans);
             beans.put(KEY_ROOT, invocation);// ${root.target} for target instance ${root.method}
-            return new CacheELContext(SHARED_EL_CONTEXT, beans);
+            return new CacheExpressionContext(SHARED_EL_CONTEXT, beans);
         }
 
     }

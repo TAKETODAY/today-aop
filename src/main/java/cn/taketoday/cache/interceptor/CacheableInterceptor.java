@@ -32,7 +32,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import cn.taketoday.aop.annotation.Advice;
 import cn.taketoday.aop.annotation.Aspect;
 import cn.taketoday.cache.Cache;
-import cn.taketoday.cache.CacheELContext;
+import cn.taketoday.cache.CacheExpressionContext;
 import cn.taketoday.cache.CacheManager;
 import cn.taketoday.cache.CacheValueRetrievalException;
 import cn.taketoday.cache.annotation.CacheConfiguration;
@@ -65,7 +65,7 @@ public class CacheableInterceptor extends AbstractCacheInterceptor {
 
         final CacheConfiguration cacheable = prepareAnnotation(methodKey);
 
-        final CacheELContext context = prepareELContext(methodKey, invocation);
+        final CacheExpressionContext context = prepareELContext(methodKey, invocation);
 
         if (isConditionPassing(cacheable.condition(), context)) {// pass the condition
             final Cache cache = obtainCache(method, cacheable);

@@ -30,7 +30,7 @@ import org.aopalliance.intercept.MethodInvocation;
 
 import cn.taketoday.aop.annotation.Advice;
 import cn.taketoday.aop.annotation.Aspect;
-import cn.taketoday.cache.CacheELContext;
+import cn.taketoday.cache.CacheExpressionContext;
 import cn.taketoday.cache.CacheManager;
 import cn.taketoday.cache.annotation.CacheConfiguration;
 import cn.taketoday.cache.annotation.CachePut;
@@ -62,7 +62,7 @@ public class CachePutInterceptor extends AbstractCacheInterceptor {
         final Method method = invocation.getMethod();
         final MethodKey methodKey = new MethodKey(method, CachePut.class);
         final CacheConfiguration cachePut = prepareAnnotation(methodKey);
-        final CacheELContext context = prepareELContext(methodKey, invocation);
+        final CacheExpressionContext context = prepareELContext(methodKey, invocation);
 
         context.putBean(Operations.KEY_RESULT, result);
 
