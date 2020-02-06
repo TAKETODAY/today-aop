@@ -182,7 +182,7 @@ public class DefaultProxyFactory implements ProxyFactory {
 
             boolean isAllMethodsWeaved = false;
 
-            boolean traceEnabled = ClassUtils.traceEnabled;
+            boolean traceEnabled = log.isTraceEnabled();
             // annotation matching
             for (Class<? extends Annotation> annotation : advice.value()) {
                 if (targetClass.isAnnotationPresent(annotation)) {

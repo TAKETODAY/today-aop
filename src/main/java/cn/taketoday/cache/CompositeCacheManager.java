@@ -49,6 +49,14 @@ public class CompositeCacheManager implements CacheManager {
         Objects.requireNonNull(cacheManagers, "cacheManager s can't be null");
         this.cacheManagers.addAll(cacheManagers);
     }
+    
+    
+    public void setCacheManagers(Collection<CacheManager> cacheManagers) {
+        Objects.requireNonNull(cacheManagers, "cacheManager s can't be null");
+        this.cacheManagers.clear();
+        this.cacheManagers.addAll(cacheManagers);
+    }
+    
 
     @Override
     public Cache getCache(String name, CacheConfig cacheConfig) {

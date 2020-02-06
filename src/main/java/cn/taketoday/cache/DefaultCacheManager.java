@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import cn.taketoday.cache.annotation.CacheConfig;
 import cn.taketoday.context.annotation.MissingBean;
@@ -38,7 +37,7 @@ public class DefaultCacheManager implements CacheManager {
 
     private boolean dynamic = true;
 
-    private final ConcurrentMap<String, Cache> cacheMap = new ConcurrentHashMap<>(32);
+    private final ConcurrentHashMap<String, Cache> cacheMap = new ConcurrentHashMap<>(32);
 
     public DefaultCacheManager() {
 
