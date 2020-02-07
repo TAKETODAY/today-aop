@@ -17,7 +17,7 @@
 
 ```
 
-- [Maven Central](https://search.maven.org/artifact/cn.taketoday/today-aop/1.0.4.RELEASE/jar)
+- [Maven Central](https://search.maven.org/artifact/cn.taketoday/today-aop/1.0.5.RELEASE/jar)
 
 ## 案例
 - [DEMO](https://github.com/TAKETODAY/today-web-demo)
@@ -28,6 +28,7 @@
 
 ```java
 @Aspect
+@Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class LogAspect {
 
